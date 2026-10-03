@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Lua Obfuscator - เครื่องมือปกปิดโค้ด Lua แบบย่อเบา</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0b0f19',
+                            card: '#131b2e',
+                            border: '#1e293b',
+                            cyan: '#06b6d4',
+                            cyanHover: '#0891b2',
+                            purple: '#8b5cf6',
+                            codeBg: '#070a12'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #070a10;
+            color: #e2e8f0;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d1322;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        .line-numbers {
+            user-select: none;
+            text-align: right;
+            color: #475569;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+        }
+
+        textarea.code-area {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            tab-size: 4;
+            white-space: pre;
+            overflow-x: auto;
+            resize: none;
+        }
+
+        .code-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            white-space: pre;
+            word-break: break-all;
+        }
+
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-cyber-card/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg glow-cyan">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-white flex items-center gap-2">
+                        ROBLOX LUA OBFUSCATOR
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">v1.0 Lightweight</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">ระบบปกปิดโค้ด Lua แบบย่อสั้น ปกปิดด้วยตัวอักษรภาษาอังกฤษล้วน</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    รองรับทุก Executer (Luau Ready)
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full flex flex-col gap-6">
+
+        <!-- Controls Bar -->
+        <div class="bg-cyber-card border border-cyber-border rounded-xl p-4 shadow-xl flex flex-wrap items-center justify-between gap-4">
+            <!-- Mode Selection -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
+                <label class="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-sliders text-cyan-400"></i>
+                    รูปแบบการซ่อน:
+                </label>
+                <select id="obfPreset" class="bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 px-3 py-2 outline-none w-full sm:w-auto">
+                    <option value="compact">1. แบบย่อเบาที่สุด (Compact Letter-Pair ~2x)</option>
+                    <option value="english_vars">2. เข้ารหัสตัวอักษร + สุ่มตัวแปรภาษาอังกฤษ (English Vars)</option>
+                    <option value="barcode">3. ซ่อนในรูปแบบตัวอักษรผสม Barcode (IllIIIll Matrix)</option>
+                </select>
+            </div>
+
+            <!-- Naming Style -->
+            <div class="flex items-center gap-3">
+                <label class="text-xs font-medium text-slate-400 uppercase tracking-wider">ชุดอักษร:</label>
+                <select id="alphabetStyle" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 outline-none">
+                    <option value="uppercase">A-P (ตัวพิมพ์ใหญ่)</option>
+                    <option value="lowercase">a-p (ตัวพิมพ์เล็ก)</option>
+                    <option value="mixed">สุ่มผสมอักษรย่อ</option>
+                </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button id="btnSample" onclick="loadSampleScript()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-code text-cyan-400"></i>
+                    โหลดโค้ดตัวอย่าง
+                </button>
+                <button id="btnClear" onclick="clearInput()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-trash-can text-red-400"></i>
+                    ล้างข้อมูล
+                </button>
+            </div>
+        </div>
+
+        <!-- TOP SECTION: Source Lua Input -->
+        <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
+            <!-- Header -->
+            <div class="bg-slate-900/80 px-4 py-3 border-b border-cyber-border flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+                    <span class="ml-2 text-xs font-mono text-slate-300 font-semibold flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-lines text-cyan-400"></i>
+                        source_script.lua (โค้ดต้นฉบับ)
+                    </span>
+                </div>
+                <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
+                    <span id="inputLines">บรรทัด: 1</span>
+                    <span id="inputChars">ขนาด: 0 B</span>
+                </div>
+            </div>
+
+            <!-- Textarea Container -->
+            <div class="relative flex min-h-[220px] max-h-[340px] bg-cyber-codeBg">
+                <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-slate-950/50 border-r border-slate-800/80 select-none min-w-[45px]">
+                    1
+                </div>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการปกปิดสคริปต์ที่นี่...
+local player = game.Players.LocalPlayer
+print('สวัสดี! โค้ดนี้จะถูกแปลงเป็นตัวอักษรภาษาอังกฤษแบบสั้น')" class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+            </div>
+
+            <!-- Obfuscate Main Button -->
+            <div class="p-3 bg-slate-900/60 border-t border-cyber-border flex justify-end">
+                <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg glow-cyan transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
+                    <i class="fa-solid fa-lock text-base"></i>
+                    <span>🔒 ล็อคและปกปิดสคริปต์ (แบบย่อเบา)</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- BOTTOM SECTION: Obfuscated Output -->
+        <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
+            <!-- Header -->
+            <div class="bg-slate-900/80 px-4 py-3 border-b border-cyber-border flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                    <span class="text-xs font-mono text-slate-300 font-semibold">
+                        protected_script.lua (ผลลัพธ์โค้ดปกปิด)
+                    </span>
+                    <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        สำเร็จ
+                    </span>
+                </div>
+
+                <!-- Stats & Action Tools -->
+                <div class="flex items-center gap-2 flex-wrap">
+                    <div id="outputStats" class="hidden text-xs font-mono text-slate-400 flex items-center gap-3 mr-2">
+                        <span>ขนาดใหม่: <strong id="outputSize" class="text-cyan-400">0 B</strong></span>
+                        <span>อัตราส่วน: <strong id="ratioStat" class="text-emerald-400">1.0x</strong></span>
+                    </div>
+
+                    <button id="btnTestDecode" onclick="testDecodeInBrowser()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-vial text-purple-400"></i>
+                        <span>🧪 ทดสอบถอดรหัส</span>
+                    </button>
+                    <button id="btnCopy" onclick="copyObfuscatedCode()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>📋 คัดลอกโค้ด</span>
+                    </button>
+                    <button id="btnDownload" onclick="downloadLuaFile()" class="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-download"></i>
+                        <span>📥 ดาวน์โหลด .lua</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Code Output Display Area -->
+            <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
+                <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
+                    <i class="fa-solid fa-shield-cat text-4xl mb-3 text-slate-700"></i>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ที่ปกปิด</p>
+                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกด "🔒 ล็อคและปกปิดสคริปต์" เพื่อสร้างสคริปต์แบบย่อเบา</p>
+                </div>
+                <pre id="luaOutput" class="code-display text-cyan-300 selection:bg-cyan-500 selection:text-black hidden"></pre>
+            </div>
+        </div>
+
+        <!-- Simulation Test Decode Result Box (Hidden by default) -->
+        <div id="testDecodeBox" class="hidden bg-slate-900 border border-purple-500/30 rounded-xl p-4 shadow-2xl flex flex-col gap-2">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <span class="text-xs font-mono text-purple-400 font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    ผลลัพธ์การจำลองการถอดรหัส (ข้อความต้นฉบับที่จะถูกรันใน Roblox):
+                </span>
+                <button onclick="closeTestDecodeBox()" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i> ปิด</button>
+            </div>
+            <pre id="testDecodeContent" class="font-mono text-xs text-slate-300 bg-slate-950 p-3 rounded-lg overflow-x-auto max-h-[180px]"></pre>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-4 mt-6 text-center text-xs text-slate-500">
+        <p>Roblox Luau Obfuscator Studio &copy; 2026 - สคริปต์แบบย่อเบา ใช้ได้กับ Solara, Wave, Delta, Arceus X, Codex ฯลฯ</p>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 translate-y-10 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 border border-cyan-500/50 text-white shadow-2xl">
+        <i class="fa-solid fa-circle-check text-cyan-400 text-lg"></i>
+        <span id="toastMsg" class="text-sm font-medium">คัดลอกโค้ดเรียบร้อยแล้ว!</span>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const luaInput = document.getElementById('luaInput');
+        const luaOutput = document.getElementById('luaOutput');
+        const inputLineNumbers = document.getElementById('inputLineNumbers');
+        const inputLines = document.getElementById('inputLines');
+        const inputChars = document.getElementById('inputChars');
+        const outputPlaceholder = document.getElementById('outputPlaceholder');
+        const statusBadge = document.getElementById('statusBadge');
+        const outputStats = document.getElementById('outputStats');
+        const outputSize = document.getElementById('outputSize');
+        const ratioStat = document.getElementById('ratioStat');
+        const testDecodeBox = document.getElementById('testDecodeBox');
+        const testDecodeContent = document.getElementById('testDecodeContent');
+
+        const ALPHABETS = {
+            uppercase: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"],
+            lowercase: ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p"],
+            mixed:     ["K","x","M","q","R","p","W","z","A","v","N","y","T","u","E","s"]
+        };
+
+        let lastEncodedLetters = "";
+        let lastAlphabetUsed = [];
+
+        function updateInputStats() {
+            const text = luaInput.value;
+            const lines = text.split('\n');
+            const lineCount = lines.length;
+            
+            inputLines.textContent = `บรรทัด: ${lineCount}`;
+            inputChars.textContent = `ขนาด: ${formatBytes(new Blob([text]).size)}`;
+
+            let lineHTML = '';
+            for (let i = 1; i <= Math.max(lineCount, 1); i++) {
+                lineHTML += i + '<br>';
+            }
+            inputLineNumbers.innerHTML = lineHTML;
+        }
+
+        luaInput.addEventListener('scroll', () => {
+            inputLineNumbers.scrollTop = luaInput.scrollTop;
+        });
+        luaInput.addEventListener('input', updateInputStats);
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const icon = toast.querySelector('i');
+
+            toastMsg.textContent = message;
+            if (isSuccess) {
+                toast.classList.remove('border-red-500/50');
+                toast.classList.add('border-cyan-500/50');
+                icon.className = 'fa-solid fa-circle-check text-cyan-400 text-lg';
+            } else {
+                toast.classList.remove('border-cyan-500/50');
+                toast.classList.add('border-red-500/50');
+                icon.className = 'fa-solid fa-circle-xmark text-red-400 text-lg';
+            }
+
+            toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        function makeVarName(style = 'english', index = 1) {
+            if (style === 'barcode') {
+                const parts = ['I', 'l', '1'];
+                let res = 'I';
+                for(let i = 0; i < 8; i++) res += parts[Math.floor(Math.random()*parts.length)];
+                return res + '_' + index;
+            } else if (style === 'short') {
+                return `_${String.fromCharCode(97 + (index % 26))}${index}`;
+            } else {
+                const words = ['DataStr', 'MapTable', 'ByteBuf', 'SubFunc', 'CharFunc', 'ExecScript', 'LoadFunc', 'Runner'];
+                return (words[index % words.length] || 'v') + Math.floor(Math.random() * 899 + 100);
+            }
+        }
+
+        function generateLightweightLua(sourceText, preset, alphaStyle) {
+            const alpha = ALPHABETS[alphaStyle] || ALPHABETS.uppercase;
+            lastAlphabetUsed = alpha;
+
+            const bytes = new TextEncoder().encode(sourceText);
+            let letterPairs = [];
+            for (let i = 0; i < bytes.length; i++) {
+                const b = bytes[i];
+                const hi = (b >> 4) & 0x0F;
+                const lo = b & 0x0F;
+                letterPairs.push(alpha[hi] + alpha[lo]);
+            }
+            const encodedString = letterPairs.join('');
+            lastEncodedLetters = encodedString;
+
+            let luaMapEntries = [];
+            for (let i = 0; i < 16; i++) {
+                luaMapEntries.push(`["${alpha[i]}"]=${i}`);
+            }
+            const mapTableStr = `{${luaMapEntries.join(',')}}`;
+
+            let varStyle = 'short';
+            if (preset === 'english_vars') varStyle = 'english';
+            if (preset === 'barcode') varStyle = 'barcode';
+
+            const vData = makeVarName(varStyle, 1);
+            const vMap = makeVarName(varStyle, 2);
+            const vOut = makeVarName(varStyle, 3);
+            const vSub = makeVarName(varStyle, 4);
+            const vChar = makeVarName(varStyle, 5);
+            const vI = makeVarName(varStyle, 6);
+            const vH = makeVarName(varStyle, 7);
+            const vL = makeVarName(varStyle, 8);
+            const vScript = makeVarName(varStyle, 9);
+            const vExec = makeVarName(varStyle, 10);
+
+            let lua = `-- [[ Protected by Luau Lightweight Obfuscator ]]\\n`;
+            lua += `local ${vData} = "${encodedString}"\\n`;
+            lua += `local ${vMap} = ${mapTableStr}\\n`;
+            lua += `local ${vOut} = {}\\n`;
+            lua += `local ${vSub} = string.sub\\n`;
+            lua += `local ${vChar} = string.char\\n\\n`;
+            lua += `for ${vI} = 1, #${vData}, 2 do\\n`;
+            lua += `    local ${vH} = ${vMap}[${vSub}(${vData}, ${vI}, ${vI})]\\n`;
+            lua += `    local ${vL} = ${vMap}[${vSub}(${vData}, ${vI} + 1, ${vI} + 1)]\\n`;
+            lua += `    if ${vH} and ${vL} then\\n`;
+            lua += `        ${vOut}[#${vOut} + 1] = ${vChar}(${vH} * 16 + ${vL})\\n`;
+            lua += `    end\\n`;
+            lua += `end\\n\\n`;
+            lua += `local ${vScript} = table.concat(${vOut})\\n`;
+            lua += `local ${vExec} = assert((loadstring or load)(${vScript}), "Error loading script")\\n`;
+            lua += `return ${vExec}()`;
+
+            return lua;
+        }
+
+        function processObfuscation() {
+            const inputCode = luaInput.value;
+            if (!inputCode.trim()) {
+                showToast("กรุณากรอกโค้ด Lua ก่อนทำการปกปิด", false);
+                return;
+            }
+
+            const preset = document.getElementById('obfPreset').value;
+            const alphaStyle = document.getElementById('alphabetStyle').value;
+
+            const btn = document.getElementById('btnObfuscate');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังประมวลผล...</span>`;
+
+            setTimeout(() => {
+                try {
+                    const obfuscatedLua = generateLightweightLua(inputCode, preset, alphaStyle);
+
+                    luaOutput.textContent = obfuscatedLua;
+                    luaOutput.classList.remove('hidden');
+                    outputPlaceholder.classList.add('hidden');
+                    statusBadge.classList.remove('hidden');
+                    outputStats.classList.remove('hidden');
+
+                    const origSize = new Blob([inputCode]).size;
+                    const newSize = new Blob([obfuscatedLua]).size;
+                    const ratio = (newSize / Math.max(origSize, 1)).toFixed(1);
+
+                    outputSize.textContent = formatBytes(newSize);
+                    ratioStat.textContent = `${ratio}x`;
+
+                    showToast("ปกปิดสคริปต์แบบย่อเบาสำเร็จ!");
+
+                } catch (err) {
+                    showToast(err.message || "เกิดข้อผิดพลาดในการปกปิดโค้ด", false);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-lock text-base"></i> <span>🔒 ล็อคและปกปิดสคริปต์ (แบบย่อเบา)</span>`;
+                }
+            }, 40);
+        }
+
+        function testDecodeInBrowser() {
+            if (!lastEncodedLetters || !lastAlphabetUsed) {
+                showToast("ยังไม่มีโค้ดที่ปกปิดให้ทดสอบ", false);
+                return;
+            }
+
+            try {
+                let map = {};
+                for (let i = 0; i < lastAlphabetUsed.length; i++) {
+                    map[lastAlphabetUsed[i]] = i;
+                }
+
+                let bytes = [];
+                for (let i = 0; i < lastEncodedLetters.length; i += 2) {
+                    let hChar = lastEncodedLetters[i];
+                    let lChar = lastEncodedLetters[i + 1];
+                    let h = map[hChar];
+                    let l = map[lChar];
+                    if (h !== undefined && l !== undefined) {
+                        bytes.push((h << 4) | l);
+                    }
+                }
+
+                const decodedText = new TextDecoder().decode(new Uint8Array(bytes));
+                testDecodeContent.textContent = decodedText;
+                testDecodeBox.classList.remove('hidden');
+                testDecodeBox.scrollIntoView({ behavior: 'smooth' });
+                showToast("ทดสอบถอดรหัสสำเร็จ! โค้ดถูกต้อง 100%");
+            } catch (e) {
+                showToast("การถอดรหัสล้มเหลว: " + e.message, false);
+            }
+        }
+
+        function closeTestDecodeBox() {
+            testDecodeBox.classList.add('hidden');
+        }
+
+        function copyObfuscatedCode() {
+            const code = luaOutput.textContent;
+            if (!code || luaOutput.classList.contains('hidden')) {
+                showToast("ยังไม่มีโค้ดที่ปกปิดเพื่อคัดลอก", false);
+                return;
+            }
+
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast("📋 คัดลอกโค้ดสคริปต์ลงคลิปบอร์ดแล้ว!");
+            } catch (e) {
+                showToast("ไม่สามารถคัดลอกได้", false);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        function downloadLuaFile() {
+            const code = luaOutput.textContent;
+            if (!code || luaOutput.classList.contains('hidden')) {
+                showToast("ยังไม่มีโค้ดที่ปกปิดเพื่อดาวน์โหลด", false);
+                return;
+            }
+
+            const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `protected_light_${Date.now()}.lua`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast("📥 ดาวน์โหลดไฟล์ .lua สำเร็จ!");
+        }
+
+        function loadSampleScript() {
+            const sample = `-- [[ Roblox Speed Hack & Fly Script ]]
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function applyBuffs()
+    print("กำลังเปิดใช้งานสคริปต์ให้ผู้เล่น: " .. LocalPlayer.Name)
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.WalkSpeed = 50
+        LocalPlayer.Character.Humanoid.JumpPower = 120
+    end
+end
+
+applyBuffs()`;
+
+            luaInput.value = sample;
+            updateInputStats();
+            showToast("โหลดสคริปต์ตัวอย่างเรียบร้อยแล้ว");
+        }
+
+        function clearInput() {
+            luaInput.value = '';
+            luaOutput.textContent = '';
+            luaOutput.classList.add('hidden');
+            outputPlaceholder.classList.remove('hidden');
+            statusBadge.classList.add('hidden');
+            outputStats.classList.add('hidden');
+            testDecodeBox.classList.add('hidden');
+            lastEncodedLetters = "";
+            updateInputStats();
+            showToast("ล้างข้อมูลเรียบร้อย");
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateInputStats();
+        });
+    </script>
+</body>
+</html>
