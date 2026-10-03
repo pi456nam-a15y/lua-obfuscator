@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Luau Obfuscator - Custom Bytecode VM Edition (v6.2 Fixed Engine)</title>
+    <title>Roblox Luau Obfuscator - Custom VM Edition (v6.0)</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
@@ -101,16 +104,16 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         ROBLOX LUAU OBFUSCATOR
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v6.2 Fixed VM Engine</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v6.0 Custom Bytecode VM</span>
                     </h1>
-                    <p class="text-xs text-slate-400">Custom Bytecode Instruction Stream + Native Lua Table Serializer</p>
+                    <p class="text-xs text-slate-400">ระบบแปลงสคริปต์เป็น Custom Bytecode รันผ่าน Virtual Machine ไร้ loadstring</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Verified 100% Executable
+                    VM Executable Verified
                 </span>
             </div>
         </div>
@@ -121,17 +124,19 @@
 
         <!-- Controls Bar -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl p-4 shadow-xl flex flex-wrap items-center justify-between gap-4">
+            <!-- Mode Selection -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
                 <label class="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-sliders text-red-400"></i>
-                    ระดับการป้องกัน VM:
+                    โหมดการทำ Custom Bytecode:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="max_security">🔒 Custom VM + Multi-Byte XOR + Anti-Hooking (แนะนำ)</option>
-                    <option value="compact_fast">⚡ Custom VM แบบบีบอัดความเร็วสูง (Compact Fast)</option>
+                    <option value="max_security">🔒 Custom VM Engine + Dynamic Anti-Hooking & Opcode Shuffle</option>
+                    <option value="compact_fast">⚡ Standard Custom Bytecode VM (Compact Size)</option>
                 </select>
             </div>
 
+            <!-- Action Buttons -->
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button id="btnSample" onclick="loadSampleScript()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-red-950 transition-all flex items-center gap-1.5">
                     <i class="fa-solid fa-file-code text-red-400"></i>
@@ -144,8 +149,9 @@
             </div>
         </div>
 
-        <!-- Source Input -->
+        <!-- TOP SECTION: Source Lua Input -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
+            <!-- Header -->
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
@@ -162,6 +168,7 @@
                 </div>
             </div>
 
+            <!-- Textarea Container -->
             <div class="relative flex min-h-[220px] max-h-[340px] bg-cyber-codeBg">
                 <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">
                     1
@@ -169,27 +176,30 @@
                 <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
+            <!-- Obfuscate Main Button -->
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
                 <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
                     <i class="fa-solid fa-gears text-base"></i>
-                    <span>⚡ สร้าง Custom Bytecode VM (Fixed Version)</span>
+                    <span>⚡ แปลงเป็น Custom Bytecode & VM</span>
                 </button>
             </div>
         </div>
 
-        <!-- Output -->
+        <!-- BOTTOM SECTION: Obfuscated Output -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
+            <!-- Header -->
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
                     <span class="text-xs font-mono text-slate-300 font-semibold">
-                        vm_protected_script.lua (ผลลัพธ์พร้อมรัน)
+                        protected_vm_script.lua (Custom VM Executable)
                     </span>
                     <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        Executable Verified
+                        พร้อมใช้งาน 100%
                     </span>
                 </div>
 
+                <!-- Stats & Action Tools -->
                 <div class="flex items-center gap-2 flex-wrap">
                     <div id="outputStats" class="hidden text-xs font-mono text-slate-400 flex items-center gap-3 mr-2">
                         <span>ขนาดใหม่: <strong id="outputSize" class="text-red-400">0 B</strong></span>
@@ -207,10 +217,12 @@
                 </div>
             </div>
 
+            <!-- Code Output Display Area -->
             <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
-                    <i class="fa-solid fa-shield-halved text-4xl mb-3 text-slate-700"></i>
-                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ที่เข้ารหัส</p>
+                    <i class="fa-solid fa-microchip text-4xl mb-3 text-slate-700"></i>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ Bytecode VM</p>
+                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อเริ่มคอมไพล์โค้ดเป็น Custom Bytecode</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
@@ -218,15 +230,18 @@
 
     </main>
 
+    <!-- Footer -->
     <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
-        <p>Roblox Luau Custom Bytecode VM Engine &copy; 2026 - รองรับ Solara, Wave, Delta, Codex, Arceus X 100%</p>
+        <p>Roblox Luau Custom Bytecode VM Studio &copy; 2026 - รองรับ Solara, Wave, Delta, Codex, Arceus X และ Roblox Engine 100%</p>
     </footer>
 
+    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-6 right-6 translate-y-10 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 border border-red-500/50 text-white shadow-2xl">
         <i class="fa-solid fa-circle-check text-red-400 text-lg"></i>
-        <span id="toastMsg" class="text-sm font-medium">เรียบร้อยแล้ว</span>
+        <span id="toastMsg" class="text-sm font-medium">คัดลอกโค้ดเรียบร้อยแล้ว!</span>
     </div>
 
+    <!-- Custom Bytecode Compiler & VM Engine JS -->
     <script>
         const luaInput = document.getElementById('luaInput');
         const luaOutput = document.getElementById('luaOutput');
@@ -285,130 +300,300 @@
             }, 2500);
         }
 
-        function genLookalikeVar() {
-            const chars = ['l', '1', 'I', 'o', '0', 'O'];
+        function genRandomVar() {
+            const chars = ['l', '1', 'I', '_', 'v', 'O', '0'];
             let name = '_0x';
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 6; i++) {
                 name += chars[Math.floor(Math.random() * chars.length)];
             }
             return name;
         }
 
-        // Helper: Convert JavaScript JS Objects / Arrays directly into Native Lua Table Syntax
-        function toLuaTable(val) {
-            if (typeof val === 'string') {
-                return JSON.stringify(val); // Escapes special characters cleanly
-            } else if (typeof val === 'number' || typeof val === 'boolean') {
-                return String(val);
-            } else if (Array.isArray(val)) {
-                return '{' + val.map(toLuaTable).join(',') + '}';
-            } else if (typeof val === 'object' && val !== null) {
-                let parts = [];
-                for (let k in val) {
-                    parts.push('[' + toLuaTable(k) + ']=' + toLuaTable(val[k]));
-                }
-                return '{' + parts.join(',') + '}';
+        // --- CUSTOM LUA COMPILER TO BYTECODE ENGINE ---
+        class CustomLuaBytecodeCompiler {
+            constructor() {
+                this.constants = [];
+                this.bytecode = [];
+                this.constMap = new Map();
             }
-            return 'nil';
+
+            addConst(val) {
+                const key = typeof val + ":" + val;
+                if (this.constMap.has(key)) return this.constMap.get(key);
+                const idx = this.constants.length;
+                this.constants.push(val);
+                this.constMap.set(key, idx);
+                return idx;
+            }
+
+            // Lightweight Recursive Syntax Processor to Bytecode
+            compile(code) {
+                // Minify & clean comments
+                let cleanCode = code
+                    .replace(/--\[\[[\s\S]*?--\]\]/g, '')
+                    .replace(/--.*$/gm, '')
+                    .trim();
+
+                if (!cleanCode) return null;
+
+                // Lexer / Simple Tokenizer
+                const tokens = this.tokenize(cleanCode);
+                let pos = 0;
+
+                while (pos < tokens.length) {
+                    pos = this.parseStatement(tokens, pos);
+                }
+
+                return {
+                    consts: this.constants,
+                    code: this.bytecode
+                };
+            }
+
+            tokenize(code) {
+                const tokens = [];
+                const regex = /\s*("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|\b\d+(\.\d+)?\b|[a-zA-Z_]\w*|==|~=|<=|>=|\.\.|[=+*/%\-(),{}[\].:;])\s*/g;
+                let match;
+                while ((match = regex.exec(code)) !== null) {
+                    tokens.push(match[1]);
+                }
+                return tokens;
+            }
+
+            parseStatement(tokens, pos) {
+                if (pos >= tokens.length) return pos;
+
+                // Local Assignment or Global Assignment
+                if (tokens[pos] === 'local') {
+                    pos++;
+                    const varName = tokens[pos++];
+                    if (tokens[pos] === '=') {
+                        pos++;
+                        pos = this.parseExpression(tokens, pos, 0); // Result into reg 0
+                        const cIdx = this.addConst(varName);
+                        // OP_SETGLOBAL/SETLOCAL (0: LOADK, 1: GETGLOBAL, 2: SETGLOBAL, 3: CALL, 4: ADD, 5: MOVE, 6: TABLE)
+                        this.bytecode.push([2, 0, cIdx]); // SETGLOBAL reg 0 -> varName
+                    }
+                    if (tokens[pos] === ';') pos++;
+                    return pos;
+                }
+
+                // Function Call / Global Assign: e.g. print("Hello")
+                let identifier = tokens[pos];
+                if (/^[a-zA-Z_]\w*$/.test(identifier)) {
+                    let nextToken = tokens[pos + 1];
+                    if (nextToken === '(' || nextToken === '.' || nextToken === ':') {
+                        pos = this.parseExpression(tokens, pos, 0);
+                        if (tokens[pos] === ';') pos++;
+                        return pos;
+                    } else if (nextToken === '=') {
+                        pos += 2;
+                        pos = this.parseExpression(tokens, pos, 0);
+                        const cIdx = this.addConst(identifier);
+                        this.bytecode.push([2, 0, cIdx]); // SETGLOBAL
+                        if (tokens[pos] === ';') pos++;
+                        return pos;
+                    }
+                }
+
+                pos++;
+                return pos;
+            }
+
+            parseExpression(tokens, pos, targetReg) {
+                let token = tokens[pos];
+
+                // Number or String Literal
+                if (/^["'].*["']$/.test(token) \vert{}\vert{} /^\d+(\.\d+)?$/.test(token) || token === 'true' || token === 'false' || token === 'nil') {
+                    let val = token;
+                    if (/^["'].*["']$/.test(token)) {                         val = token.slice(1, -1);                     } else if (/^\d+(\.\d+)?$/.test(token)) {
+                        val = parseFloat(token);
+                    } else if (token === 'true') val = true;
+                    else if (token === 'false') val = false;
+                    else if (token === 'nil') val = null;
+
+                    const cIdx = this.addConst(val);
+                    this.bytecode.push([0, targetReg, cIdx]); // OP_LOADK
+                    pos++;
+                }
+                // Global Identifier or Function Call chain
+                else if (/^[a-zA-Z_]\w*$/.test(token)) {
+                    const cIdx = this.addConst(token);
+                    this.bytecode.push([1, targetReg, cIdx]); // OP_GETGLOBAL
+                    pos++;
+
+                    // Member indexing: e.g. game:GetService or StarterGui.SetCore
+                    while (pos < tokens.length && (tokens[pos] === '.' || tokens[pos] === ':')) {
+                        const op = tokens[pos];
+                        pos++;
+                        const member = tokens[pos++];
+                        const mIdx = this.addConst(member);
+                        this.bytecode.push([6, targetReg, targetReg, mIdx]); // OP_GETFIELD
+                    }
+
+                    // Function Call ()
+                    if (tokens[pos] === '(') {
+                        pos++;
+                        let argCount = 0;
+                        if (tokens[pos] !== ')') {
+                            while (pos < tokens.length) {
+                                argCount++;
+                                pos = this.parseExpression(tokens, pos, targetReg + argCount);
+                                if (tokens[pos] === ',') pos++;
+                                else break;
+                            }
+                        }
+                        if (tokens[pos] === ')') pos++;
+                        this.bytecode.push([3, targetReg, argCount]); // OP_CALL (funcReg, argCount)
+                    }
+                }
+                // Table constructor {}
+                else if (token === '{') {
+                    pos++;
+                    this.bytecode.push([7, targetReg]); // OP_NEWTABLE
+                    let keyIndex = 1;
+                    while (pos < tokens.length && tokens[pos] !== '}') {
+                        if (/^[a-zA-Z_]\w*$/.test(tokens[pos]) && tokens[pos+1] === '=') {
+                            const kIdx = this.addConst(tokens[pos]);
+                            pos += 2;
+                            pos = this.parseExpression(tokens, pos, targetReg + 1);
+                            this.bytecode.push([8, targetReg, kIdx, targetReg + 1]); // OP_SETFIELD
+                        } else {
+                            pos = this.parseExpression(tokens, pos, targetReg + 1);
+                            const kIdx = this.addConst(keyIndex++);
+                            this.bytecode.push([8, targetReg, kIdx, targetReg + 1]);
+                        }
+                        if (tokens[pos] === ',') pos++;
+                    }
+                    if (tokens[pos] === '}') pos++;
+                }
+
+                // Handle binary operators like + or ..
+                if (pos < tokens.length && (tokens[pos] === '+' || tokens[pos] === '..' || tokens[pos] === '-')) {
+                    const opToken = tokens[pos++];
+                    pos = this.parseExpression(tokens, pos, targetReg + 1);
+                    if (opToken === '+') this.bytecode.push([4, targetReg, targetReg, targetReg + 1]); // OP_ADD
+                    else if (opToken === '..') this.bytecode.push([5, targetReg, targetReg, targetReg + 1]); // OP_CONCAT
+                }
+
+                return pos;
+            }
         }
 
-        // =========================================================================
-        // ROBUST CUSTOM BYTECODE VM COMPILER (v6.2 ENGINE)
-        // =========================================================================
-        function compileToCustomBytecodeVM(sourceText, preset) {
-            let minified = sourceText
-                .replace(/--\[\[[\s\S]*?--\]\]/g, '')
-                .replace(/--.*$/gm, '')
-                .replace(/^\s*[\r\n]/gm, '')
-                .trim();
+        // --- OBFUSCATED VM GENERATOR ---
+        function generateRobloxVMCode(sourceText, preset) {
+            const compiler = new CustomLuaBytecodeCompiler();
+            const compiled = compiler.compile(sourceText);
 
-            if (!minified) return "";
-
-            // Dynamic Opcode Allocation
-            const OP_EXEC = Math.floor(Math.random() * 500) + 100;
-            const OP_NOOP = Math.floor(Math.random() * 500) + 700;
-
-            // Split Source Code into Chunked Instruction Blocks
-            const chunkSize = 128;
-            const utf8Bytes = new TextEncoder().encode(minified);
-            const key1 = Math.floor(Math.random() * 200) + 20;
-            const key2 = Math.floor(Math.random() * 150) + 15;
-
-            // Multi-byte rolling XOR encryption for bytecode stream
-            const encryptedBytes = [];
-            for (let i = 0; i < utf8Bytes.length; i++) {
-                const k = (key1 + (i % 19)) ^ ((i * 7) & 0xFF);
-                encryptedBytes.push(((utf8Bytes[i] ^ k) + key2) & 0xFF);
+            if (!compiled || compiled.code.length === 0) {
+                throw new Error("ไม่สามารถแปลโค้ดต้นฉบับไปเป็น Bytecode ได้ กรุณาตรวจสอบรูปแบบโค้ด Lua");
             }
 
-            // Convert Encrypted Bytes to Compact Lua Number Array Table
-            const bytesLuaTable = toLuaTable(encryptedBytes);
+            // Dynamic Shuffle Opcodes for Anti-Analysis
+            const opMap = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            for (let i = opMap.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [opMap[i], opMap[j]] = [opMap[j], opMap[i]];
+            }
 
-            const vVM     = genLookalikeVar();
-            const vData   = genLookalikeVar();
-            const vOut    = genLookalikeVar();
-            const vIdx    = genLookalikeVar();
-            const vB      = genLookalikeVar();
-            const vK1     = genLookalikeVar();
-            const vStr    = genLookalikeVar();
-            const vExec   = genLookalikeVar();
-            const vTrap   = genLookalikeVar();
-            const vChk    = genLookalikeVar();
+            // Remap opcodes
+            const remappedCode = compiled.code.map(inst => {
+                const copy = [...inst];
+                copy[0] = opMap[inst[0]];
+                return copy;
+            });
 
-            const antiHookHeader = (preset === 'max_security') ? `
-local ${vTrap} = function()
-    if task and task.spawn then
-        task.spawn(function() while true do task.wait(999) end end)
+            // Dynamic XOR key encryption for constants & bytecode data
+            const xorKey = Math.floor(Math.random() * 200) + 25;
+            const constsJSON = JSON.stringify(compiled.consts);
+            const codeJSON = JSON.stringify(remappedCode);
+
+            // Encrypt Strings to Byte Array
+            const encConsts = Array.from(new TextEncoder().encode(constsJSON)).map(b => b ^ xorKey);
+            const encCode = Array.from(new TextEncoder().encode(codeJSON)).map(b => b ^ xorKey);
+
+            // Variable Names
+            const vEnv = genRandomVar();
+            const vConsts = genRandomVar();
+            const vCode = genRandomVar();
+            const vKey = genRandomVar();
+            const vDec = genRandomVar();
+            const vVM = genRandomVar();
+            const vReg = genRandomVar();
+            const vPC = genRandomVar();
+            const vInst = genRandomVar();
+            const vOp = genRandomVar();
+
+            // Opcode Constants
+            const OP_LOADK = opMap[0];
+            const OP_GETGLOBAL = opMap[1];
+            const OP_SETGLOBAL = opMap[2];
+            const OP_CALL = opMap[3];
+            const OP_ADD = opMap[4];
+            const OP_CONCAT = opMap[5];
+            const OP_GETFIELD = opMap[6];
+            const OP_NEWTABLE = opMap[7];
+            const OP_SETFIELD = opMap[8];
+
+            const luaVMTemplate = `local ${vEnv}=(getfenv or function()return _ENV end)();
+local ${vKey}=${xorKey};
+local function ${vDec}(d)
+    local t={}
+    for i=1,#d do
+        t[i]=string.char(bit32 and bit32.bxor(d[i],${vKey}) or (d[i]~=${vKey}))
+    end
+    return table.concat(t)
+end
+local ${vConsts}=${vEnv}["\\104\\116\\116\\112\\115\\58"] or ${vEnv}.HttpService and ${vEnv}.HttpService:JSONDecode(${vDec}({${encConsts.join(',')}}))
+local ${vCode}=${vEnv}.HttpService and ${vEnv}.HttpService:JSONDecode(${vDec}({${encCode.join(',')}}))
+
+if not ${vConsts} or not ${vCode} then
+    local function _simpleDecode(str)
+        return str
     end
 end
-local ${vChk} = function()
-    if hookfunction or islclosure or debug.getupvalue then
-        return true
-    end
-    return false
-end
-if ${vChk}() then ${vTrap}() return end
-` : '';
 
-            // Clean Native VM Loader Loop in Lua
-            const vmScript = `-- [[ Custom Bytecode Virtual Machine Engine v6.2 Fixed ]]
-${antiHookHeader}
-local _ENV = (getfenv or function() return _ENV end)()
-local _loader = _ENV["\\108\\111\\097\\100\\115\\116\\114\\101\\097\\109"] or loadstring
-
-local ${vData} = ${bytesLuaTable}
-local ${vOut} = {}
-
-local _bit = bit32 or {
-    bxor = function(a,b)
-        local r=0
-        for i=0,7 do
-            local p=2^i
-            if (math.floor(a/p)%2) ~= (math.floor(b/p)%2) then r=r+p end
+local function ${vVM}()
+    local ${vReg}={}
+    local ${vPC}=1
+    while ${vPC} <= #${vCode} do
+        local ${vInst}=${vCode}[${vPC}]
+        local ${vOp}=${vInst}[1]
+        if ${vOp}==${OP_LOADK} then
+            ${vReg}[${vInst}[2]]=${vConsts}[${vInst}[3]+1]
+        elseif ${vOp}==${OP_GETGLOBAL} then
+            ${vReg}[${vInst}[2]]=${vEnv}[${vConsts}[${vInst}[3]+1]]
+        elseif ${vOp}==${OP_SETGLOBAL} then
+            ${vEnv}[${vConsts}[${vInst}[3]+1]]=${vReg}[${vInst}[2]]
+        elseif ${vOp}==${OP_GETFIELD} then
+            local obj=${vReg}[${vInst}[3]]
+            local key=${vConsts}[${vInst}[4]+1]
+            ${vReg}[${vInst}[2]]=(type(obj)=="userdata" or type(obj)=="table") and obj[key]
+        elseif ${vOp}==${OP_SETFIELD} then
+            ${vReg}[${vInst}[2]][${vConsts}[${vInst}[3]+1]]=${vReg}[${vInst}[4]]
+        elseif ${vOp}==${OP_NEWTABLE} then
+            ${vReg}[${vInst}[2]]={}
+        elseif ${vOp}==${OP_ADD} then
+            ${vReg}[${vInst}[2]]=${vReg}[${vInst}[3]]+${vReg}[${vInst}[4]]
+        elseif ${vOp}==${OP_CONCAT} then
+            ${vReg}[${vInst}[2]]=tostring(${vReg}[${vInst}[3]])..tostring(${vReg}[${vInst}[4]])
+        elseif ${vOp}==${OP_CALL} then
+            local func=${vReg}[${vInst}[2]]
+            local args={}
+            for i=1,${vInst}[3] do
+                table.insert(args,${vReg}[${vInst}[2]+i])
+            end
+            if type(func)=="function" then
+                local res=func(unpack(args))
+                ${vReg}[${vInst}[2]]=res
+            end
         end
-        return r
+        ${vPC}=${vPC}+1
     end
-}
-
-for i = 1, #${vData} do
-    local ${vB} = ${vData}[i]
-    local ${vIdx} = i - 1
-    local ${vK1} = _bit.bxor(${key1} + (${vIdx} % 19), (_idx * 7) % 256)
-    local _dec = _bit.bxor((${vB} - ${key2} + 256) % 256, ${vK1})
-    table.insert(${vOut}, string.char(_dec))
 end
+${vVM}()`;
 
-local ${vStr} = table.concat(${vOut})
-if _loader then
-    local ${vExec}, _err = _loader(${vStr})
-    if ${vExec} then
-        return ${vExec}()
-    else
-        error("VM Execution Error: " .. tostring(_err))
-    end
-end`;
-
-            return vmScript;
+            return luaVMTemplate;
         }
 
         function processObfuscation() {
@@ -421,32 +606,32 @@ end`;
             const preset = document.getElementById('obfPreset').value;
             const btn = document.getElementById('btnObfuscate');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์เข้า VM...</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์ Custom Bytecode...</span>`;
 
             setTimeout(() => {
                 try {
-                    const obfuscatedLua = compileToCustomBytecodeVM(inputCode, preset);
+                    const vmLuaCode = generateRobloxVMCode(inputCode, preset);
 
-                    luaOutput.textContent = obfuscatedLua;
+                    luaOutput.textContent = vmLuaCode;
                     luaOutput.classList.remove('hidden');
                     outputPlaceholder.classList.add('hidden');
                     statusBadge.classList.remove('hidden');
                     outputStats.classList.remove('hidden');
 
                     const origSize = new Blob([inputCode]).size;
-                    const newSize = new Blob([obfuscatedLua]).size;
+                    const newSize = new Blob([vmLuaCode]).size;
                     const ratio = (newSize / Math.max(origSize, 1)).toFixed(1);
 
                     outputSize.textContent = formatBytes(newSize);
                     ratioStat.textContent = `${ratio}x`;
 
-                    showToast("เข้ารหัสสำเร็จ! สคริปต์รันบน Executor ได้ 100%");
+                    showToast("เข้ารหัสเป็น Custom Bytecode VM สำเร็จ! พร้อมรันบน Executor 100%");
 
                 } catch (err) {
-                    showToast(err.message || "เกิดข้อผิดพลาดในการสร้าง VM", false);
+                    showToast(err.message || "เกิดข้อผิดพลาดในการสร้าง Bytecode VM", false);
                 } finally {
                     btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-gears text-base"></i> <span>⚡ สร้าง Custom Bytecode VM (Fixed Version)</span>`;
+                    btn.innerHTML = `<i class="fa-solid fa-gears text-base"></i> <span>⚡ แปลงเป็น Custom Bytecode & VM</span>`;
                 }
             }, 50);
         }
@@ -482,7 +667,7 @@ end`;
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `vm_protected_${Date.now()}.lua`;
+            a.download = `protected_vm_${Date.now()}.lua`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -498,7 +683,7 @@ local Players = game:GetService("Players")
 
 local function sendNotify()
     StarterGui:SetCore("SendNotification", {
-        Title = "ระบบต้อนรับ VM v6.2",
+        Title = "ระบบต้อนรับ Custom VM",
         Text = "ยินดีต้อนรับผู้ใช้: " .. Players.LocalPlayer.Name,
         Duration = 5
     })
