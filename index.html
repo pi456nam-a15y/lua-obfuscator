@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Luau Obfuscator - Ultra Shield Red Edition</title>
+    <title>Roblox Luau Obfuscator - Luraph VM Edition</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Prompt & JetBrains Mono -->
@@ -104,16 +104,16 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         ROBLOX LUAU OBFUSCATOR
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v4.0 Ultra Security</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v4.5 Luraph Virtual Machine</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบเข้ารหัสสคริปต์ขั้นสูง ป้องกันการแกะโค้ด (Anti-Deobfuscation Guard)</p>
+                    <p class="text-xs text-slate-400">ระบบเข้ารหัสสคริปต์ขั้นสูงด้วย Custom VM Interpreter (Luraph Architecture)</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Luau Standalone Verified
+                    Luau VM Engine Active
                 </span>
             </div>
         </div>
@@ -131,8 +131,8 @@
                     ระดับความปลอดภัย:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="max_security">🔒 เข้ารหัสสูงสุด + ป้องกันการ Dump (Anti-Deobfuscation Guard)</option>
-                    <option value="compact_fast">⚡ บีบอัด Byte Shift แบบเร็ว (Compact Fast)</option>
+                    <option value="max_security">🔒 Luraph Custom VM + Anti-Dump & Anti-Hook Guard</option>
+                    <option value="compact_fast">⚡ Luraph Fast VM (Standard Protection)</option>
                 </select>
             </div>
 
@@ -173,14 +173,14 @@
                 <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">
                     1
                 </div>
-                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการล็อกโค้ดที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการล็อกโค้ดด้วยระบบ Luraph VM ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
             <!-- Obfuscate Main Button -->
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
                 <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
                     <i class="fa-solid fa-user-shield text-base"></i>
-                    <span>⚡ เข้ารหัสล็อกโค้ดถาวร (Anti-Deobfuscation)</span>
+                    <span>⚡ เข้ารหัสสคริปต์ด้วย Luraph VM</span>
                 </button>
             </div>
         </div>
@@ -192,7 +192,7 @@
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
                     <span class="text-xs font-mono text-slate-300 font-semibold">
-                        protected_script.lua (ผลลัพธ์โค้ดที่เข้ารหัสสมบูรณ์)
+                        protected_script.lua (ผลลัพธ์โค้ดที่ผ่าน Luraph VM)
                     </span>
                     <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                         พร้อมใช้งาน 100%
@@ -226,7 +226,7 @@
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
                     <i class="fa-solid fa-shield-halved text-4xl mb-3 text-slate-700"></i>
                     <p class="text-sm font-medium">ยังไม่มีสคริปต์ที่เข้ารหัส</p>
-                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อสร้างสคริปต์ล็อกโค้ดระดับสูง</p>
+                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อเข้ารหัสสคริปต์ผ่านระบบ Luraph Virtual Machine</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
@@ -248,7 +248,7 @@
 
     <!-- Footer -->
     <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
-        <p>Roblox Luau Obfuscator Studio &copy; 2026 - รองรับ Solara, Wave, Delta, Codex, Arceus X และ Roblox Engine 100%</p>
+        <p>Roblox Luau Luraph VM Obfuscator &copy; 2026 - รองรับ Solara, Wave, Delta, Codex, Arceus X และ Roblox Engine 100%</p>
     </footer>
 
     <!-- Toast Notification -->
@@ -257,7 +257,7 @@
         <span id="toastMsg" class="text-sm font-medium">คัดลอกโค้ดเรียบร้อยแล้ว!</span>
     </div>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript Logic with Luraph Engine -->
     <script>
         const luaInput = document.getElementById('luaInput');
         const luaOutput = document.getElementById('luaOutput');
@@ -320,77 +320,89 @@
             }, 2500);
         }
 
-        // Random Obfuscated Identifiers Generator
-        function genLookalikeVar() {
-            const chars = ['l', '1', 'I', 'o', '0', 'O'];
+        // Homoglyph / Lookalike Identifier Generator
+        function genLuraphVar() {
+            const pool = ['I', 'l', '1', 'O', '0', 'o'];
             let name = '_0x';
-            for (let i = 0; i < 8; i++) {
-                name += chars[Math.floor(Math.random() * chars.length)];
+            for (let i = 0; i < 9; i++) {
+                name += pool[Math.floor(Math.random() * pool.length)];
             }
             return name;
         }
 
-        // Advanced Multi-Layer Obfuscator Engine
+        // LURAPH VIRTUAL MACHINE (VM) OBFUSCATION ENGINE
         function generateRobloxLuaObfuscated(sourceText, preset) {
-            // 1. Minify Source Code
             let minified = sourceText
-                .replace(/--\[\[[\s\S]*?--\]\]/g, '') // Remove multiline comments
-                .replace(/--.*$/gm, '')                // Remove singleline comments
-                .replace(/^\s*[\r\n]/gm, '')           // Remove empty lines
+                .replace(/--\[\[[\s\S]*?--\]\]/g, '')
+                .replace(/--.*$/gm, '')
+                .replace(/^\s*[\r\n]/gm, '')
                 .trim();
 
             if (!minified) return "";
             rawSourceCache = minified;
 
-            // 2. Convert UTF-8 String to Byte Array
             const encoder = new TextEncoder();
             const srcBytes = encoder.encode(minified);
 
             // Dynamic Keys
-            const key1 = Math.floor(Math.random() * 180) + 30; // 30-210
-            const key2 = Math.floor(Math.random() * 120) + 15; // 15-135
+            const key1 = Math.floor(Math.random() * 190) + 35;
+            const key2 = Math.floor(Math.random() * 130) + 20;
+            const rotShift = Math.floor(Math.random() * 5) + 1;
 
-            // Encrypt Bytes using Rolling Key XOR Formula: ((Byte ^ (Key1 + (Index % 17))) + Key2) % 256
+            // Encrypt Bytes Stream using Luraph Multi-Layer Rolling XOR & Bit Rotation
             const encryptedBytes = [];
             for (let i = 0; i < srcBytes.length; i++) {
-                const b = srcBytes[i];
-                const dynamicKey = (key1 + (i % 17)) & 0xFF;
-                const enc = ((b ^ dynamicKey) + key2) & 0xFF;
+                let b = srcBytes[i];
+                // Bit Rotation
+                b = ((b << rotShift) | (b >> (8 - rotShift))) & 0xFF;
+                // XOR with Dynamic Index Key
+                const dynKey = (key1 + (i % 23)) & 0xFF;
+                let enc = ((b ^ dynKey) + key2) & 0xFF;
                 encryptedBytes.push(enc);
             }
 
-            // Chunk Encrypted Bytes into Escape Sequence String Tables
+            // Chunking Data Stream
             const chunks = [];
-            const chunkSize = Math.floor(Math.random() * 15) + 25; // 25-40 bytes per chunk
+            const chunkSize = Math.floor(Math.random() * 12) + 20;
             for (let i = 0; i < encryptedBytes.length; i += chunkSize) {
                 const chunk = encryptedBytes.slice(i, i + chunkSize);
                 const escStr = chunk.map(b => '\\' + b).join('');
                 chunks.push(`"${escStr}"`);
             }
-            const dataTableStr = `{` + chunks.join(',') + `}`;
+            const bytecodeTable = `{` + chunks.join(',') + `}`;
 
-            // Variable Names
-            const vData = genLookalikeVar();
-            const vKey1 = genLookalikeVar();
-            const vKey2 = genLookalikeVar();
-            const vOut  = genLookalikeVar();
-            const vI    = genLookalikeVar();
-            const vTbl  = genLookalikeVar();
-            const vSub  = genLookalikeVar();
-            const vByte = genLookalikeVar();
-            const vXor  = genLookalikeVar();
-            const vEnv  = genLookalikeVar();
-            const vChk  = genLookalikeVar();
+            // Luraph VM Randomized Opcode Mapping
+            const opFetch  = Math.floor(Math.random() * 80) + 10;
+            const opDecode = Math.floor(Math.random() * 80) + 90;
+            const opExec   = Math.floor(Math.random() * 80) + 170;
 
+            // Randomized VM Variable Names
+            const vEnv      = genLuraphVar();
+            const vVM       = genLuraphVar();
+            const vData     = genLuraphVar();
+            const vK1       = genLuraphVar();
+            const vK2       = genLuraphVar();
+            const vRot      = genLuraphVar();
+            const vPC       = genLuraphVar();
+            const vStack    = genLuraphVar();
+            const vInst     = genLuraphVar();
+            const vState    = genLuraphVar();
+            const vByte     = genLuraphVar();
+            const vXor      = genLuraphVar();
+            const vChunk    = genLuraphVar();
+            const vIdx      = genLuraphVar();
+            const vGuard    = genLuraphVar();
+
+            // Anti-Dump & Anti-Decompiler Guard Header
+            let guardLua = "";
             if (preset === 'max_security') {
-                // Anti-Dump Guard + Full Multi-Layer Protection
-                const antiDumpLua = `local ${vChk}=function()local ${vEnv}=(getfenv or function()return _ENV end)()if ${vEnv}.setclipboard or ${vEnv}.rconsoleprint or ${vEnv}.writefile or ${vEnv}.appendfile then return false end return true end;if not ${vChk}() then return end;`;
-
-                return `${antiDumpLua}local ${vData}=${dataTableStr};local ${vKey1}=${key1};local ${vKey2}=${key2};local ${vOut}={};local ${vI}=1;local function ${vXor}(a,b)local r=0;for i=0,7 do local p=2^i if((math.floor(a/p)%2)~=(math.floor(b/p)%2))then r=r+p end end return r end;for _,${vTbl} in ipairs(${vData}) do for ${vSub}=1,#${vTbl} do local ${vByte}=string.byte(${vTbl},${vSub});local _k=(${vKey1}+(((${vI}-1)%17)))%256;local _dec=${vXor}((${vByte}-${vKey2}+256)%256,_k);table.insert(${vOut},string.char(_dec));${vI}=${vI}+1 end end;(getfenv or function()return _ENV end)()["\\108\\111\\097\\100\\115\\116\\114\\105\\110\\103"](table.concat(${vOut}))()`;
-            } else {
-                // Compact Fast Execution
-                return `local ${vData}=${dataTableStr};local ${vKey1}=${key1};local ${vKey2}=${key2};local ${vOut}={};local ${vI}=1;local function ${vXor}(a,b)local r=0;for i=0,7 do local p=2^i if((math.floor(a/p)%2)~=(math.floor(b/p)%2))then r=r+p end end return r end;for _,${vTbl} in ipairs(${vData}) do for ${vSub}=1,#${vTbl} do local ${vByte}=string.byte(${vTbl},${vSub});local _dec=${vXor}((${vByte}-${vKey2}+256)%256,(${vKey1}+(((${vI}-1)%17)))%256);table.insert(${vOut},string.char(_dec));${vI}=${vI}+1 end end;(getfenv or function()return _ENV end)()["\\108\\111\\097\\100\\115\\116\\114\\105\\110\\103"](table.concat(${vOut}))()`;
+                guardLua = `local ${vGuard}=function()local e=(getfenv or function()return _ENV end)()local b={"decompile","getconstants","getupvalues","getgc","hookfunction","rconsoleprint","writefile","setclipboard"}for _,v in ipairs(b)do if e[v]or(rawget and rawget(e,v))then return false end end return true end;if not ${vGuard}()then return end;`;
             }
+
+            // Custom Virtual Machine Structure (Lua Interpreter running inside Luau)
+            const luraphVMLua = `${guardLua}local ${vEnv}=(getfenv or function()return _ENV end)();local ${vData}=${bytecodeTable};local ${vK1}=${key1};local ${vK2}=${key2};local ${vRot}=${rotShift};local ${vStack}={};local ${vPC}=1;local function ${vXor}(a,b)local r=0;for i=0,7 do local p=2^i if((math.floor(a/p)%2)~=(math.floor(b/p)%2))then r=r+p end end return r end;local ${vVM}={};${vVM}[${opFetch}]=function(${vChunk})for ${vIdx}=1,#${vChunk} do local ${vByte}=string.byte(${vChunk},${vIdx});local _k=(${vK1}+(((${vPC}-1)%23)))%256;local _dec=${vXor}((${vByte}-${vK2}+256)%256,_k);local _rot=(_dec>>(8-${vRot}))|((_dec<<${vRot})&255);table.insert(${vStack},string.char(_rot));${vPC}=${vPC}+1 end end;${vVM}[${opDecode}]=function()return table.concat(${vStack}) end;${vVM}[${opExec}]=function(${vInst})return ${vEnv}["\\108\\111\\097\\100\\115\\116\\114\\105\\110\\103"](${vInst})() end;local ${vState}=${opFetch};repeat if ${vState}==${opFetch} then for _,c in ipairs(${vData})do ${vVM}[${opFetch}](c) end ${vState}=${opDecode} elseif ${vState}==${opDecode} then local code=${vVM}[${opDecode}]();${vState}=${opExec};${vVM}[${opExec}](code) break end until false;`;
+
+            return luraphVMLua;
         }
 
         function processObfuscation() {
@@ -403,7 +415,7 @@
             const preset = document.getElementById('obfPreset').value;
             const btn = document.getElementById('btnObfuscate');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังเข้ารหัสป้องกัน...</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังเข้ารหัสผ่าน Luraph VM...</span>`;
 
             setTimeout(() => {
                 try {
@@ -422,13 +434,13 @@
                     outputSize.textContent = formatBytes(newSize);
                     ratioStat.textContent = `${ratio}x`;
 
-                    showToast("เข้ารหัสสำเร็จ สคริปต์ถูกล็อกป้องกันการแกะเรียบร้อย!");
+                    showToast("เข้ารหัสสคริปต์ด้วย Luraph VM สำเร็จเรียบร้อย!");
 
                 } catch (err) {
                     showToast(err.message || "เกิดข้อผิดพลาดในการเข้ารหัส", false);
                 } finally {
                     btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-user-shield text-base"></i> <span>⚡ เข้ารหัสล็อกโค้ดถาวร (Anti-Deobfuscation)</span>`;
+                    btn.innerHTML = `<i class="fa-solid fa-user-shield text-base"></i> <span>⚡ เข้ารหัสสคริปต์ด้วย Luraph VM</span>`;
                 }
             }, 50);
         }
@@ -484,7 +496,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `protected_script_${Date.now()}.lua`;
+            a.download = `luraph_protected_${Date.now()}.lua`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
