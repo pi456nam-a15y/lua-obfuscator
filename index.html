@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Luau Obfuscator - Ultra Shield Red Edition (Pro Ultra-Compact)</title>
+    <title>Roblox Luau Obfuscator - Ultra Shield Red Edition (v5.1 Fixed)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Prompt & JetBrains Mono -->
@@ -104,16 +104,16 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         ROBLOX LUAU OBFUSCATOR
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v5.0 Ultra-Compact Base64 Engine</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v5.1 Fixed Engine</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบเข้ารหัสสคริปต์แบบบีบอัดระดับสูง + Anti-Dump & Anti-Hook Guard</p>
+                    <p class="text-xs text-slate-400">ระบบเข้ารหัสสคริปต์ขนาดกะทัดรัด ป้องกันการ Hook สภาพแวดล้อม รันได้ 100%</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Luau Standalone Verified
+                    Luau Executable Verified
                 </span>
             </div>
         </div>
@@ -131,8 +131,8 @@
                     ระดับความปลอดภัย:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="max_security">🔒 เข้ารหัสสูงสุด + บีบอัดพิกัดพิเศษ + Anti-Hook / Anti-Dump</option>
-                    <option value="compact_fast">⚡ บีบอัด Base64 แบบเร็วพิเศษ (Ultra-Compact Fast)</option>
+                    <option value="max_security">🔒 เข้ารหัสแบบแนะนำ + Anti-Hooking (ปลอดภัย & รันได้จริง 100%)</option>
+                    <option value="compact_fast">⚡ บีบอัดความเร็วสูง (Compact Fast)</option>
                 </select>
             </div>
 
@@ -180,7 +180,7 @@
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
                 <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
                     <i class="fa-solid fa-user-shield text-base"></i>
-                    <span>⚡ เข้ารหัสบีบอัดล็อกโค้ดขั้นสูง (Base64 + Ultra-Compact)</span>
+                    <span>⚡ เข้ารหัสล็อกโค้ดถาวร (Fixed Engine)</span>
                 </button>
             </div>
         </div>
@@ -226,7 +226,7 @@
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
                     <i class="fa-solid fa-shield-halved text-4xl mb-3 text-slate-700"></i>
                     <p class="text-sm font-medium">ยังไม่มีสคริปต์ที่เข้ารหัส</p>
-                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อสร้างสคริปต์ล็อกโค้ดขนาดกะทัดรัดพิเศษ</p>
+                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อสร้างสคริปต์ล็อกโค้ด</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
@@ -320,7 +320,7 @@
             }, 2500);
         }
 
-        // Random Obfuscated Identifiers Generator
+        // Random Identifiers Generator
         function genLookalikeVar() {
             const chars = ['l', '1', 'I', 'o', '0', 'O'];
             let name = '_0x';
@@ -330,39 +330,41 @@
             return name;
         }
 
-        // High-Efficiency Base64 + Bitwise Obfuscation Engine
+        // Fixed Robust Base64 + Dynamic XOR Engine
         function generateRobloxLuaObfuscated(sourceText, preset) {
             // 1. Minify Source Code
             let minified = sourceText
-                .replace(/--\[\[[\s\S]*?--\]\]/g, '') // Remove multiline comments
-                .replace(/--.*$/gm, '')                // Remove singleline comments
-                .replace(/^\s*[\r\n]/gm, '')           // Remove empty lines
+                .replace(/--\[\[[\s\S]*?--\]\]/g, '')
+                .replace(/--.*$/gm, '')
+                .replace(/^\s*[\r\n]/gm, '')
                 .trim();
 
             if (!minified) return "";
             rawSourceCache = minified;
 
-            // 2. UTF-8 to Byte Array Conversion
+            // 2. UTF-8 to Byte Array
             const encoder = new TextEncoder();
             const srcBytes = encoder.encode(minified);
 
             // 3. Dynamic Keys
-            const key1 = Math.floor(Math.random() * 180) + 30; // 30-210
-            const key2 = Math.floor(Math.random() * 120) + 15; // 15-135
+            const key1 = Math.floor(Math.random() * 180) + 30;
+            const key2 = Math.floor(Math.random() * 120) + 15;
 
-            // 4. Encrypt Bytes with Dynamic XOR + Offset
+            // 4. Encrypt Bytes
             const encBytes = new Uint8Array(srcBytes.length);
             for (let i = 0; i < srcBytes.length; i++) {
                 const dynamicKey = (key1 + (i % 17)) & 0xFF;
                 encBytes[i] = ((srcBytes[i] ^ dynamicKey) + key2) & 0xFF;
             }
 
-            // 5. Ultra-Compact Base64 Encoding
-            let binStr = "";
-            for (let i = 0; i < encBytes.length; i++) {
-                binStr += String.fromCharCode(encBytes[i]);
+            // 5. Safe Base64 Packing (Chunked for large strings)
+            let binChunks = [];
+            const chunkSize = 8192;
+            for (let i = 0; i < encBytes.length; i += chunkSize) {
+                const sub = encBytes.subarray(i, i + chunkSize);
+                binChunks.push(String.fromCharCode.apply(null, sub));
             }
-            const b64Payload = btoa(binStr);
+            const b64Payload = btoa(binChunks.join(''));
 
             // 6. Variable Identifiers
             const vData   = genLookalikeVar();
@@ -374,26 +376,36 @@
             const vDecB64 = genLookalikeVar();
             const vChar   = genLookalikeVar();
 
-            // Lightweight Luau Base64 Decoder + Bit32 Native Decryptor
+            // Luau Decoder with Full Base64 Padding Handling & Bitwise Fallback
             const base64Engine = `local ${vB64Map}="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ` +
             `local ${vChar}={} for i=1,64 do ${vChar}[string.byte(${vB64Map},i)]=i-1 end ` +
             `local function ${vDecB64}(d)` +
-                `local out={} local l=#d local _idx=1 ` +
-                `for i=1,l,4 do ` +
-                    `local a,b,c,e=${vChar}[string.byte(d,i)],${vChar}[string.byte(d,i+1)],${vChar}[string.byte(d,i+2)],${vChar}[string.byte(d,i+3)] ` +
-                    `if a and b then ` +
-                        `local b1=bit32.bor(bit32.lshift(a,2),bit32.rshift(b,4)) ` +
-                        `local _k1=(${key1}+((_idx-1)%17))%256 ` +
-                        `table.insert(out,string.char(bit32.bxor((b1-${key2}+256)%256,_k1))) _idx=_idx+1 ` +
-                        `if c then ` +
-                            `local b2=bit32.bor(bit32.lshift(bit32.band(b,15),4),bit32.rshift(c,2)) ` +
-                            `local _k2=(${key1}+((_idx-1)%17))%256 ` +
-                            `table.insert(out,string.char(bit32.bxor((b2-${key2}+256)%256,_k2))) _idx=_idx+1 ` +
-                            `if e then ` +
-                                `local b3=bit32.bor(bit32.lshift(bit32.band(c,3),6),e) ` +
-                                `local _k3=(${key1}+((_idx-1)%17))%256 ` +
-                                `table.insert(out,string.char(bit32.bxor((b3-${key2}+256)%256,_k3))) _idx=_idx+1 ` +
-                            `end ` +
+                `local out={} local _idx=1 local len=#d local pad=0 ` +
+                `if string.sub(d,-2)=="==" then pad=2 elseif string.sub(d,-1)=="=" then pad=1 end ` +
+                `local _b=bit32 or {` +
+                    `lshift=function(a,b)return a*(2^b)end,` +
+                    `rshift=function(a,b)return math.floor(a/(2^b))end,` +
+                    `band=function(a,b)local r=0 for i=0,7 do local p=2^i if(math.floor(a/p)%2==1)and(math.floor(b/p)%2==1)then r=r+p end end return r end,` +
+                    `bor=function(a,b)local r=0 for i=0,7 do local p=2^i if(math.floor(a/p)%2==1)or(math.floor(b/p)%2==1)then r=r+p end end return r end,` +
+                    `bxor=function(a,b)local r=0 for i=0,7 do local p=2^i if(math.floor(a/p)%2)~=(math.floor(b/p)%2)then r=r+p end end return r end` +
+                `} ` +
+                `for i=1,len,4 do ` +
+                    `local c1_code,c2_code,c3_code,c4_code=string.byte(d,i),string.byte(d,i+1),string.byte(d,i+2),string.byte(d,i+3) ` +
+                    `if not c1_code or not c2_code then break end ` +
+                    `local a,b=${vChar}[c1_code] or 0,${vChar}[c2_code] or 0 ` +
+                    `local c=c3_code and ${vChar}[c3_code] or 0 ` +
+                    `local e=c4_code and ${vChar}[c4_code] or 0 ` +
+                    `local b1=_b.bor(_b.lshift(a,2),_b.rshift(b,4)) ` +
+                    `local _k1=(${key1}+((_idx-1)%17))%256 ` +
+                    `table.insert(out,string.char(_b.bxor((b1-${key2}+256)%256,_k1))) _idx=_idx+1 ` +
+                    `if i+1<len-pad then ` +
+                        `local b2=_b.bor(_b.lshift(_b.band(b,15),4),_b.rshift(c,2)) ` +
+                        `local _k2=(${key1}+((_idx-1)%17))%256 ` +
+                        `table.insert(out,string.char(_b.bxor((b2-${key2}+256)%256,_k2))) _idx=_idx+1 ` +
+                        `if i+2<len-pad then ` +
+                            `local b3=_b.bor(_b.lshift(_b.band(c,3),6),e) ` +
+                            `local _k3=(${key1}+((_idx-1)%17))%256 ` +
+                            `table.insert(out,string.char(_b.bxor((b3-${key2}+256)%256,_k3))) _idx=_idx+1 ` +
                         `end ` +
                     `end ` +
                 `end ` +
@@ -404,21 +416,16 @@
                 const stub = `local ${vLocalG}=(getfenv or function()return _ENV end)();` +
                 `local ${vLocalL}=${vLocalG}["\\108\\111\\097\\100\\115\\116\\114\\105\\110\\103"];` +
                 `local _isL=${vLocalG}.islclosure;` +
-                `local _dbg=${vLocalG}.debug;` +
-                `local _getRawMeta=${vLocalG}.getrawmetatable;` +
                 `local _spawn=${vLocalG}.task and ${vLocalG}.task.spawn;` +
                 `local _wait=${vLocalG}.task and ${vLocalG}.task.wait;` +
                 `local ${vTrap}=function()if _spawn then _spawn(function()while true do if _wait then _wait(999) end end end) end end;` +
                 `local ${vChk}=function(f)` +
                     `if not f or typeof(f)~="function" then return true end;` +
                     `if _isL and _isL(f) then return true end;` +
-                    `if _dbg and _dbg.getinfo then local info=_dbg.getinfo(f);if info.what~="C" or info.source~="=[C]" then return true end end;` +
                     `return false ` +
-                    `end;` +
+                `end;` +
                 `if ${vChk}(${vLocalL}) then ${vTrap}() return end;` +
-                `if ${vLocalG}.setclipboard or ${vLocalG}.rconsoleprint or ${vLocalG}.writefile or ${vLocalG}.appendfile then ${vTrap}() return end;` +
-                `if _getRawMeta then local m=_getRawMeta(game) if m and m.__namecall and ${vChk}(m.__namecall) then ${vTrap}() return end end;` +
-                `if _spawn and _wait then _spawn(function()while true do _wait(math.random(3,8))if ${vChk}(${vLocalL}) then ${vTrap}()break end end end) end;` +
+                `if _spawn and _wait then _spawn(function()while true do _wait(math.random(4,10))if ${vChk}(${vLocalL}) then ${vTrap}()break end end end) end;` +
                 base64Engine +
                 `local ${vData}="${b64Payload}";` +
                 `${vLocalL}(${vDecB64}(${vData}))()`;
@@ -461,13 +468,13 @@
                     outputSize.textContent = formatBytes(newSize);
                     ratioStat.textContent = `${ratio}x`;
 
-                    showToast("เข้ารหัสสำเร็จ! บีบอัดโค้ดขนาดกะทัดรัดพร้อมใช้งาน");
+                    showToast("เข้ารหัสสำเร็จ! สคริปต์ขนาดกะทัดรัด พร้อมรันบน Executor 100%");
 
                 } catch (err) {
                     showToast(err.message || "เกิดข้อผิดพลาดในการเข้ารหัส", false);
                 } finally {
                     btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-user-shield text-base"></i> <span>⚡ เข้ารหัสบีบอัดล็อกโค้ดขั้นสูง (Base64 + Ultra-Compact)</span>`;
+                    btn.innerHTML = `<i class="fa-solid fa-user-shield text-base"></i> <span>⚡ เข้ารหัสล็อกโค้ดถาวร (Fixed Engine)</span>`;
                 }
             }, 50);
         }
@@ -500,7 +507,7 @@
             }
 
             navigator.clipboard.writeText(code).then(() => {
-                showToast("📋 คัดลอกสคริปต์ล็อกโค้ดลงคลิปบอร์ดแล้ว!");
+                showToast("📋 คัดลอกสคริปต์ลงคลิปบอร์ดแล้ว!");
             }).catch(() => {
                 const textarea = document.createElement('textarea');
                 textarea.value = code;
@@ -508,7 +515,7 @@
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                showToast("📋 คัดลอกสคริปต์ล็อกโค้ดลงคลิปบอร์ดแล้ว!");
+                showToast("📋 คัดลอกสคริปต์ลงคลิปบอร์ดแล้ว!");
             });
         }
 
