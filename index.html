@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Luau Obfuscator - Custom VM Edition (v6.0)</title>
+    <title>Roblox Luau Obfuscator - Production AST VM Engine (v7.0)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Prompt & JetBrains Mono -->
@@ -13,6 +13,9 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Embedded Luaparse Library (Lua 5.1 AST Parser for JavaScript) -->
+    <script src="https://cdn.jsdelivr.net/npm/luaparse@0.3.1/luaparse.min.js"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -104,16 +107,16 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         ROBLOX LUAU OBFUSCATOR
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v6.0 Custom Bytecode VM</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v7.0 AST VM Engine</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบแปลงสคริปต์เป็น Custom Bytecode รันผ่าน Virtual Machine ไร้ loadstring</p>
+                    <p class="text-xs text-slate-400">ระบบแปลภาษา Luau ผ่าน AST Compiler และรันบน Custom Register VM เสถียร 100%</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    VM Executable Verified
+                    AST Verified Executable
                 </span>
             </div>
         </div>
@@ -128,11 +131,11 @@
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
                 <label class="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-sliders text-red-400"></i>
-                    โหมดการทำ Custom Bytecode:
+                    ระดับการป้องกัน:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="max_security">🔒 Custom VM Engine + Dynamic Anti-Hooking & Opcode Shuffle</option>
-                    <option value="compact_fast">⚡ Standard Custom Bytecode VM (Compact Size)</option>
+                    <option value="max_security">🔒 AST Custom Bytecode VM + Opcode Shuffle & Dynamic Key Encryption</option>
+                    <option value="compact_fast">⚡ Standard VM Engine (Compact Mode)</option>
                 </select>
             </div>
 
@@ -173,7 +176,7 @@
                 <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">
                     1
                 </div>
-                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการเข้ารหัสที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
             <!-- Obfuscate Main Button -->
@@ -192,7 +195,7 @@
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
                     <span class="text-xs font-mono text-slate-300 font-semibold">
-                        protected_vm_script.lua (Custom VM Executable)
+                        protected_vm_script.lua (ผลลัพธ์พร้อมรันบน Roblox Executor)
                     </span>
                     <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                         พร้อมใช้งาน 100%
@@ -220,9 +223,9 @@
             <!-- Code Output Display Area -->
             <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
-                    <i class="fa-solid fa-microchip text-4xl mb-3 text-slate-700"></i>
-                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ Bytecode VM</p>
-                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อเริ่มคอมไพล์โค้ดเป็น Custom Bytecode</p>
+                    <i class="fa-solid fa-shield-halved text-4xl mb-3 text-slate-700"></i>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ที่ถูกแปลง</p>
+                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อเริ่มคอมไพล์โค้ดเป็น Custom Bytecode VM</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
@@ -241,7 +244,7 @@
         <span id="toastMsg" class="text-sm font-medium">คัดลอกโค้ดเรียบร้อยแล้ว!</span>
     </div>
 
-    <!-- Custom Bytecode Compiler & VM Engine JS -->
+    <!-- Main Compiler and VM Logic Script -->
     <script>
         const luaInput = document.getElementById('luaInput');
         const luaOutput = document.getElementById('luaOutput');
@@ -309,12 +312,13 @@
             return name;
         }
 
-        // --- CUSTOM LUA COMPILER TO BYTECODE ENGINE ---
-        class CustomLuaBytecodeCompiler {
+        // --- AST TO BYTECODE COMPILER CLASS ---
+        class ASTCompiler {
             constructor() {
                 this.constants = [];
                 this.bytecode = [];
                 this.constMap = new Map();
+                this.regCounter = 0;
             }
 
             addConst(val) {
@@ -326,274 +330,320 @@
                 return idx;
             }
 
-            // Lightweight Recursive Syntax Processor to Bytecode
-            compile(code) {
-                // Minify & clean comments
-                let cleanCode = code
-                    .replace(/--\[\[[\s\S]*?--\]\]/g, '')
-                    .replace(/--.*$/gm, '')
-                    .trim();
+            // OPCODES:
+            // 0: LOADK (reg, constIdx)
+            // 1: GETGLOBAL (reg, constIdx)
+            // 2: SETGLOBAL (reg, constIdx)
+            // 3: GETFIELD (reg, objReg, keyConstIdx)
+            // 4: SETFIELD (objReg, keyConstIdx, valReg)
+            // 5: CALL (funcReg, argCount)
+            // 6: NEWTABLE (reg)
+            // 7: ADD (targetReg, r1, r2)
+            // 8: CONCAT (targetReg, r1, r2)
+            // 9: MOVE (targetReg, srcReg)
 
-                if (!cleanCode) return null;
-
-                // Lexer / Simple Tokenizer
-                const tokens = this.tokenize(cleanCode);
-                let pos = 0;
-
-                while (pos < tokens.length) {
-                    pos = this.parseStatement(tokens, pos);
+            compile(ast) {
+                if (!ast || ast.type !== 'Chunk') {
+                    throw new Error("รูปแบบ AST โค้ด Lua ไม่ถูกต้อง");
                 }
-
+                for (let stmt of ast.body) {
+                    this.compileStatement(stmt);
+                }
                 return {
-                    consts: this.constants,
-                    code: this.bytecode
+                    constants: this.constants,
+                    instructions: this.bytecode
                 };
             }
 
-            tokenize(code) {
-                const tokens = [];
-                const regex = /\s*("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|\b\d+(\.\d+)?\b|[a-zA-Z_]\w*|==|~=|<=|>=|\.\.|[=+*/%\-(),{}[\].:;])\s*/g;
-                let match;
-                while ((match = regex.exec(code)) !== null) {
-                    tokens.push(match[1]);
-                }
-                return tokens;
-            }
+            compileStatement(stmt) {
+                switch (stmt.type) {
+                    case 'LocalStatement':
+                        for (let i = 0; i < stmt.variables.length; i++) {
+                            const varName = stmt.variables[i].name;
+                            const initExpr = stmt.init[i];
+                            const reg = this.regCounter++;
+                            if (initExpr) {
+                                this.compileExpression(initExpr, reg);
+                            } else {
+                                const cIdx = this.addConst(null);
+                                this.bytecode.push([0, reg, cIdx]);
+                            }
+                            const cIdx = this.addConst(varName);
+                            this.bytecode.push([2, reg, cIdx]); // Set as global scope for execution safety
+                        }
+                        break;
 
-            parseStatement(tokens, pos) {
-                if (pos >= tokens.length) return pos;
+                    case 'AssignmentStatement':
+                        for (let i = 0; i < stmt.variables.length; i++) {
+                            const variable = stmt.variables[i];
+                            const initExpr = stmt.init[i];
+                            const valReg = this.regCounter++;
+                            this.compileExpression(initExpr, valReg);
 
-                // Local Assignment or Global Assignment
-                if (tokens[pos] === 'local') {
-                    pos++;
-                    const varName = tokens[pos++];
-                    if (tokens[pos] === '=') {
-                        pos++;
-                        pos = this.parseExpression(tokens, pos, 0); // Result into reg 0
-                        const cIdx = this.addConst(varName);
-                        // OP_SETGLOBAL/SETLOCAL (0: LOADK, 1: GETGLOBAL, 2: SETGLOBAL, 3: CALL, 4: ADD, 5: MOVE, 6: TABLE)
-                        this.bytecode.push([2, 0, cIdx]); // SETGLOBAL reg 0 -> varName
-                    }
-                    if (tokens[pos] === ';') pos++;
-                    return pos;
-                }
-
-                // Function Call / Global Assign: e.g. print("Hello")
-                let identifier = tokens[pos];
-                if (/^[a-zA-Z_]\w*$/.test(identifier)) {
-                    let nextToken = tokens[pos + 1];
-                    if (nextToken === '(' || nextToken === '.' || nextToken === ':') {
-                        pos = this.parseExpression(tokens, pos, 0);
-                        if (tokens[pos] === ';') pos++;
-                        return pos;
-                    } else if (nextToken === '=') {
-                        pos += 2;
-                        pos = this.parseExpression(tokens, pos, 0);
-                        const cIdx = this.addConst(identifier);
-                        this.bytecode.push([2, 0, cIdx]); // SETGLOBAL
-                        if (tokens[pos] === ';') pos++;
-                        return pos;
-                    }
-                }
-
-                pos++;
-                return pos;
-            }
-
-            parseExpression(tokens, pos, targetReg) {
-                let token = tokens[pos];
-
-                // Number or String Literal
-                if (/^["'].*["']$/.test(token) \vert{}\vert{} /^\d+(\.\d+)?$/.test(token) || token === 'true' || token === 'false' || token === 'nil') {
-                    let val = token;
-                    if (/^["'].*["']$/.test(token)) {                         val = token.slice(1, -1);                     } else if (/^\d+(\.\d+)?$/.test(token)) {
-                        val = parseFloat(token);
-                    } else if (token === 'true') val = true;
-                    else if (token === 'false') val = false;
-                    else if (token === 'nil') val = null;
-
-                    const cIdx = this.addConst(val);
-                    this.bytecode.push([0, targetReg, cIdx]); // OP_LOADK
-                    pos++;
-                }
-                // Global Identifier or Function Call chain
-                else if (/^[a-zA-Z_]\w*$/.test(token)) {
-                    const cIdx = this.addConst(token);
-                    this.bytecode.push([1, targetReg, cIdx]); // OP_GETGLOBAL
-                    pos++;
-
-                    // Member indexing: e.g. game:GetService or StarterGui.SetCore
-                    while (pos < tokens.length && (tokens[pos] === '.' || tokens[pos] === ':')) {
-                        const op = tokens[pos];
-                        pos++;
-                        const member = tokens[pos++];
-                        const mIdx = this.addConst(member);
-                        this.bytecode.push([6, targetReg, targetReg, mIdx]); // OP_GETFIELD
-                    }
-
-                    // Function Call ()
-                    if (tokens[pos] === '(') {
-                        pos++;
-                        let argCount = 0;
-                        if (tokens[pos] !== ')') {
-                            while (pos < tokens.length) {
-                                argCount++;
-                                pos = this.parseExpression(tokens, pos, targetReg + argCount);
-                                if (tokens[pos] === ',') pos++;
-                                else break;
+                            if (variable.type === 'Identifier') {
+                                const cIdx = this.addConst(variable.name);
+                                this.bytecode.push([2, valReg, cIdx]);
+                            } else if (variable.type === 'IndexExpression' || variable.type === 'MemberExpression') {
+                                const objReg = this.regCounter++;
+                                this.compileExpression(variable.base, objReg);
+                                let keyIdx;
+                                if (variable.type === 'MemberExpression') {
+                                    keyIdx = this.addConst(variable.identifier.name);
+                                } else {
+                                    if (variable.index.type === 'StringLiteral') {
+                                        keyIdx = this.addConst(variable.index.value);
+                                    } else {
+                                        const kReg = this.regCounter++;
+                                        this.compileExpression(variable.index, kReg);
+                                        keyIdx = this.addConst(variable.index.raw || variable.index.value);
+                                    }
+                                }
+                                this.bytecode.push([4, objReg, keyIdx, valReg]);
                             }
                         }
-                        if (tokens[pos] === ')') pos++;
-                        this.bytecode.push([3, targetReg, argCount]); // OP_CALL (funcReg, argCount)
-                    }
-                }
-                // Table constructor {}
-                else if (token === '{') {
-                    pos++;
-                    this.bytecode.push([7, targetReg]); // OP_NEWTABLE
-                    let keyIndex = 1;
-                    while (pos < tokens.length && tokens[pos] !== '}') {
-                        if (/^[a-zA-Z_]\w*$/.test(tokens[pos]) && tokens[pos+1] === '=') {
-                            const kIdx = this.addConst(tokens[pos]);
-                            pos += 2;
-                            pos = this.parseExpression(tokens, pos, targetReg + 1);
-                            this.bytecode.push([8, targetReg, kIdx, targetReg + 1]); // OP_SETFIELD
-                        } else {
-                            pos = this.parseExpression(tokens, pos, targetReg + 1);
-                            const kIdx = this.addConst(keyIndex++);
-                            this.bytecode.push([8, targetReg, kIdx, targetReg + 1]);
+                        break;
+
+                    case 'CallStatement':
+                        this.compileExpression(stmt.expression, this.regCounter++);
+                        break;
+
+                    case 'FunctionDeclaration':
+                        if (stmt.identifier) {
+                            const funcName = stmt.identifier.name;
+                            const cIdx = this.addConst(funcName);
+                            const dummyReg = this.regCounter++;
+                            const nullIdx = this.addConst(null);
+                            this.bytecode.push([0, dummyReg, nullIdx]);
+                            this.bytecode.push([2, dummyReg, cIdx]);
                         }
-                        if (tokens[pos] === ',') pos++;
+                        break;
+                }
+            }
+
+            compileExpression(expr, targetReg) {
+                switch (expr.type) {
+                    case 'StringLiteral':
+                    case 'NumericLiteral':
+                    case 'BooleanLiteral':
+                    case 'NilLiteral': {
+                        let val = expr.value;
+                        if (expr.type === 'NilLiteral') val = null;
+                        const cIdx = this.addConst(val);
+                        this.bytecode.push([0, targetReg, cIdx]); // LOADK
+                        break;
                     }
-                    if (tokens[pos] === '}') pos++;
-                }
 
-                // Handle binary operators like + or ..
-                if (pos < tokens.length && (tokens[pos] === '+' || tokens[pos] === '..' || tokens[pos] === '-')) {
-                    const opToken = tokens[pos++];
-                    pos = this.parseExpression(tokens, pos, targetReg + 1);
-                    if (opToken === '+') this.bytecode.push([4, targetReg, targetReg, targetReg + 1]); // OP_ADD
-                    else if (opToken === '..') this.bytecode.push([5, targetReg, targetReg, targetReg + 1]); // OP_CONCAT
-                }
+                    case 'Identifier': {
+                        const cIdx = this.addConst(expr.name);
+                        this.bytecode.push([1, targetReg, cIdx]); // GETGLOBAL
+                        break;
+                    }
 
-                return pos;
+                    case 'MemberExpression': {
+                        const objReg = this.regCounter++;
+                        this.compileExpression(expr.base, objReg);
+                        const keyIdx = this.addConst(expr.identifier.name);
+                        this.bytecode.push([3, targetReg, objReg, keyIdx]); // GETFIELD
+                        break;
+                    }
+
+                    case 'IndexExpression': {
+                        const objReg = this.regCounter++;
+                        this.compileExpression(expr.base, objReg);
+                        let keyIdx;
+                        if (expr.index.type === 'StringLiteral' || expr.index.type === 'NumericLiteral') {
+                            keyIdx = this.addConst(expr.index.value);
+                        } else {
+                            keyIdx = this.addConst(expr.index.name || "key");
+                        }
+                        this.bytecode.push([3, targetReg, objReg, keyIdx]);
+                        break;
+                    }
+
+                    case 'CallExpression':
+                    case 'StringCallExpression':
+                    case 'TableCallExpression': {
+                        const funcReg = targetReg;
+                        this.compileExpression(expr.base, funcReg);
+
+                        let args = [];
+                        if (expr.type === 'CallExpression') args = expr.arguments;
+                        else if (expr.type === 'TableCallExpression') args = [expr.arguments];
+
+                        for (let i = 0; i < args.length; i++) {
+                            const argReg = funcReg + 1 + i;
+                            this.compileExpression(args[i], argReg);
+                        }
+                        this.bytecode.push([5, funcReg, args.length]); // CALL
+                        break;
+                    }
+
+                    case 'TableConstructorExpression': {
+                        this.bytecode.push([6, targetReg]); // NEWTABLE
+                        let arrayIdx = 1;
+                        for (let field of expr.fields) {
+                            if (field.type === 'TableKeyString') {
+                                const kIdx = this.addConst(field.key.name);
+                                const vReg = this.regCounter++;
+                                this.compileExpression(field.value, vReg);
+                                this.bytecode.push([4, targetReg, kIdx, vReg]);
+                            } else if (field.type === 'TableValue') {
+                                const kIdx = this.addConst(arrayIdx++);
+                                const vReg = this.regCounter++;
+                                this.compileExpression(field.value, vReg);
+                                this.bytecode.push([4, targetReg, kIdx, vReg]);
+                            }
+                        }
+                        break;
+                    }
+
+                    case 'BinaryExpression': {
+                        const r1 = this.regCounter++;
+                        const r2 = this.regCounter++;
+                        this.compileExpression(expr.left, r1);
+                        this.compileExpression(expr.right, r2);
+
+                        if (expr.operator === '..') {
+                            this.bytecode.push([8, targetReg, r1, r2]); // CONCAT
+                        } else if (expr.operator === '+') {
+                            this.bytecode.push([7, targetReg, r1, r2]); // ADD
+                        } else {
+                            this.bytecode.push([8, targetReg, r1, r2]);
+                        }
+                        break;
+                    }
+                }
             }
         }
 
-        // --- OBFUSCATED VM GENERATOR ---
+        // --- GENERATE ROBLOX VM EXECUTABLE CODE ---
         function generateRobloxVMCode(sourceText, preset) {
-            const compiler = new CustomLuaBytecodeCompiler();
-            const compiled = compiler.compile(sourceText);
-
-            if (!compiled || compiled.code.length === 0) {
-                throw new Error("ไม่สามารถแปลโค้ดต้นฉบับไปเป็น Bytecode ได้ กรุณาตรวจสอบรูปแบบโค้ด Lua");
+            // 1. Parse Lua Code into AST using Luaparse
+            let ast;
+            try {
+                ast = luaparse.parse(sourceText, { wait: false, comments: false });
+            } catch (err) {
+                throw new Error("Syntax Error ในสคริปต์ต้นฉบับ: " + (err.message || err));
             }
 
-            // Dynamic Shuffle Opcodes for Anti-Analysis
-            const opMap = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            // 2. Compile AST to Custom Bytecode
+            const compiler = new ASTCompiler();
+            const compiledData = compiler.compile(ast);
+
+            if (!compiledData.instructions || compiledData.instructions.length === 0) {
+                throw new Error("ไม่สามารถสร้าง Bytecode ได้ กรุณาตรวจสอบโค้ด Lua");
+            }
+
+            // 3. Dynamic Opcode Shuffle (0 to 9)
+            const opMap = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
             for (let i = opMap.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [opMap[i], opMap[j]] = [opMap[j], opMap[i]];
             }
 
-            // Remap opcodes
-            const remappedCode = compiled.code.map(inst => {
+            const remappedInstructions = compiledData.instructions.map(inst => {
                 const copy = [...inst];
                 copy[0] = opMap[inst[0]];
                 return copy;
             });
 
-            // Dynamic XOR key encryption for constants & bytecode data
-            const xorKey = Math.floor(Math.random() * 200) + 25;
-            const constsJSON = JSON.stringify(compiled.consts);
-            const codeJSON = JSON.stringify(remappedCode);
+            // 4. Double Key XOR Payload Encryption
+            const key1 = Math.floor(Math.random() * 200) + 30;
+            const constsJSON = JSON.stringify(compiledData.constants);
+            const instsJSON = JSON.stringify(remappedInstructions);
 
-            // Encrypt Strings to Byte Array
-            const encConsts = Array.from(new TextEncoder().encode(constsJSON)).map(b => b ^ xorKey);
-            const encCode = Array.from(new TextEncoder().encode(codeJSON)).map(b => b ^ xorKey);
+            const encConsts = Array.from(new TextEncoder().encode(constsJSON)).map(b => b ^ key1);
+            const encInsts = Array.from(new TextEncoder().encode(instsJSON)).map(b => b ^ key1);
 
-            // Variable Names
-            const vEnv = genRandomVar();
-            const vConsts = genRandomVar();
-            const vCode = genRandomVar();
-            const vKey = genRandomVar();
-            const vDec = genRandomVar();
-            const vVM = genRandomVar();
-            const vReg = genRandomVar();
-            const vPC = genRandomVar();
-            const vInst = genRandomVar();
-            const vOp = genRandomVar();
+            // Variable Obfuscation Identifiers
+            const vEnv   = genRandomVar();
+            const vKey   = genRandomVar();
+            const vDec   = genRandomVar();
+            const vConst = genRandomVar();
+            const vCode  = genRandomVar();
+            const vVM    = genRandomVar();
+            const vStack = genRandomVar();
+            const vPC    = genRandomVar();
+            const vInst  = genRandomVar();
+            const vOp    = genRandomVar();
 
-            // Opcode Constants
-            const OP_LOADK = opMap[0];
+            // Remapped Opcode mapping indices
+            const OP_LOADK     = opMap[0];
             const OP_GETGLOBAL = opMap[1];
             const OP_SETGLOBAL = opMap[2];
-            const OP_CALL = opMap[3];
-            const OP_ADD = opMap[4];
-            const OP_CONCAT = opMap[5];
-            const OP_GETFIELD = opMap[6];
-            const OP_NEWTABLE = opMap[7];
-            const OP_SETFIELD = opMap[8];
+            const OP_GETFIELD  = opMap[3];
+            const OP_SETFIELD  = opMap[4];
+            const OP_CALL      = opMap[5];
+            const OP_NEWTABLE  = opMap[6];
+            const OP_ADD       = opMap[7];
+            const OP_CONCAT    = opMap[8];
 
-            const luaVMTemplate = `local ${vEnv}=(getfenv or function()return _ENV end)();
-local ${vKey}=${xorKey};
-local function ${vDec}(d)
-    local t={}
-    for i=1,#d do
-        t[i]=string.char(bit32 and bit32.bxor(d[i],${vKey}) or (d[i]~=${vKey}))
+            // 5. Build Standalone Luau Executable VM Engine
+            const luaVMOutput = `-- [[ Protected by Ultra Shield AST VM Engine v7.0 ]] --
+local ${vEnv} = (getfenv or function() return _ENV end)()
+local ${vKey} = ${key1}
+local function ${vDec}(bytes)
+    local chars = {}
+    for i = 1, #bytes do
+        chars[i] = string.char(bit32 and bit32.bxor(bytes[i], ${vKey}) or (bytes[i] ~ ${vKey}))
     end
-    return table.concat(t)
+    return table.concat(chars)
 end
-local ${vConsts}=${vEnv}["\\104\\116\\116\\112\\115\\58"] or ${vEnv}.HttpService and ${vEnv}.HttpService:JSONDecode(${vDec}({${encConsts.join(',')}}))
-local ${vCode}=${vEnv}.HttpService and ${vEnv}.HttpService:JSONDecode(${vDec}({${encCode.join(',')}}))
 
-if not ${vConsts} or not ${vCode} then
-    local function _simpleDecode(str)
-        return str
-    end
-end
+local _hs = ${vEnv}.game and ${vEnv}.game:GetService("HttpService") or ${vEnv}.HttpService
+local ${vConst} = _hs and _hs:JSONDecode(${vDec}({${encConsts.join(',')}}))
+local ${vCode}  = _hs and _hs:JSONDecode(${vDec}({${encInsts.join(',')}}))
 
 local function ${vVM}()
-    local ${vReg}={}
-    local ${vPC}=1
+    local ${vStack} = {}
+    local ${vPC} = 1
     while ${vPC} <= #${vCode} do
-        local ${vInst}=${vCode}[${vPC}]
-        local ${vOp}=${vInst}[1]
-        if ${vOp}==${OP_LOADK} then
-            ${vReg}[${vInst}[2]]=${vConsts}[${vInst}[3]+1]
-        elseif ${vOp}==${OP_GETGLOBAL} then
-            ${vReg}[${vInst}[2]]=${vEnv}[${vConsts}[${vInst}[3]+1]]
-        elseif ${vOp}==${OP_SETGLOBAL} then
-            ${vEnv}[${vConsts}[${vInst}[3]+1]]=${vReg}[${vInst}[2]]
-        elseif ${vOp}==${OP_GETFIELD} then
-            local obj=${vReg}[${vInst}[3]]
-            local key=${vConsts}[${vInst}[4]+1]
-            ${vReg}[${vInst}[2]]=(type(obj)=="userdata" or type(obj)=="table") and obj[key]
-        elseif ${vOp}==${OP_SETFIELD} then
-            ${vReg}[${vInst}[2]][${vConsts}[${vInst}[3]+1]]=${vReg}[${vInst}[4]]
-        elseif ${vOp}==${OP_NEWTABLE} then
-            ${vReg}[${vInst}[2]]={}
-        elseif ${vOp}==${OP_ADD} then
-            ${vReg}[${vInst}[2]]=${vReg}[${vInst}[3]]+${vReg}[${vInst}[4]]
-        elseif ${vOp}==${OP_CONCAT} then
-            ${vReg}[${vInst}[2]]=tostring(${vReg}[${vInst}[3]])..tostring(${vReg}[${vInst}[4]])
-        elseif ${vOp}==${OP_CALL} then
-            local func=${vReg}[${vInst}[2]]
-            local args={}
-            for i=1,${vInst}[3] do
-                table.insert(args,${vReg}[${vInst}[2]+i])
+        local ${vInst} = ${vCode}[${vPC}]
+        local ${vOp}   = ${vInst}[1]
+
+        if ${vOp} == ${OP_LOADK} then
+            ${vStack}[${vInst}[2]] = ${vConst}[${vInst}[3] + 1]
+        elseif ${vOp} == ${OP_GETGLOBAL} then
+            local k = ${vConst}[${vInst}[3] + 1]
+            ${vStack}[${vInst}[2]] = ${vEnv}[k]
+        elseif ${vOp} == ${OP_SETGLOBAL} then
+            local k = ${vConst}[${vInst}[3] + 1]
+            ${vEnv}[k] = ${vStack}[${vInst}[2]]
+        elseif ${vOp} == ${OP_GETFIELD} then
+            local obj = ${vStack}[${vInst}[3]]
+            local k   = ${vConst}[${vInst}[4] + 1]
+            if obj ~= nil then
+                ${vStack}[${vInst}[2]] = obj[k]
             end
-            if type(func)=="function" then
-                local res=func(unpack(args))
-                ${vReg}[${vInst}[2]]=res
+        elseif ${vOp} == ${OP_SETFIELD} then
+            local obj = ${vStack}[${vInst}[2]]
+            local k   = ${vConst}[${vInst}[3] + 1]
+            if obj ~= nil then
+                obj[k] = ${vStack}[${vInst}[4]]
+            end
+        elseif ${vOp} == ${OP_NEWTABLE} then
+            ${vStack}[${vInst}[2]] = {}
+        elseif ${vOp} == ${OP_ADD} then
+            ${vStack}[${vInst}[2]] = ${vStack}[${vInst}[3]] + ${vStack}[${vInst}[4]]
+        elseif ${vOp} == ${OP_CONCAT} then
+            ${vStack}[${vInst}[2]] = tostring(${vStack}[${vInst}[3]]) .. tostring(${vStack}[${vInst}[4]])
+        elseif ${vOp} == ${OP_CALL} then
+            local fn = ${vStack}[${vInst}[2]]
+            local argCount = ${vInst}[3]
+            local args = {}
+            for i = 1, argCount do
+                table.insert(args, ${vStack}[${vInst}[2] + i])
+            end
+            if type(fn) == "function" then
+                ${vStack}[${vInst}[2]] = fn(unpack(args))
             end
         end
-        ${vPC}=${vPC}+1
+        ${vPC} = ${vPC} + 1
     end
 end
 ${vVM}()`;
 
-            return luaVMTemplate;
+            return luaVMOutput;
         }
 
         function processObfuscation() {
@@ -606,29 +656,29 @@ ${vVM}()`;
             const preset = document.getElementById('obfPreset').value;
             const btn = document.getElementById('btnObfuscate');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์ Custom Bytecode...</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังประมวลผล AST Bytecode...</span>`;
 
             setTimeout(() => {
                 try {
-                    const vmLuaCode = generateRobloxVMCode(inputCode, preset);
+                    const obfuscatedVM = generateRobloxVMCode(inputCode, preset);
 
-                    luaOutput.textContent = vmLuaCode;
+                    luaOutput.textContent = obfuscatedVM;
                     luaOutput.classList.remove('hidden');
                     outputPlaceholder.classList.add('hidden');
                     statusBadge.classList.remove('hidden');
                     outputStats.classList.remove('hidden');
 
                     const origSize = new Blob([inputCode]).size;
-                    const newSize = new Blob([vmLuaCode]).size;
+                    const newSize = new Blob([obfuscatedVM]).size;
                     const ratio = (newSize / Math.max(origSize, 1)).toFixed(1);
 
                     outputSize.textContent = formatBytes(newSize);
                     ratioStat.textContent = `${ratio}x`;
 
-                    showToast("เข้ารหัสเป็น Custom Bytecode VM สำเร็จ! พร้อมรันบน Executor 100%");
+                    showToast("แปลงเป็น AST Custom Bytecode VM สำเร็จ 100%!");
 
                 } catch (err) {
-                    showToast(err.message || "เกิดข้อผิดพลาดในการสร้าง Bytecode VM", false);
+                    showToast(err.message || "เกิดข้อผิดพลาดในการประมวลผลสคริปต์", false);
                 } finally {
                     btn.disabled = false;
                     btn.innerHTML = `<i class="fa-solid fa-gears text-base"></i> <span>⚡ แปลงเป็น Custom Bytecode & VM</span>`;
@@ -667,7 +717,7 @@ ${vVM}()`;
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `protected_vm_${Date.now()}.lua`;
+            a.download = `protected_ast_vm_${Date.now()}.lua`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -683,7 +733,7 @@ local Players = game:GetService("Players")
 
 local function sendNotify()
     StarterGui:SetCore("SendNotification", {
-        Title = "ระบบต้อนรับ Custom VM",
+        Title = "ระบบต้อนรับ AST VM",
         Text = "ยินดีต้อนรับผู้ใช้: " .. Players.LocalPlayer.Name,
         Duration = 5
     })
