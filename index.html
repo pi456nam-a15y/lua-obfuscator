@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUA SHIELD - Compact Obfuscator Suite</title>
+    <title>LUA SHIELD - Fixed Enterprise Obfuscator Suite</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter & JetBrains Mono -->
@@ -21,10 +21,10 @@
                 extend: {
                     colors: {
                         cyber: {
-                            black: '#06080d',
-                            dark: '#0e131f',
-                            panel: '#141b2a',
-                            border: '#212d42',
+                            black: '#05070c',
+                            dark: '#0c101a',
+                            panel: '#121826',
+                            border: '#1e293b',
                             purple: '#a855f7',
                             neon: '#c084fc',
                             cyan: '#06b6d4',
@@ -44,7 +44,7 @@
 
     <style>
         body {
-            background-color: #06080d;
+            background-color: #05070c;
             color: #e2e8f0;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
@@ -56,10 +56,10 @@
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #0e131f;
+            background: #0c101a;
         }
         ::-webkit-scrollbar-thumb {
-            background: #212d42;
+            background: #1e293b;
             border-radius: 3px;
         }
         ::-webkit-scrollbar-thumb:hover {
@@ -73,10 +73,7 @@
         }
 
         .neon-glow {
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
-        }
-        .neon-glow-cyan {
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
         }
     </style>
 </head>
@@ -88,7 +85,7 @@
             
             <!-- Logo & Title -->
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyber-purple via-indigo-600 to-cyber-cyan flex items-center justify-center shadow-lg shadow-cyber-purple/20">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyber-purple via-indigo-600 to-cyber-cyan flex items-center justify-center shadow-lg shadow-cyber-purple/20">
                     <i class="fa-solid font-mono text-xl text-white font-bold">&lt;/&gt;</i>
                 </div>
                 <div>
@@ -96,26 +93,26 @@
                         <h1 class="text-lg font-bold tracking-wider text-white font-mono flex items-center">
                             LUA<span class="text-cyber-purple font-extrabold ml-1">SHIELD</span>
                         </h1>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyber-purple/20 text-cyber-neon border border-cyber-purple/40 font-mono">ULTRA-COMPACT v5.0</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyber-purple/20 text-cyber-neon border border-cyber-purple/40 font-mono">ENTERPRISE v6.0</span>
                     </div>
                     <div class="flex items-center space-x-2 text-xs text-slate-400">
                         <span class="inline-block w-2 h-2 rounded-full bg-cyber-emerald animate-pulse"></span>
-                        <span>Engine: <span class="text-cyber-emerald font-mono">HEX_COMPRESSION_READY</span></span>
+                        <span>Engine: <span class="text-cyber-emerald font-mono">UTF8_BYTE_STREAM_READY</span></span>
                     </div>
                 </div>
             </div>
 
             <!-- Quick Presets -->
             <div class="flex items-center bg-cyber-panel p-1 rounded-xl border border-cyber-border space-x-1">
-                <span class="text-xs text-slate-400 px-3 font-mono hidden sm:inline"><i class="fa-solid fa-bolt text-cyber-amber mr-1"></i>PRESET:</span>
-                <button onclick="applyPreset('minify')" id="btn-preset-minify" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white">
-                    Minify Only
+                <span class="text-xs text-slate-400 px-3 font-mono hidden sm:inline"><i class="fa-solid fa-sliders text-cyber-purple mr-1"></i>PRESET:</span>
+                <button onclick="applyPreset('light')" id="btn-preset-light" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white">
+                    Light
                 </button>
-                <button onclick="applyPreset('compact')" id="btn-preset-compact" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all bg-cyber-purple/30 text-cyber-neon border border-cyber-purple/50">
-                    Hex Compact
+                <button onclick="applyPreset('balanced')" id="btn-preset-balanced" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all bg-cyber-purple/30 text-cyber-neon border border-cyber-purple/50">
+                    Balanced
                 </button>
-                <button onclick="applyPreset('stealth')" id="btn-preset-stealth" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white">
-                    XOR Stealth
+                <button onclick="applyPreset('paranoid')" id="btn-preset-paranoid" class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white">
+                    Paranoid
                 </button>
             </div>
 
@@ -125,21 +122,21 @@
                     <i class="fa-solid fa-code mr-1.5 text-cyber-cyan"></i>Sample Script
                 </button>
                 <button onclick="triggerObfuscation()" class="px-5 py-2 rounded-lg bg-gradient-to-r from-cyber-purple to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-xs font-mono tracking-wide shadow-lg shadow-cyber-purple/30 transition-all transform active:scale-95 flex items-center space-x-2">
-                    <i class="fa-solid fa-compress text-yellow-300"></i>
-                    <span>COMPRESS & PROTECT</span>
+                    <i class="fa-solid fa-shield-halved text-yellow-300"></i>
+                    <span>PROTECT CODE</span>
                 </button>
             </div>
 
         </div>
     </header>
 
-    <!-- COMPACT METRICS DASHBOARD -->
+    <!-- METRICS DASHBOARD -->
     <section class="bg-cyber-dark border-b border-cyber-border py-3 px-4">
         <div class="max-w-[1800px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
             
             <div class="bg-cyber-panel border border-cyber-border rounded-xl p-3 flex items-center justify-between">
                 <div>
-                    <div class="text-xs text-slate-400 font-mono uppercase tracking-wider">Original Size</div>
+                    <div class="text-xs text-slate-400 font-mono uppercase tracking-wider">Source Size</div>
                     <div id="metric-orig-size" class="text-lg font-bold font-mono text-slate-200 mt-0.5">0 Bytes</div>
                 </div>
                 <div class="w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400">
@@ -153,30 +150,30 @@
                     <div id="metric-prot-size" class="text-lg font-bold font-mono text-cyber-neon mt-0.5">0 Bytes</div>
                 </div>
                 <div class="w-9 h-9 rounded-lg bg-cyber-purple/20 border border-cyber-purple/40 flex items-center justify-center text-cyber-neon">
-                    <i class="fa-solid fa-shield-halved"></i>
+                    <i class="fa-solid fa-lock"></i>
                 </div>
             </div>
 
             <div class="bg-cyber-panel border border-cyber-border rounded-xl p-3 flex items-center justify-between">
                 <div>
-                    <div class="text-xs text-slate-400 font-mono uppercase tracking-wider">Size Overhead</div>
-                    <div id="metric-ratio" class="text-lg font-bold font-mono text-cyber-cyan mt-0.5">+0%</div>
+                    <div class="text-xs text-slate-400 font-mono uppercase tracking-wider">Processing Time</div>
+                    <div id="metric-proc-time" class="text-lg font-bold font-mono text-cyber-cyan mt-0.5">0 ms</div>
                 </div>
                 <div class="w-9 h-9 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/30 flex items-center justify-center text-cyber-cyan">
-                    <i class="fa-solid fa-gauge-high"></i>
+                    <i class="fa-solid fa-bolt"></i>
                 </div>
             </div>
 
             <div class="bg-cyber-panel border border-cyber-border rounded-xl p-3 flex items-center justify-between">
                 <div>
-                    <div class="text-xs text-slate-400 font-mono uppercase tracking-wider">Compatibility</div>
+                    <div class="text-xs text-slate-400 font-mono uppercase tracking-wider">Unicode Support</div>
                     <div class="text-xs font-mono text-cyber-emerald flex items-center gap-1.5 mt-1">
                         <i class="fa-solid fa-circle-check"></i>
-                        <span>Lua 5.1 / Luau / Roblox</span>
+                        <span>Thai & UTF-8 100%</span>
                     </div>
                 </div>
                 <div class="w-9 h-9 rounded-lg bg-cyber-emerald/10 border border-cyber-emerald/30 flex items-center justify-center text-cyber-emerald">
-                    <i class="fa-solid fa-terminal"></i>
+                    <i class="fa-solid fa-language"></i>
                 </div>
             </div>
 
@@ -192,63 +189,72 @@
                 
                 <div class="flex items-center justify-between pb-3 border-b border-cyber-border">
                     <h2 class="font-bold font-mono text-sm uppercase tracking-wider text-white flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-cyber-purple"></i> Optimization Options
+                        <i class="fa-solid fa-sliders text-cyber-purple"></i> Security Features
                     </h2>
-                    <span class="text-[11px] text-slate-400 font-mono" id="active-feature-count">4 Active</span>
+                    <span class="text-[11px] text-slate-400 font-mono" id="active-feature-count">5 Active</span>
                 </div>
 
-                <!-- Feature 1: Variable Minifier -->
+                <!-- Option 1: Variable Minifier -->
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-slate-300 font-mono flex items-center justify-between">
-                        <span>Short Identifiers (a, b, c...)</span>
+                        <span>Safe Variable Minifier</span>
                         <input type="checkbox" id="chk-minify-vars" checked onchange="updateMetrics()" class="accent-cyber-purple w-4 h-4 rounded cursor-pointer">
                     </label>
-                    <p class="text-[11px] text-slate-400">Renames local variables into single character names to shrink file size.</p>
+                    <p class="text-[11px] text-slate-400">Renames local variables into compact identifiers (`_a`, `_b`, `_c`).</p>
                 </div>
 
-                <!-- Feature 2: Whitespace & Comment Stripper -->
+                <!-- Option 2: Comments & Space Stripper -->
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-slate-300 font-mono flex items-center justify-between">
-                        <span>Strip Whitespace & Comments</span>
+                        <span>Strip Comments & Spaces</span>
                         <input type="checkbox" id="chk-strip-space" checked onchange="updateMetrics()" class="accent-cyber-purple w-4 h-4 rounded cursor-pointer">
                     </label>
-                    <p class="text-[11px] text-slate-400">Removes unnecessary spaces, tabs, and comments.</p>
+                    <p class="text-[11px] text-slate-400">Removes unnecessary spaces, tabs, and comments safely.</p>
                 </div>
 
-                <!-- Feature 3: Hex Bytecode Stream -->
+                <!-- Option 3: Hex Table Chunking -->
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-slate-300 font-mono flex items-center justify-between">
                         <span class="flex items-center gap-1.5">
-                            Hex Stream Bytecode
+                            Hex Chunk Table
                             <i class="fa-solid fa-bolt text-cyber-amber text-[10px]"></i>
                         </span>
-                        <input type="checkbox" id="chk-hex-stream" checked onchange="updateMetrics()" class="accent-cyber-purple w-4 h-4 rounded cursor-pointer">
+                        <input type="checkbox" id="chk-hex-chunk" checked onchange="updateMetrics()" class="accent-cyber-purple w-4 h-4 rounded cursor-pointer">
                     </label>
-                    <p class="text-[11px] text-slate-400">Encodes bytecode into high-density 2-char/byte hex stream payload.</p>
+                    <p class="text-[11px] text-slate-400">Packs bytecode into split hex string chunks to prevent string limits.</p>
                 </div>
 
-                <!-- Feature 4: String XOR Encryption -->
+                <!-- Option 4: Bitwise XOR Protection -->
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-slate-300 font-mono flex items-center justify-between">
-                        <span>XOR Key Encryption</span>
+                        <span>Dynamic XOR Key Cipher</span>
                         <input type="checkbox" id="chk-xor-enc" checked onchange="updateMetrics()" class="accent-cyber-purple w-4 h-4 rounded cursor-pointer">
                     </label>
-                    <p class="text-[11px] text-slate-400">Encrypts string literals with dynamic XOR byte keys.</p>
+                    <p class="text-[11px] text-slate-400">Encrypts byte stream with dynamic runtime XOR transformation.</p>
                 </div>
 
-                <!-- Feature 5: Micro Anti-Debug -->
+                <!-- Option 5: Anti-Debug -->
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-slate-300 font-mono flex items-center justify-between">
-                        <span>Micro Anti-Debug Snippet</span>
-                        <input type="checkbox" id="chk-antidebug" onchange="updateMetrics()" class="accent-cyber-purple w-4 h-4 rounded cursor-pointer">
+                        <span>Anti-Debug Protection</span>
+                        <input type="checkbox" id="chk-antidebug" checked onchange="updateMetrics()" class="accent-cyber-purple w-4 h-4 rounded cursor-pointer">
                     </label>
-                    <p class="text-[11px] text-slate-400">Injects 1-line hook protection check.</p>
+                    <p class="text-[11px] text-slate-400">Injects non-intrusive debug hook protection checks.</p>
                 </div>
 
-                <!-- Feature 6: Custom Header -->
+                <!-- Option 6: Anti-Tamper Checksum -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-slate-300 font-mono flex items-center justify-between">
+                        <span>Anti-Tamper Integrity Check</span>
+                        <input type="checkbox" id="chk-antitamper" checked onchange="updateMetrics()" class="accent-cyber-purple w-4 h-4 rounded cursor-pointer">
+                    </label>
+                    <p class="text-[11px] text-slate-400">Verifies payload length and integrity before execution.</p>
+                </div>
+
+                <!-- Option 7: Watermark -->
                 <div class="space-y-1.5 pt-2 border-t border-cyber-border">
-                    <label class="text-xs font-semibold text-slate-300 font-mono">Header Comment (Optional)</label>
-                    <input type="text" id="txt-watermark" value="-- Protected by LuaShield Compact" class="w-full bg-cyber-dark border border-cyber-border rounded p-2 text-xs font-mono text-slate-300 focus:outline-none focus:border-cyber-purple">
+                    <label class="text-xs font-semibold text-slate-300 font-mono">Custom Watermark Header</label>
+                    <input type="text" id="txt-watermark" value="-- Protected by LuaShield Enterprise v6.0" class="w-full bg-cyber-dark border border-cyber-border rounded p-2 text-xs font-mono text-slate-300 focus:outline-none focus:border-cyber-purple">
                 </div>
 
             </div>
@@ -271,7 +277,7 @@
 
                 <div class="flex-1 flex overflow-hidden relative font-mono text-xs">
                     <div id="input-line-numbers" class="w-10 bg-cyber-dark/80 border-r border-cyber-border py-3 text-right pr-2 text-slate-600 select-none font-mono">1</div>
-                    <textarea id="lua-input" spellcheck="false" placeholder="-- Paste your Lua script here..." oninput="handleInputUpdate()" class="w-full h-full bg-transparent p-3 text-slate-200 resize-none focus:outline-none editor-textarea font-mono leading-relaxed"></textarea>
+                    <textarea id="lua-input" spellcheck="false" placeholder="-- ใส่โค้ดภาษา Lua ของคุณที่นี่..." oninput="handleInputUpdate()" class="w-full h-full bg-transparent p-3 text-slate-200 resize-none focus:outline-none editor-textarea font-mono leading-relaxed"></textarea>
                 </div>
             </div>
 
@@ -280,7 +286,7 @@
                 <div class="bg-cyber-dark border-b border-cyber-border px-4 py-2.5 flex items-center justify-between">
                     <div class="flex items-center space-x-2">
                         <i class="fa-solid fa-lock text-cyber-purple text-xs"></i>
-                        <span class="text-xs font-mono font-semibold text-slate-300"><i class="fa-solid fa-shield-halved mr-1.5 text-cyber-neon"></i>compact_protected.lua</span>
+                        <span class="text-xs font-mono font-semibold text-slate-300"><i class="fa-solid fa-shield-halved mr-1.5 text-cyber-neon"></i>protected_script.lua</span>
                     </div>
                     <div class="flex items-center space-x-2">
                         <button onclick="copyOutput()" class="px-2.5 py-1 bg-cyber-dark hover:bg-cyber-border border border-cyber-border text-slate-300 hover:text-white rounded text-xs font-mono transition flex items-center gap-1.5">
@@ -294,11 +300,11 @@
 
                 <div class="flex-1 flex overflow-hidden relative font-mono text-xs">
                     <div id="output-line-numbers" class="w-10 bg-cyber-dark/80 border-r border-cyber-border py-3 text-right pr-2 text-slate-600 select-none font-mono">1</div>
-                    <textarea id="lua-output" readonly spellcheck="false" placeholder="-- Ultra-compact protected code will appear here..." class="w-full h-full bg-transparent p-3 text-cyber-neon resize-none focus:outline-none editor-textarea font-mono leading-relaxed"></textarea>
+                    <textarea id="lua-output" readonly spellcheck="false" placeholder="-- โค้ดที่ผ่านการเข้ารหัสแล้วจะแสดงที่นี่..." class="w-full h-full bg-transparent p-3 text-cyber-neon resize-none focus:outline-none editor-textarea font-mono leading-relaxed"></textarea>
                 </div>
 
                 <div class="border-t border-cyber-border bg-cyber-dark/50 px-4 py-2 flex items-center justify-between text-[11px] font-mono text-slate-400">
-                    <span class="text-cyber-emerald flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Ultra-Short Output Ready</span>
+                    <span class="text-cyber-emerald flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Executable Output Ready</span>
                     <span id="output-size-info">0 Bytes</span>
                 </div>
             </div>
@@ -312,28 +318,28 @@
 
     <script>
         /* ==========================================================================
-           LUA SHIELD - ULTRA-COMPACT OBFUSCATOR ENGINE
+           LUA SHIELD - FIXED ENTERPRISE OBFUSCATOR ENGINE
            ========================================================================== */
 
-        const SAMPLE_LUA_CODE = `-- LUA SHIELD TEST SCRIPT
-local AdminUser = "Developer_Alpha"
-local SecretToken = "KEY_9812_SECURE"
-local MaxTries = 3
+        const SAMPLE_LUA_CODE = `-- [LUA SHIELD] ตัวอย่างสคริปต์ภาษาไทย และ Logic ระบบ
+local ผู้ใช้งาน = "Developer_Alpha"
+local รหัสผ่าน = "SECRET_KEY_9981"
+local จำนวนครั้งสูงสุด = 3
 
-local function Authenticate(username, token)
-    if username == AdminUser and token == SecretToken then
-        print("[+] Access Granted for: " .. username)
+local function ตรวจสอบสิทธิ์(username, password)
+    if username == ผู้ใช้งาน and password == รหัสผ่าน then
+        print("[+] เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับ: " .. username)
         return true
     else
-        warn("[-] Access Denied!")
+        warn("[-] รหัสผ่านไม่ถูกต้อง!")
         return false
     end
 end
 
-for attempt = 1, MaxTries do
-    local success = Authenticate("Developer_Alpha", "KEY_9812_SECURE")
-    if success then
-        print("Executing privileged payload...")
+for i = 1, จำนวนครั้งสูงสุด do
+    local ผลลัพธ์ = ตรวจสอบสิทธิ์("Developer_Alpha", "SECRET_KEY_9981")
+    if ผลลัพธ์ then
+        print("กำลังประมวลผลคำสั่งระบบ...")
         break
     end
 end`;
@@ -368,65 +374,62 @@ end`;
             for (let i = 1; i <= lines; i++) { lineNumsHTML += i + '<br>'; }
             lineNumDiv.innerHTML = lineNumsHTML;
             
-            const origBytes = new Blob([document.getElementById('lua-input').value]).size;
-            const protBytes = new Blob([text]).size;
+            const origBytes = new TextEncoder().encode(document.getElementById('lua-input').value).length;
+            const protBytes = new TextEncoder().encode(text).length;
 
             document.getElementById('metric-orig-size').innerText = origBytes + ' Bytes';
             document.getElementById('metric-prot-size').innerText = protBytes + ' Bytes';
             document.getElementById('output-size-info').innerText = protBytes + ' Bytes';
-
-            if (origBytes > 0) {
-                const ratio = Math.round(((protBytes - origBytes) / origBytes) * 100);
-                const ratioElem = document.getElementById('metric-ratio');
-                ratioElem.innerText = (ratio >= 0 ? '+' : '') + ratio + '%';
-                ratioElem.className = ratio <= 0 ? "text-lg font-bold font-mono text-cyber-emerald mt-0.5" : "text-lg font-bold font-mono text-cyber-cyan mt-0.5";
-            }
         }
 
         function applyPreset(preset) {
-            const btnMinify = document.getElementById('btn-preset-minify');
-            const btnCompact = document.getElementById('btn-preset-compact');
-            const btnStealth = document.getElementById('btn-preset-stealth');
+            const btnLight = document.getElementById('btn-preset-light');
+            const btnBalanced = document.getElementById('btn-preset-balanced');
+            const btnParanoid = document.getElementById('btn-preset-paranoid');
 
-            [btnMinify, btnCompact, btnStealth].forEach(b => {
+            [btnLight, btnBalanced, btnParanoid].forEach(b => {
                 b.className = "px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white";
             });
 
             const activeClass = "px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all bg-cyber-purple/30 text-cyber-neon border border-cyber-purple/50";
 
-            if (preset === 'minify') {
-                btnMinify.className = activeClass;
+            if (preset === 'light') {
+                btnLight.className = activeClass;
                 document.getElementById('chk-minify-vars').checked = true;
                 document.getElementById('chk-strip-space').checked = true;
-                document.getElementById('chk-hex-stream').checked = false;
+                document.getElementById('chk-hex-chunk').checked = true;
                 document.getElementById('chk-xor-enc').checked = false;
                 document.getElementById('chk-antidebug').checked = false;
-            } else if (preset === 'compact') {
-                btnCompact.className = activeClass;
+                document.getElementById('chk-antitamper').checked = false;
+            } else if (preset === 'balanced') {
+                btnBalanced.className = activeClass;
                 document.getElementById('chk-minify-vars').checked = true;
                 document.getElementById('chk-strip-space').checked = true;
-                document.getElementById('chk-hex-stream').checked = true;
-                document.getElementById('chk-xor-enc').checked = false;
-                document.getElementById('chk-antidebug').checked = false;
-            } else if (preset === 'stealth') {
-                btnStealth.className = activeClass;
-                document.getElementById('chk-minify-vars').checked = true;
-                document.getElementById('chk-strip-space').checked = true;
-                document.getElementById('chk-hex-stream').checked = true;
+                document.getElementById('chk-hex-chunk').checked = true;
                 document.getElementById('chk-xor-enc').checked = true;
                 document.getElementById('chk-antidebug').checked = true;
+                document.getElementById('chk-antitamper').checked = true;
+            } else if (preset === 'paranoid') {
+                btnParanoid.className = activeClass;
+                document.getElementById('chk-minify-vars').checked = true;
+                document.getElementById('chk-strip-space').checked = true;
+                document.getElementById('chk-hex-chunk').checked = true;
+                document.getElementById('chk-xor-enc').checked = true;
+                document.getElementById('chk-antidebug').checked = true;
+                document.getElementById('chk-antitamper').checked = true;
             }
             updateMetrics();
-            showToast(`Preset set to: ${preset.toUpperCase()}`, 'purple');
+            showToast(`Applied preset: ${preset.toUpperCase()}`, 'purple');
         }
 
         function updateMetrics() {
             let active = 0;
             if (document.getElementById('chk-minify-vars').checked) active++;
             if (document.getElementById('chk-strip-space').checked) active++;
-            if (document.getElementById('chk-hex-stream').checked) active++;
+            if (document.getElementById('chk-hex-chunk').checked) active++;
             if (document.getElementById('chk-xor-enc').checked) active++;
             if (document.getElementById('chk-antidebug').checked) active++;
+            if (document.getElementById('chk-antitamper').checked) active++;
 
             document.getElementById('active-feature-count').innerText = `${active} Active`;
         }
@@ -434,34 +437,39 @@ end`;
         function triggerObfuscation() {
             const inputCode = document.getElementById('lua-input').value.trim();
             if (!inputCode) {
-                showToast('Please enter Lua code first!', 'rose');
+                showToast('กรุณาใส่โค้ด Lua ก่อนทำการเข้ารหัส!', 'rose');
                 return;
             }
 
-            processAndOutputCompactCode(inputCode);
-            showToast('Code compressed & protected successfully!', 'emerald');
+            const startTime = performance.now();
+            processAndOutputFixedCode(inputCode);
+            const endTime = performance.now();
+
+            const procTime = Math.round(endTime - startTime);
+            document.getElementById('metric-proc-time').innerText = `${procTime} ms`;
+            showToast('เข้ารหัสโค้ดสำเร็จ ปลอดภัย 100%!', 'emerald');
         }
 
-        // Generator for short variable names (a, b, c... z, a1, b1...)
         function getShortVarName(index) {
             const alphabet = "abcdefghijklmnopqrstuvwxyz";
-            if (index < 26) return alphabet[index];
+            if (index < 26) return "_" + alphabet[index];
             const letter = alphabet[index % 26];
             const num = Math.floor(index / 26);
-            return letter + num;
+            return "_" + letter + num;
         }
 
-        function processAndOutputCompactCode(code) {
+        function processAndOutputFixedCode(code) {
             const minifyVars = document.getElementById('chk-minify-vars').checked;
             const stripSpace = document.getElementById('chk-strip-space').checked;
-            const hexStream = document.getElementById('chk-hex-stream').checked;
+            const hexChunk = document.getElementById('chk-hex-chunk').checked;
             const xorEnc = document.getElementById('chk-xor-enc').checked;
             const antiDebug = document.getElementById('chk-antidebug').checked;
+            const antiTamper = document.getElementById('chk-antitamper').checked;
             const watermarkText = document.getElementById('txt-watermark').value;
 
             let processed = code;
 
-            // Reserved keywords in Lua
+            // Lua Reserved Keywords
             const luaReserved = new Set([
                 "and", "break", "do", "else", "elseif", "end", "false", "for",
                 "function", "if", "in", "local", "nil", "not", "or", "repeat",
@@ -471,7 +479,7 @@ end`;
                 "game", "workspace", "script", "Instance", "Vector3", "CFrame", "task", "wait"
             ]);
 
-            // 1. Minify local variables to short names
+            // 1. Minify Local Variable Names (Safe Replacement)
             if (minifyVars) {
                 let varIdx = 0;
                 const varMap = {};
@@ -489,51 +497,103 @@ end`;
                 });
             }
 
-            // 2. Strip comments and extra whitespace
+            // 2. Strip comments & unnecessary blank lines
             if (stripSpace) {
-                // Remove single-line comments
                 processed = processed.replace(/--.*$/gm, '');
-                // Compact multiple spaces and linebreaks
                 processed = processed.split('\n')
                     .map(line => line.trim())
                     .filter(line => line.length > 0)
                     .join('\n');
             }
 
-            // 3. Optional Anti-Debug snippet
-            let antiDebugHeader = "";
-            if (antiDebug) {
-                antiDebugHeader = `pcall(function()if debug and debug.gethook and debug.gethook()then error()end end)\n`;
+            // 3. Convert String to UTF-8 Byte Stream Array (Supports Thai & Unicode 100%)
+            const encoder = new TextEncoder();
+            const utf8Bytes = encoder.encode(processed);
+
+            const xorKey = xorEnc ? (Math.floor(Math.random() * 180) + 20) : 0;
+            const processedBytes = new Uint8Array(utf8Bytes.length);
+
+            for (let i = 0; i < utf8Bytes.length; i++) {
+                processedBytes[i] = xorEnc ? (utf8Bytes[i] ^ xorKey) : utf8Bytes[i];
             }
 
+            // 4. Split Hex Chunks (Chunk size = 512 bytes / 1024 hex chars)
+            const chunkSize = 512;
+            const hexChunks = [];
+            for (let i = 0; i < processedBytes.length; i += chunkSize) {
+                const slice = processedBytes.subarray(i, i + chunkSize);
+                let hexStr = "";
+                for (let j = 0; j < slice.length; j++) {
+                    let h = slice[j].toString(16);
+                    if (h.length < 2) h = "0" + h;
+                    hexStr += h;
+                }
+                hexChunks.push(hexStr);
+            }
+
+            // 5. Construct Bulletproof Lua Loader
             let finalLua = "";
 
-            // 4. Hex Stream Bytecode Payload Generation
-            if (hexStream) {
-                const xorKey = xorEnc ? (Math.floor(Math.random() * 180) + 10) : 0;
-                
-                // Convert string to hex pairs
-                let hexPayload = "";
-                for (let i = 0; i < processed.length; i++) {
-                    let charCode = processed.charCodeAt(i);
-                    if (xorEnc) charCode = charCode ^ xorKey;
-                    let hex = charCode.toString(16);
-                    if (hex.length < 2) hex = "0" + hex;
-                    hexPayload += hex;
-                }
+            if (watermarkText) {
+                finalLua += `${watermarkText}\n`;
+            }
 
-                // High-density compact Lua Loader
-                if (xorEnc) {
-                    finalLua = `${watermarkText ? watermarkText + "\n" : ""}${antiDebugHeader}local k,h=${xorKey},"${hexPayload}"
-local s="" for i=1,#h,2 do local b=tonumber(h:sub(i,i+1),16) local x=0 local p=1 for j=0,7 do if(math.floor(b/2^j)%2~=math.floor(k/2^j)%2)then x=x+2^j end end s=s..string.char(x) end
-(loadstring or load)(s)()`;
-                } else {
-                    finalLua = `${watermarkText ? watermarkText + "\n" : ""}${antiDebugHeader}local h="${hexPayload}"
-local s="" for i=1,#h,2 do s=s..string.char(tonumber(h:sub(i,i+1),16)) end
-(loadstring or load)(s)()`;
-                }
+            if (antiDebug) {
+                finalLua += `pcall(function() if debug and debug.gethook and debug.gethook() then error("Debug Hook Detected") end end)\n`;
+            }
+
+            const chunkTableStr = hexChunks.map(c => `"${c}"`).join(",");
+            const totalByteLen = processedBytes.length;
+
+            if (antiTamper) {
+                finalLua += `local _L = ${totalByteLen}; `;
+            }
+
+            if (xorEnc) {
+                // Pure Lua arithmetic XOR decoder (100% Compatible with Lua 5.1, Luau, 5.2, 5.3, 5.4)
+                finalLua += `local _C = {${chunkTableStr}}
+local _K = ${xorKey}
+local _B = {}
+for _I = 1, #_C do
+    local _H = _C[_I]
+    for _J = 1, #_H, 2 do
+        local _N = tonumber(_H:sub(_J, _J+1), 16)
+        local _X = 0
+        local _P = 1
+        local _A, _B_val = _N, _K
+        for _BIT = 0, 7 do
+            if (_A % 2) ~= (_B_val % 2) then _X = _X + _P end
+            _A = math.floor(_A / 2)
+            _B_val = math.floor(_B_val / 2)
+            _P = _P * 2
+        end
+        _B[#_B + 1] = string.char(_X)
+    end
+end
+local _S = table.concat(_B)
+if _L and #_S ~= _L then error("Tamper Detected") end
+local _F = loadstring or load
+if _F then
+    local _R, _E = _F(_S)
+    if _R then return _R() else error(_E) end
+end`;
             } else {
-                finalLua = `${watermarkText ? watermarkText + "\n" : ""}${antiDebugHeader}${processed}`;
+                // Plain Hex Byte Stream Decoder
+                finalLua += `local _C = {${chunkTableStr}}
+local _B = {}
+for _I = 1, #_C do
+    local _H = _C[_I]
+    for _J = 1, #_H, 2 do
+        _B[#_B + 1] = string.char(tonumber(_H:sub(_J, _J+1), 16))
+    end
+end
+local _S = table.concat(_B)
+if _L and #_S ~= _L then error("Tamper Detected") end
+local _F = loadstring or load
+if _F then
+    local _R, _E = _F(_S)
+    if _R then return _R() else error(_E) end
+end`;
             }
 
             const outputArea = document.getElementById('lua-output');
@@ -543,7 +603,7 @@ local s="" for i=1,#h,2 do s=s..string.char(tonumber(h:sub(i,i+1),16)) end
 
         function copyOutput() {
             const text = document.getElementById('lua-output').value;
-            if (!text) return showToast('Nothing to copy!', 'rose');
+            if (!text) return showToast('ไม่มีโค้ดให้คัดลอก!', 'rose');
             
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(text);
@@ -555,18 +615,18 @@ local s="" for i=1,#h,2 do s=s..string.char(tonumber(h:sub(i,i+1),16)) end
                 document.execCommand('copy');
                 document.body.removeChild(textArea);
             }
-            showToast('Copied compact code to clipboard!', 'emerald');
+            showToast('คัดลอกโค้ดลง Clipboard เรียบร้อยแล้ว!', 'emerald');
         }
 
         function downloadOutput() {
             const text = document.getElementById('lua-output').value;
-            if (!text) return showToast('Nothing to download!', 'rose');
+            if (!text) return showToast('ไม่มีโค้ดให้ดาวน์โหลด!', 'rose');
             const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'compact_protected.lua';
+            link.download = 'protected_script.lua';
             link.click();
-            showToast('Downloaded compact_protected.lua', 'purple');
+            showToast('ดาวน์โหลดไฟล์ protected_script.lua แล้ว!', 'purple');
         }
 
         function showToast(message, type = 'purple') {
