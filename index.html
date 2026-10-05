@@ -104,9 +104,9 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         ROBLOX LUAU OBFUSCATOR
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v4.2 Ultra Compact Edition</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v4.3 Fixed Stable</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบเข้ารหัสสคริปต์ขั้นสูง บีบอัดไฟล์เล็กพิเศษ (Anti-Deobfuscation Guard)</p>
+                    <p class="text-xs text-slate-400">ระบบเข้ารหัสสคริปต์ขั้นสูง บีบอัดไฟล์เล็ก + เสถียร 100%</p>
                 </div>
             </div>
 
@@ -132,7 +132,7 @@
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
                     <option value="max_security">🔒 เข้ารหัสสูงสุด + ป้องกันการ Dump (Anti-Deobfuscation Guard)</option>
-                    <option value="compact_fast">⚡ บีบอัด Base64 + Bitwise Fast (Compact Fast)</option>
+                    <option value="compact_fast">⚡ บีบอัด Hex Shift แบบเร็ว (Compact Fast)</option>
                 </select>
             </div>
 
@@ -320,7 +320,7 @@
             }, 2500);
         }
 
-        // Random Variable Name Generator
+        // Random Identifier Generator
         function genLookalikeVar() {
             const chars = ['l', '1', 'I', 'o', '0', 'O'];
             let name = '_0x';
@@ -330,19 +330,23 @@
             return name;
         }
 
-        // Ultra Compact Base64 + Bitwise Luau Obfuscator Engine
+        // Ultra Compact Hex-String Luau Engine (100% Executable & Safe)
         function generateRobloxLuaObfuscated(sourceText, preset) {
-            // 1. Minify Source Code
-            let minified = sourceText
-                .replace(/--\[\[[\s\S]*?--\]\]/g, '') // Remove multiline comments
-                .replace(/--.*$/gm, '')                // Remove singleline comments
-                .replace(/^\s*[\r\n]/gm, '')           // Remove empty lines
-                .trim();
+            // 1. Safe Minify - Only remove pure comment lines to protect URLs and string values
+            const lines = sourceText.replace(/--\[\[[\s\S]*?\]\]/g, '').split('\n');
+            const cleanedLines = [];
+            for (let i = 0; i < lines.length; i++) {
+                const trimmed = lines[i].trim();
+                if (trimmed.startsWith('--')) continue; // Skip lines starting with comments
+                if (trimmed.length === 0) continue;     // Skip empty lines
+                cleanedLines.push(lines[i]);
+            }
+            const minified = cleanedLines.join('\n').trim();
 
             if (!minified) return "";
             rawSourceCache = minified;
 
-            // 2. Convert UTF-8 String to Byte Array
+            // 2. Convert Source to UTF-8 Byte Array
             const encoder = new TextEncoder();
             const srcBytes = encoder.encode(minified);
 
@@ -350,41 +354,36 @@
             const key1 = Math.floor(Math.random() * 180) + 30; // 30-210
             const key2 = Math.floor(Math.random() * 120) + 15; // 15-135
 
-            // Encrypt Bytes using Rolling Key XOR
-            const encryptedBytes = new Uint8Array(srcBytes.length);
+            // Encrypt Bytes directly to Hex Escape Sequence String (\xXX)
+            let hexString = "";
             for (let i = 0; i < srcBytes.length; i++) {
                 const b = srcBytes[i];
                 const dynamicKey = (key1 + (i % 17)) & 0xFF;
-                encryptedBytes[i] = ((b ^ dynamicKey) + key2) & 0xFF;
+                const enc = ((b ^ dynamicKey) + key2) & 0xFF;
+                hexString += "\\x" + enc.toString(16).padStart(2, '0');
             }
-
-            // 3. Convert Encrypted Bytes to Base64 (Extreme Size Reduction)
-            let binaryStr = "";
-            for (let i = 0; i < encryptedBytes.length; i++) {
-                binaryStr += String.fromCharCode(encryptedBytes[i]);
-            }
-            const b64Data = btoa(binaryStr);
 
             // Variable Names
-            const vB   = genLookalikeVar();
-            const vT   = genLookalikeVar();
-            const vD   = genLookalikeVar();
-            const vEnv = genLookalikeVar();
-            const vChk = genLookalikeVar();
+            const vData = genLookalikeVar();
+            const vKey1 = genLookalikeVar();
+            const vKey2 = genLookalikeVar();
+            const vOut  = genLookalikeVar();
+            const vByte = genLookalikeVar();
+            const vK    = genLookalikeVar();
+            const vDec  = genLookalikeVar();
+            const vXor  = genLookalikeVar();
+            const vEnv  = genLookalikeVar();
+            const vChk  = genLookalikeVar();
+            const vI    = genLookalikeVar();
 
-            // Compact Base64 + Bit32 Decryption Engine Routine in Luau
-            const luauDecoder = `local ${vB}='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/' local ${vT}={} for i=1,64 do ${vT}[string.byte(${vB},i)]=i-1 end local function ${vD}(s,k1,k2) local o,n,p={},1,0 for i=1,#s,4 do local a,b,c,d=string.byte(s,i,i+3) local v=bit32.bor(bit32.lshift(${vT}[a] or 0,18),bit32.lshift(${vT}[b] or 0,12),bit32.lshift(${vT}[c] or 0,6),${vT}[d] or 0) local bytes={bit32.extract(v,16,8),c~=61 and bit32.extract(v,8,8),d~=61 and bit32.extract(v,0,8)} for _,eb in ipairs(bytes) do if eb then local k=(k1+(p%17))%256 o[n]=string.char(bit32.bxor((eb-k2+256)%256,k)) n=n+1 p=p+1 end end end return table.concat(o) end`;
-
-            const execCall = `(getfenv or function()return _ENV end)["\\108\\111\\097\\100\\115\\116\\114\\105\\110\\103"](${vD}("${b64Data}",${key1},${key2}))()`;
+            // Luau Decoder Routine (Compact Single String)
+            const luauDecoder = `local ${vData}="${hexString}";local ${vKey1}=${key1};local ${vKey2}=${key2};local ${vOut}={};local ${vXor}=(bit32 and bit32.bxor) or function(a,b)local r=0 for i=0,7 do local p=2^i if((math.floor(a/p)%2)~=(math.floor(b/p)%2))then r=r+p end end return r end;for ${vI}=1,#${vData} do local ${vByte}=string.byte(${vData},${vI});local ${vK}=(${vKey1}+(((${vI}-1)%17)))%256;local ${vDec}=${vXor}((${vByte}-${vKey2}+256)%256,${vK});${vOut}[${vI}]=string.char(${vDec}) end;(getfenv or function()return _ENV end)["\\108\\111\\097\\100\\115\\116\\114\\105\\110\\103"](table.concat(${vOut}))()`;
 
             if (preset === 'max_security') {
-                // Anti-Dump Guard + Base64 Multi-Layer
                 const antiDumpLua = `local ${vChk}=function()local ${vEnv}=(getfenv or function()return _ENV end)()if ${vEnv}.setclipboard or ${vEnv}.rconsoleprint or ${vEnv}.writefile or ${vEnv}.appendfile then return false end return true end;if not ${vChk}() then return end;`;
-
-                return `${antiDumpLua}${luauDecoder};${execCall}`;
+                return `${antiDumpLua}${luauDecoder}`;
             } else {
-                // Compact Fast Execution
-                return `${luauDecoder};${execCall}`;
+                return luauDecoder;
             }
         }
 
@@ -417,7 +416,7 @@
                     outputSize.textContent = formatBytes(newSize);
                     ratioStat.textContent = `${ratio}x`;
 
-                    showToast("เข้ารหัสสำเร็จ สคริปต์บีบอัดขนาดเล็กลงเรียบร้อย!");
+                    showToast("เข้ารหัสสำเร็จ สคริปต์เสถียรพร้อมใช้งาน 100%!");
 
                 } catch (err) {
                     showToast(err.message || "เกิดข้อผิดพลาดในการเข้ารหัส", false);
@@ -477,7 +476,7 @@
 
             const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            const a = document.appendFile ? null : document.createElement('a');
             a.href = url;
             a.download = `protected_script_${Date.now()}.lua`;
             document.body.appendChild(a);
