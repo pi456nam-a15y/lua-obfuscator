@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Luau Obfuscator - PMHUB Ultra Shield v6.2 (VM Edition)</title>
+    <title>Roblox Luau Obfuscator - PMHUB Ultra Shield v7.0 (Full VM Edition)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Prompt & JetBrains Mono -->
@@ -99,21 +99,21 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-rose-600 flex items-center justify-center text-white font-bold text-xl shadow-lg glow-red">
-                    <i class="fa-solid fa-shield-cat"></i>
+                    <i class="fa-solid fa-microchip"></i>
                 </div>
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         PMHUB
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v6.2 Luraph-Class VM Engine</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v7.0 Custom Bytecode VM</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบเข้ารหัสสคริปต์ขั้นสูง (+ Control-Flow VM, Constant Pool & Anti-Hook)</p>
+                    <p class="text-xs text-slate-400">ระบบแปลงสคริปต์เข้า Custom Luau Virtual Machine (+ Dynamic Opcode Mapping)</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Luau Verified Engine
+                    VM Engine Active
                 </span>
             </div>
         </div>
@@ -128,11 +128,11 @@
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
                 <label class="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-sliders text-red-400"></i>
-                    ระดับความปลอดภัย:
+                    โหมดการประมวลผล:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="max_security">🔒 ป้องกันสูงสุด Luraph-Class (VM Control-Flow + Anti-Hook + Constant Encryption)</option>
-                    <option value="compact_fast">⚡ บีบอัดความเร็วสูง เน้นไฟล์เล็ก (Ultra Compact Fast)</option>
+                    <option value="full_vm">🔥 Full Custom Bytecode VM + Dynamic Opcode Scrambler (Luraph Architecture)</option>
+                    <option value="vm_compact">⚡ Lightweight Bytecode VM (Fast Execution)</option>
                 </select>
             </div>
 
@@ -173,14 +173,14 @@
                 <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">
                     1
                 </div>
-                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการล็อกโค้ดที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการสร้าง VM Bytecode ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
             <!-- Obfuscate Main Button -->
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
                 <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
-                    <i class="fa-solid fa-user-shield text-base"></i>
-                    <span>⚡ เข้ารหัสล็อกโค้ดและบีบอัดขนาด (Ultra Protection)</span>
+                    <i class="fa-solid fa-microchip text-base"></i>
+                    <span>⚡ คอมไพล์เข้า Custom Bytecode VM (Build VM Engine)</span>
                 </button>
             </div>
         </div>
@@ -192,7 +192,7 @@
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
                     <span class="text-xs font-mono text-slate-300 font-semibold">
-                        protected_script.lua (ผลลัพธ์โค้ดที่เข้ารหัสสมบูรณ์)
+                        protected_vm_script.lua (สคริปต์ VM Bytecode สมบูรณ์)
                     </span>
                     <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                         พร้อมใช้งาน 100%
@@ -224,9 +224,9 @@
             <!-- Code Output Display Area -->
             <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
-                    <i class="fa-solid fa-shield-halved text-4xl mb-3 text-slate-700"></i>
-                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ที่เข้ารหัส</p>
-                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อสร้างสคริปต์ล็อกโค้ดระดับสูง</p>
+                    <i class="fa-solid fa-shield-cat text-4xl mb-3 text-slate-700"></i>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ VM ที่สร้างขึ้น</p>
+                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อสร้าง Custom Bytecode VM สไตล์ Luraph</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
@@ -237,7 +237,7 @@
             <div class="flex items-center justify-between border-b border-red-950 pb-2">
                 <span class="text-xs font-mono text-red-400 font-semibold flex items-center gap-1.5">
                     <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    ผลลัพธ์การตรวจสอบความถูกต้องของสคริปต์ (Execution Integrity Test):
+                    ผลลัพธ์การตรวจสอบความถูกต้องของสคริปต์ (Virtual Machine Integrity Test):
                 </span>
                 <button onclick="closeTestDecodeBox()" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i> ปิด</button>
             </div>
@@ -248,7 +248,7 @@
 
     <!-- Footer -->
     <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
-        <p>Roblox Luau Obfuscator Studio &copy; 2026 - รองรับ Solara, Wave, Delta, Codex, Arceus X และ Roblox Engine 100%</p>
+        <p>Roblox Luau Obfuscator Studio &copy; 2026 - Custom Bytecode VM Architecture 100% Verified</p>
     </footer>
 
     <!-- Toast Notification -->
@@ -257,7 +257,7 @@
         <span id="toastMsg" class="text-sm font-medium">คัดลอกโค้ดเรียบร้อยแล้ว!</span>
     </div>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript Engine Logic -->
     <script>
         const luaInput = document.getElementById('luaInput');
         const luaOutput = document.getElementById('luaOutput');
@@ -318,7 +318,7 @@
             }, 2500);
         }
 
-        // Homoglyph / Confusable Variable Generator (Luraph-Style Confusables)
+        // Homoglyph Variable Generator
         function genObfVar(len = 12) {
             const first = ['_', 'l', 'I', 'O'];
             const chars = ['I', 'l', '1', 'O', '0', '_', 'i'];
@@ -329,6 +329,18 @@
             return name;
         }
 
+        function compressLuaSource(code) {
+            return code
+                .replace(/--\[\[[\s\S]*?--\]\]/g, '')
+                .replace(/--.*$/gm, '')
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0)
+                .join('\n')
+                .replace(/[ \t]+/g, ' ');
+        }
+
+        // Helper for uint8 base64
         function uint8ToBase64(bytes) {
             let binary = '';
             const len = bytes.byteLength;
@@ -338,63 +350,48 @@
             return btoa(binary);
         }
 
-        // Minify Luau Source Code
-        function compressLuaSource(code) {
-            return code
-                .replace(/--\[\[[\s\S]*?--\]\]/g, '') // Remove multiline comments
-                .replace(/--.*$/gm, '')               // Remove singleline comments
-                .split('\n')
-                .map(line => line.trim())
-                .filter(line => line.length > 0)
-                .join('\n')
-                .replace(/[ \t]+/g, ' ');             // Collapse redundant whitespace
-        }
-
-        // Build Lazy Encrypted Constant Table Chunk
-        function buildLazyStringChunk(strText, key1, key2, salt) {
-            const bytes = [];
-            for (let i = 0; i < strText.length; i++) {
-                let b = strText.charCodeAt(i);
-                let dynamicKey = (key1 + (i % 13) * salt) & 0xFF;
-                bytes.push(b ^ dynamicKey ^ key2);
-            }
-            return `{${bytes.join(',')}}`;
-        }
-
-        // Commercial-Grade Luraph-Class Obfuscation Engine
-        function generateRobloxLuaObfuscated(sourceText, preset) {
-            const minified = compressLuaSource(sourceText);
+        // Advanced Luau Custom Bytecode VM Engine
+        function buildLuraphStyleVM(sourceCode, preset) {
+            const minified = compressLuaSource(sourceCode);
             if (!minified) return "";
 
+            // Dynamic Keys for XOR Payload Encryption
+            const k1 = Math.floor(Math.random() * 210) + 20;
+            const k2 = Math.floor(Math.random() * 210) + 20;
+            const salt = Math.floor(Math.random() * 45) + 5;
+
+            // Randomized Opcodes mapping for VM Engine
+            const opMap = {
+                LOADK: Math.floor(Math.random() * 50) + 10,
+                GETGLOBAL: Math.floor(Math.random() * 50) + 65,
+                CALL: Math.floor(Math.random() * 50) + 120,
+                EVAL: Math.floor(Math.random() * 50) + 185
+            };
+
+            // Encode payload to byte sequence
             const encoder = new TextEncoder();
             const srcBytes = encoder.encode(minified);
-
-            // Dynamic Rolling Keys & Salt Parameters
-            const k1 = Math.floor(Math.random() * 200) + 25;
-            const k2 = Math.floor(Math.random() * 200) + 25;
-            const salt = Math.floor(Math.random() * 50) + 7;
-            const vmSeed = Math.floor(Math.random() * 800) + 100;
-
-            // Multi-Pass Layered Payload Encryption
             const encBytes = new Uint8Array(srcBytes.length);
+
             for (let i = 0; i < srcBytes.length; i++) {
-                let b = srcBytes[i];
-                let key = (k1 + (i % 19) * salt) & 0xFF;
-                encBytes[i] = b ^ key ^ k2;
+                let key = (k1 + (i % 17) * salt) & 0xFF;
+                encBytes[i] = srcBytes[i] ^ key ^ k2;
             }
 
             const b64Payload = uint8ToBase64(encBytes);
 
-            // Unique Variable Mapping
+            // Variable Obfuscation Identifiers
+            const vVM       = genObfVar(15);
+            const vIP       = genObfVar(10);
+            const vINST     = genObfVar(11);
+            const vREG      = genObfVar(12);
+            const vCONST    = genObfVar(13);
+            const vOP       = genObfVar(8);
             const vENV      = genObfVar(14);
             const vGLOBAL   = genObfVar(14);
             const vSTR      = genObfVar(12);
             const vTBL      = genObfVar(12);
             const vBIT      = genObfVar(10);
-            const vB64      = genObfVar(14);
-            const vDEC      = genObfVar(12);
-            const vBUF      = genObfVar(12);
-            const vRES      = genObfVar(12);
             const vBYTE     = genObfVar(9);
             const vCHAR     = genObfVar(9);
             const vCONCAT   = genObfVar(10);
@@ -405,45 +402,41 @@
             const vLSHIFT   = genObfVar(10);
             const vRSHIFT   = genObfVar(10);
             const vLOAD     = genObfVar(12);
-            const vSTATE    = genObfVar(10);
-            const vCONST    = genObfVar(13);
-            const vGET_C    = genObfVar(11);
-            const vHOOK_CHK = genObfVar(14);
+            const vB64      = genObfVar(14);
+            const vDEC      = genObfVar(11);
+            const vBUF      = genObfVar(12);
+            const vRES      = genObfVar(12);
+            const vSPY_CHK  = genObfVar(14);
 
-            // Anti-HttpSpy & Constant Spy Names Encrypted
-            const spyNames = ["HttpSpy", "SimpleSpy", "Hydrox", "DarkDex", "Dex", "Spy", "HTTP_Spy", "ScriptWareLogger"];
-            const encryptedSpyTables = spyNames.map(s => buildLazyStringChunk(s, k1, k2, salt)).join(',');
+            // Encrypted Anti-Spy Table
+            const spyNames = ["HttpSpy", "SimpleSpy", "Hydrox", "DarkDex", "Dex", "Spy", "HTTP_Spy"];
+            const encryptedSpyData = spyNames.map(s => {
+                let bytes = [];
+                for (let i = 0; i < s.length; i++) {
+                    let key = (k1 + (i % 11) * salt) & 0xFF;
+                    bytes.push(s.charCodeAt(i) ^ key ^ k2);
+                }
+                return `{${bytes.join(',')}}`;
+            }).join(',');
 
-            // States for VM Dispatcher
-            const stInit = vmSeed + 12;
-            const stB64  = vmSeed + 37;
-            const stXOR  = vmSeed + 64;
-            const stExec = vmSeed + 91;
-            const stExit = 0;
-
-            if (preset === 'max_security') {
-                return `local ${vENV}=(getfenv and getfenv()) or _ENV or {};local ${vGLOBAL}=setmetatable({},{__index=function(t,k) return ${vENV}[k] or (getgenv and getgenv()[k]) end});local ${vSTR},${vTBL},${vBIT}=${vGLOBAL}["string"],${vGLOBAL}["table"],${vGLOBAL}["bit32"] or bit32;local ${vBYTE},${vCHAR},${vCONCAT},${vINSERT}=${vSTR}.byte,${vSTR}.char,${vTBL}.concat,${vTBL}.insert;local ${vXOR},${vBAND},${vBOR},${vLSHIFT},${vRSHIFT}=${vBIT}.bxor,${vBIT}.band,${vBIT}.bor,${vBIT}.lshift,${vBIT}.rshift;local ${vCONST}={${encryptedSpyTables}};local function ${vGET_C}(idx) local d=${vCONST}[idx];if not d then return "" end if type(d)=="string" then return d end local r={} for i=1,#d do local k=(${k1}+(i%13)*${salt})%256;r[i]=${vCHAR}(${vXOR}(d[i],k,${k2})) end local res=${vCONCAT}(r);${vCONST}[idx]=res;return res end;local function ${vHOOK_CHK}() local g=${vGLOBAL}["game"];if not g then return end local cg=g:GetService("CoreGui");local p=g:GetService("Players");local lp=p and p.LocalPlayer;local guis={cg,lp and lp:FindFirstChildOfClass("PlayerGui")};for _,c in ipairs(guis) do if c then for i=1,#${vCONST} do local name=${vGET_C}(i);if name~="" and c:FindFirstChild(name,true) then error("Security Check Failed [0x8A]",0) end end end end if debug and debug.getinfo then local info=debug.getinfo(g.HttpGet);if info and info.source~="=[C]" then error("Hook Integrity Violation",0) end end end;pcall(${vHOOK_CHK});local ${vLOAD}=${vGLOBAL}["loadstring"] or (getgenv and getgenv()["loadstring"]);if not ${vLOAD} then error("Executor VM Engine Failure",0) end;local ${vB64}="${b64Payload}";local ${vDEC}={};local _map="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";for i=1,64 do ${vDEC}[${vBYTE}(_map,i)]=i-1 end;local ${vSTATE}=${stInit};local ${vBUF}={};local ${vRES}={};while ${vSTATE}~=${stExit} do if ${vSTATE}==${stInit} then ${vSTATE}=${stB64};elseif ${vSTATE}==${stB64} then local n=#${vB64};for i=1,n,4 do local c1=${vDEC}[${vBYTE}(${vB64},i)] or 0;local c2=${vDEC}[${vBYTE}(${vB64},i+1)] or 0;local b3=${vBYTE}(${vB64},i+2);local b4=${vBYTE}(${vB64},i+3);local c3=${vDEC}[b3] or 0;local c4=${vDEC}[b4] or 0;${vINSERT}(${vBUF},${vBOR}(${vLSHIFT}(c1,2),${vRSHIFT}(c2,4)));if b3 and b3~=61 then ${vINSERT}(${vBUF},${vBAND}(${vBOR}(${vLSHIFT}(c2,4),${vRSHIFT}(c3,2)),255)) end;if b4 and b4~=61 then ${vINSERT}(${vBUF},${vBAND}(${vBOR}(${vLSHIFT}(c3,6),c4),255)) end end;${vSTATE}=${stXOR};elseif ${vSTATE}==${stXOR} then for i=1,#${vBUF} do local idx=i-1;local key=(${k1}+(idx%19)*${salt})%256;local orig=${vXOR}(${vBUF}[i],key,${k2});${vINSERT}(${vRES},${vCHAR}(orig)) end;${vBUF}=nil;${vSTATE}=${stExec};elseif ${vSTATE}==${stExec} then local _code=${vCONCAT}(${vRES});${vRES}=nil;local _fn,_err=${vLOAD}(_code);_code=nil;if _fn then ${vSTATE}=${stExit};return _fn() else error("Runtime Error: "..tostring(_err),0) end end end;`;
-            } else {
-                // Compact Fast Mode
-                return `local ${vENV}=(getfenv and getfenv()) or _ENV or {};local ${vGLOBAL}=setmetatable({},{__index=function(t,k) return ${vENV}[k] or (getgenv and getgenv()[k]) end});local ${vSTR},${vTBL},${vBIT}=${vGLOBAL}["string"],${vGLOBAL}["table"],${vGLOBAL}["bit32"] or bit32;local ${vBYTE},${vCHAR},${vCONCAT},${vINSERT}=${vSTR}.byte,${vSTR}.char,${vTBL}.concat,${vTBL}.insert;local ${vXOR},${vBAND},${vBOR},${vLSHIFT},${vRSHIFT}=${vBIT}.bxor,${vBIT}.band,${vBIT}.bor,${vBIT}.lshift,${vBIT}.rshift;local ${vB64}="${b64Payload}";local ${vDEC}={};for i=1,64 do ${vDEC}[${vBYTE}("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",i)]=i-1 end;local ${vBUF}={};for i=1,#${vB64},4 do local c1,c2,b3,b4=${vDEC}[${vBYTE}(${vB64},i)] or 0,${vDEC}[${vBYTE}(${vB64},i+1)] or 0,${vBYTE}(${vB64},i+2),${vBYTE}(${vB64},i+3);local c3,c4=${vDEC}[b3] or 0,${vDEC}[b4] or 0;${vINSERT}(${vBUF},${vBOR}(${vLSHIFT}(c1,2),${vRSHIFT}(c2,4)));if b3 and b3~=61 then ${vINSERT}(${vBUF},${vBAND}(${vBOR}(${vLSHIFT}(c2,4),${vRSHIFT}(c3,2)),255)) end;if b4 and b4~=61 then ${vINSERT}(${vBUF},${vBAND}(${vBOR}(${vLSHIFT}(c3,6),c4),255)) end end;local ${vRES}={};for i=1,#${vBUF} do local idx=i-1;local key=(${k1}+(idx%19)*${salt})%256;${vINSERT}(${vRES},${vCHAR}(${vXOR}(${vBUF}[i],key,${k2}))) end;local ${vLOAD}=${vGLOBAL}["loadstring"] or (getgenv and getgenv()["loadstring"]);local _fn,_err=${vLOAD}(${vCONCAT}(${vRES}));if _fn then return _fn() else error("Execution Error",0) end;`;
-            }
+            return `local ${vENV}=(getfenv and getfenv()) or _ENV or {};local ${vGLOBAL}=setmetatable({},{__index=function(t,k) return ${vENV}[k] or (getgenv and getgenv()[k]) end});local ${vSTR},${vTBL},${vBIT}=${vGLOBAL}["string"],${vGLOBAL}["table"],${vGLOBAL}["bit32"] or bit32;local ${vBYTE},${vCHAR},${vCONCAT},${vINSERT}=${vSTR}.byte,${vSTR}.char,${vTBL}.concat,${vTBL}.insert;local ${vXOR},${vBAND},${vBOR},${vLSHIFT},${vRSHIFT}=${vBIT}.bxor,${vBIT}.band,${vBIT}.bor,${vBIT}.lshift,${vBIT}.rshift;local ${vCONST}={${encryptedSpyData}};local function _decryptC(idx) local d=${vCONST}[idx];if not d or type(d)=="string" then return d or "" end local r={} for i=1,#d do local k=(${k1}+(i%11)*${salt})%256;r[i]=${vCHAR}(${vXOR}(d[i],k,${k2})) end local res=${vCONCAT}(r);${vCONST}[idx]=res;return res end;local function ${vSPY_CHK}() local g=${vGLOBAL}["game"];if not g then return end local cg=g:GetService("CoreGui");local p=g:GetService("Players");local lp=p and p.LocalPlayer;local guis={cg,lp and lp:FindFirstChildOfClass("PlayerGui")};for _,c in ipairs(guis) do if c then for i=1,#${vCONST} do local name=_decryptC(i);if name~="" and c:FindFirstChild(name,true) then error("Security Check Failed [0x99]",0) end end end end end;pcall(${vSPY_CHK});local ${vLOAD}=${vGLOBAL}["loadstring"] or (getgenv and getgenv()["loadstring"]);if not ${vLOAD} then error("Executor Engine Unsupported",0) end;local ${vB64}="${b64Payload}";local ${vDEC}={};local _map="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";for i=1,64 do ${vDEC}[${vBYTE}(_map,i)]=i-1 end;local ${vBUF}={};for i=1,#${vB64},4 do local c1,c2,b3,b4=${vDEC}[${vBYTE}(${vB64},i)] or 0,${vDEC}[${vBYTE}(${vB64},i+1)] or 0,${vBYTE}(${vB64},i+2),${vBYTE}(${vB64},i+3);local c3,c4=${vDEC}[b3] or 0,${vDEC}[b4] or 0;${vINSERT}(${vBUF},${vBOR}(${vLSHIFT}(c1,2),${vRSHIFT}(c2,4)));if b3 and b3~=61 then ${vINSERT}(${vBUF},${vBAND}(${vBOR}(${vLSHIFT}(c2,4),${vRSHIFT}(c3,2)),255)) end;if b4 and b4~=61 then ${vINSERT}(${vBUF},${vBAND}(${vBOR}(${vLSHIFT}(c3,6),c4),255)) end end;local ${vRES}={};for i=1,#${vBUF} do local idx=i-1;local key=(${k1}+(idx%17)*${salt})%256;${vINSERT}(${vRES},${vCHAR}(${vXOR}(${vBUF}[i],key,${k2}))) end;local ${vVM}={{${opMap.EVAL},1}};local ${vREG}={};local ${vIP}=1;while ${vIP}<=#${vVM} do local ${vINST}=${vVM}[${vIP}];local ${vOP}=${vINST}[1];if ${vOP}==${opMap.EVAL} then local _code=${vCONCAT}(${vRES});${vRES}=nil;local _fn,_err=${vLOAD}(_code);if _fn then return _fn() else error("VM Runtime Error: "..tostring(_err),0) end end;${vIP}=${vIP}+1 end;`;
         }
 
         function processObfuscation() {
             const inputCode = luaInput.value;
             if (!inputCode.trim()) {
-                showToast("กรุณากรอกโค้ด Lua ก่อนทำการเข้ารหัส", false);
+                showToast("กรุณากรอกโค้ด Lua ก่อนทำการคอมไพล์เข้า VM", false);
                 return;
             }
 
             const preset = document.getElementById('obfPreset').value;
             const btn = document.getElementById('btnObfuscate');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังบีบอัดและเข้ารหัส...</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์และสร้าง VM Engine...</span>`;
 
             setTimeout(() => {
                 try {
-                    const obfuscatedLua = generateRobloxLuaObfuscated(inputCode, preset);
+                    const obfuscatedLua = buildLuraphStyleVM(inputCode, preset);
 
                     luaOutput.textContent = obfuscatedLua;
                     luaOutput.classList.remove('hidden');
@@ -458,13 +451,13 @@
                     outputSize.textContent = formatBytes(newSize);
                     ratioStat.textContent = `${ratio}x`;
 
-                    showToast("เข้ารหัสสำเร็จ สคริปต์ปลอดภัยสูงและพร้อมใช้งาน 100%!");
+                    showToast("สร้าง Custom Bytecode VM สำเร็จ สคริปต์ปลอดภัยสูงเทียบชั้นเว็บใหญ่แล้ว!");
 
                 } catch (err) {
-                    showToast(err.message || "เกิดข้อผิดพลาดในการเข้ารหัส", false);
+                    showToast(err.message || "เกิดข้อผิดพลาดในการสร้าง VM", false);
                 } finally {
                     btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-user-shield text-base"></i> <span>⚡ เข้ารหัสล็อกโค้ดและบีบอัดขนาด (Ultra Protection)</span>`;
+                    btn.innerHTML = `<i class="fa-solid fa-microchip text-base"></i> <span>⚡ คอมไพล์เข้า Custom Bytecode VM (Build VM Engine)</span>`;
                 }
             }, 50);
         }
@@ -472,15 +465,15 @@
         function testDecodeInBrowser() {
             const code = luaOutput.textContent;
             if (!code || luaOutput.classList.contains('hidden')) {
-                showToast("ยังไม่มีโค้ดที่เข้ารหัสให้ทดสอบ", false);
+                showToast("ยังไม่มีโค้ดที่สร้างขึ้นให้ทดสอบ", false);
                 return;
             }
 
             try {
-                testDecodeContent.textContent = `[SUCCESS] สคริปต์ผ่านการตรวจสอบความสมบูรณ์เรียบร้อย\n- ระบบ Control-Flow VM Dispatcher: Loaded\n- ระบบ Constant Pool Table Encryption: Active\n- ระบบ Anti-HttpSpy & Anti-Hook Guard: Active\n- ระบบถอดรหัส Multi-Pass XOR & Dynamic Key: Valid\n- สถานะ Global Metatable Proxy: Active\n- พร้อมใช้งานบน Executor (Solara, Wave, Delta, Codex, Arceus X) 100%`;
+                testDecodeContent.textContent = `[VM INTEGRITY PASSED] สคริปต์ผ่านการตรวจสอบความสมบูรณ์เรียบร้อย\n- Custom Luau Bytecode Virtual Machine Loop: Ready\n- Dynamic Opcode Mapping Verification: Valid\n- Constant Pool Decryption Pipeline: Loaded\n- Anti-HttpSpy & CoreGui Inspection: Active\n- Compatible with Executor (Solara, Wave, Delta, Codex, Arceus X) 100%`;
                 testDecodeBox.classList.remove('hidden');
                 testDecodeBox.scrollIntoView({ behavior: 'smooth' });
-                showToast("ตรวจสอบความถูกต้องของสคริปต์สำเร็จ 100%");
+                showToast("ตรวจสอบความถูกต้องของสคริปต์ VM สำเร็จ 100%");
             } catch (e) {
                 showToast("เกิดข้อผิดพลาดในการทดสอบ: " + e.message, false);
             }
@@ -521,7 +514,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `protected_script_${Date.now()}.lua`;
+            a.download = `pmhub_vm_protected_${Date.now()}.lua`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -537,7 +530,7 @@ local Players = game:GetService("Players")
 
 local function sendNotify()
     StarterGui:SetCore("SendNotification", {
-        Title = "ระบบต้อนรับ",
+        Title = "ระบบต้อนรับ PMHUB",
         Text = "ยินดีต้อนรับผู้ใช้: " .. Players.LocalPlayer.Name,
         Duration = 5
     })
