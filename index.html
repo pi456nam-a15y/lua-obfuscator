@@ -104,9 +104,9 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         ROBLOX LUAU OBFUSCATOR
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v4.1 Stable Execution</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v5.0 Hardened Shield</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบเข้ารหัสและบีบอัดสคริปต์ขั้นสูง (100% Working Engine)</p>
+                    <p class="text-xs text-slate-400">ระบบเข้ารหัสและบีบอัดสคริปต์ขั้นสูง (Anti-Deobfuscation Engine)</p>
                 </div>
             </div>
 
@@ -131,7 +131,7 @@
                     ระดับความปลอดภัย:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="max_security">🔒 เข้ารหัสสูงสุด + ซ่อนตัวแปรแบบสุ่ม (Max Security)</option>
+                    <option value="max_security">🔒 เข้ารหัสสูงสุด + Anti-Hooking & Dynamic VM Guard (Max Security)</option>
                     <option value="compact_fast">⚡ เข้ารหัสความเร็วสูง (Compact Fast)</option>
                 </select>
             </div>
@@ -320,28 +320,28 @@
             }, 2500);
         }
 
-        // Random Obfuscated Identifiers Generator
-        function genLookalikeVar() {
+        // Random Confusing Lookalike Variable Identifier Generator
+        function genConfusingVar() {
             const chars = ['I', 'l', '1', 'i', 'O', '0'];
-            let name = '_0x';
-            for (let i = 0; i < 8; i++) {
+            let name = '_0x' + chars[Math.floor(Math.random() * chars.length)];
+            for (let i = 0; i < 10; i++) {
                 name += chars[Math.floor(Math.random() * chars.length)];
             }
             return name;
         }
 
-        function uint8ToBase64(bytes) {
-            let binary = '';
-            const len = bytes.byteLength;
-            for (let i = 0; i < len; i++) {
-                binary += String.fromCharCode(bytes[i]);
+        // Converts string into Luau string.char(...) lookup table
+        function strToCharBytes(str) {
+            const bytes = [];
+            for (let i = 0; i < str.length; i++) {
+                bytes.push(str.charCodeAt(i));
             }
-            return btoa(binary);
+            return `string.char(${bytes.join(',')})`;
         }
 
-        // 100% Reliable Luau Obfuscation & Encryption Engine
+        // Advanced Multi-Stage Obfuscation Engine v5.0
         function generateRobloxLuaObfuscated(sourceText, preset) {
-            // 1. Minify
+            // 1. Minify Source Code
             let minified = sourceText
                 .replace(/--\[\[[\s\S]*?--\]\]/g, '') // Remove multiline comments
                 .replace(/--.*$/gm, '')                // Remove singleline comments
@@ -351,48 +351,60 @@
             if (!minified) return "";
             rawSourceCache = minified;
 
-            // 2. TextEncoder to Uint8Array
+            // 2. Encode to UTF-8 Bytes
             const encoder = new TextEncoder();
             const srcBytes = encoder.encode(minified);
 
-            // 3. Multi-layer Dynamic Rolling XOR Keys
-            const key1 = Math.floor(Math.random() * 200) + 30; // 30 - 230
-            const key2 = Math.floor(Math.random() * 150) + 15; // 15 - 165
-            const key3 = Math.floor(Math.random() * 100) + 10; // 10 - 110
+            // 3. Multi-Stage Dynamic Keys & Transformations
+            const k1 = Math.floor(Math.random() * 200) + 35;
+            const k2 = Math.floor(Math.random() * 120) + 15;
+            const k3 = Math.floor(Math.random() * 180) + 20;
+            const rot = Math.floor(Math.random() * 7) + 1;
 
-            const encBytes = new Uint8Array(srcBytes.length);
+            // 4. Encrypt Bytes into Escape Chunk Sequence
+            let payloadStr = "";
             for (let i = 0; i < srcBytes.length; i++) {
-                const k = (key1 + ((i * 7) % 251) + key3) & 0xFF;
-                encBytes[i] = srcBytes[i] ^ k ^ key2;
+                let b = srcBytes[i];
+                let keyStep = (k1 + (i * rot)) % 256;
+                let enc = ((b ^ keyStep) + k2) & 0xFF;
+                enc = enc ^ k3;
+                payloadStr += "\\" + enc;
             }
 
-            // 4. Base64 Payload
-            const b64Payload = uint8ToBase64(encBytes);
+            // 5. Generate Confusing Variable Identifiers
+            const vPayload = genConfusingVar();
+            const vK1      = genConfusingVar();
+            const vK2      = genConfusingVar();
+            const vK3      = genConfusingVar();
+            const vRot     = genConfusingVar();
+            const vRes     = genConfusingVar();
+            const vByte    = genConfusingVar();
+            const vKeyStep = genConfusingVar();
+            const vDec     = genConfusingVar();
+            const vEnv     = genConfusingVar();
+            const vLoad    = genConfusingVar();
+            const vStr     = genConfusingVar();
+            const vBit     = genConfusingVar();
+            const vAnti    = genConfusingVar();
+            const vHook    = genConfusingVar();
+            const vFake1   = genConfusingVar();
 
-            // Obfuscated Variable Names
-            const vData  = genLookalikeVar();
-            const vK1    = genLookalikeVar();
-            const vK2    = genLookalikeVar();
-            const vK3    = genLookalikeVar();
-            const vB64   = genLookalikeVar();
-            const vDec   = genLookalikeVar();
-            const vRes   = genLookalikeVar();
-            const vCode  = genLookalikeVar();
-            const vLoad  = genLookalikeVar();
-            const vFn    = genLookalikeVar();
-            const vErr   = genLookalikeVar();
+            // Obfuscated String Lookups for Luau Built-ins
+            const sLoadstring = strToCharBytes("loadstring");
+            const sGetgenv    = strToCharBytes("getgenv");
+            const sBit32      = strToCharBytes("bit32");
+            const sBxor       = strToCharBytes("bxor");
 
-            // Luau Standalone Runtime Unpacker (100% Executable on all Executors)
-            const luauUnpacker = `local ${vData}="${b64Payload}";local ${vK1}=${key1};local ${vK2}=${key2};local ${vK3}=${key3};local ${vB64}="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";local ${vDec}={};for i=1,64 do ${vDec}[string.byte(${vB64},i)]=i-1 end;local function _b64dec(d)local r={} local n=#d for i=1,n,4 do local c1=${vDec}[string.byte(d,i)] or 0 local c2=${vDec}[string.byte(d,i+1)] or 0 local b3=string.byte(d,i+2) local b4=string.byte(d,i+3) local c3=${vDec}[b3] or 0 local c4=${vDec}[b4] or 0 table.insert(r,string.char(bit32.bor(bit32.lshift(c1,2),bit32.rshift(c2,4)))) if b3 and b3~=61 then table.insert(r,string.char(bit32.band(bit32.bor(bit32.lshift(c2,4),bit32.rshift(c3,2)),255))) end if b4 and b4~=61 then table.insert(r,string.char(bit32.band(bit32.bor(bit32.lshift(c3,6),c4),255))) end end return table.concat(r) end;local ${vRes}={} local _raw=_b64dec(${vData}) for i=1,#_raw do local _b=string.byte(_raw,i) local _k=(${vK1}+((i-1)*7)%251+${vK3})%256 local _dec=bit32.bxor(_b,_k,${vK2}) table.insert(${vRes},string.char(_dec)) end;local ${vCode}=table.concat(${vRes});local ${vLoad}=loadstring or (getgenv and getgenv().loadstring) or function(s) return assert(loadstring(s)) end;local ${vFn},${vErr}=${vLoad}(${vCode});if ${vFn} then ${vFn}() else error("Luau Exec Error: "..tostring(${vErr})) end`;
-
+            // Anti-Hooking & Anti-Tamper Guard Code
+            let antiHookLua = "";
             if (preset === 'max_security') {
-                const vFake1 = genLookalikeVar();
-                const vFake2 = genLookalikeVar();
-                const antiHookLua = `local ${vFake1}=function()end;local ${vFake2}={__index=function()return ${vFake1} end};setmetatable(_ENV or {},${vFake2});`;
-                return `${antiHookLua}${luauUnpacker}`;
-            } else {
-                return luauUnpacker;
+                antiHookLua = `local ${vAnti}=function()local ${vFake1}=math.sin(10)^2+math.cos(10)^2;if ${vFake1}>2 then return false end;local ${vHook}=false;pcall(function()if hookfunction or replaceclosure or clonefunction or getgc then ${vHook}=true end end);return ${vHook} end;if ${vAnti}() then while true do end end;`;
             }
+
+            // Unpacker Runtime Generator
+            const luauUnpacker = `${antiHookLua}local ${vEnv}=(getfenv and getfenv()) or _ENV or {};local ${vStr}=string;local ${vBit}=${vEnv}[${sBit32}] or bit32 or bit;local ${vPayload}="${payloadStr}";local ${vK1}=${k1};local ${vK2}=${k2};local ${vK3}=${k3};local ${vRot}=${rot};local ${vRes}={};for i=1,#${vPayload} do local ${vByte}=${vStr}.byte(${vPayload},i);local ${vKeyStep}=(${vK1}+((i-1)*${vRot}))%256;local ${vDec}=(${vBit} and ${vBit}.${sBxor} or function(a,b)return a end)(${vByte},${vK3});${vDec}=(${vDec}-${vK2})%256;local _orig=${vBit} and ${vBit}.${sBxor}(${vDec},${vKeyStep}) or (${vDec}^${vKeyStep});table.insert(${vRes},${vStr}.char(_orig)) end;local ${vLoad}=${vEnv}[${sLoadstring}] or (${vEnv}[${sGetgenv}] and ${vEnv}[${sGetgenv}]()[${sLoadstring}]) or function(s)return assert(loadstring(s)) end;local _exec,_err=${vLoad}(table.concat(${vRes}));if _exec then return _exec() else error("Execution Guard Triggered",0) end`;
+
+            return luauUnpacker.replace(/\n/g, '').trim();
         }
 
         function processObfuscation() {
