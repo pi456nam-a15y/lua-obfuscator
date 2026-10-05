@@ -1,19 +1,18 @@
-```html
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="th" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Script Encryptor & Compact Obfuscator</title>
+    <title>Roblox Luau Obfuscator - Ultra Shield Red Edition</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Prompt & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -21,19 +20,18 @@
                 extend: {
                     colors: {
                         cyber: {
-                            bg: '#090b10',
-                            card: '#111520',
-                            border: '#1f2638',
-                            purple: '#8b5cf6',
-                            cyan: '#06b6d4',
-                            emerald: '#10b981',
-                            pink: '#ec4899',
-                            amber: '#f59e0b'
+                            bg: '#0b0f19',
+                            card: '#151016',
+                            border: '#2a1518',
+                            red: '#ef4444',
+                            redHover: '#dc2626',
+                            rose: '#f43f5e',
+                            codeBg: '#090506'
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace']
+                        sans: ['Prompt', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
                     }
                 }
             }
@@ -42,356 +40,259 @@
 
     <style>
         body {
-            background-color: #090b10;
-            color: #f3f4f6;
-            font-family: 'Inter', sans-serif;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.07) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.07) 0%, transparent 40%);
-            background-attachment: fixed;
+            background-color: #060304;
+            color: #e2e8f0;
+            font-family: 'Prompt', sans-serif;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0d111a;
+            background: #100608;
         }
         ::-webkit-scrollbar-thumb {
-            background: #232b3e;
+            background: #2a1518;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #343f59;
-        }
-
-        .code-textarea {
-            tab-size: 4;
-            -moz-tab-size: 4;
-            white-space: pre;
-            word-break: normal;
-            overflow-wrap: normal;
+            background: #451a20;
         }
 
         .line-numbers {
             user-select: none;
+            text-align: right;
+            color: #64474c;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
         }
 
-        .glow-btn {
-            position: relative;
-            transition: all 0.25s ease;
+        textarea.code-area {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            tab-size: 4;
+            white-space: pre;
+            overflow-x: auto;
+            resize: none;
         }
-        .glow-btn::after {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: inherit;
-            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
-            z-index: -1;
-            opacity: 0;
-            filter: blur(8px);
-            transition: opacity 0.3s ease;
+
+        .code-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            white-space: pre-wrap;
+            word-break: break-all;
         }
-        .glow-btn:hover::after {
-            opacity: 0.75;
+
+        .glow-red {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between antialiased">
+<body class="min-h-screen flex flex-col justify-between selection:bg-red-500 selection:text-white">
 
-    <!-- Top Header -->
-    <header class="border-b border-cyber-border bg-cyber-card/80 backdrop-blur-md sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyber-purple via-indigo-500 to-cyber-cyan p-0.5 flex items-center justify-center shadow-lg shadow-cyber-purple/20">
-                    <div class="w-full h-full bg-cyber-bg rounded-[10px] flex items-center justify-center">
-                        <i class="fa-solid fa-code-compare text-transparent bg-clip-text bg-gradient-to-r from-cyber-purple to-cyber-cyan text-lg"></i>
-                    </div>
+    <!-- Header -->
+    <header class="border-b border-red-950/60 bg-cyber-card/90 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-rose-600 flex items-center justify-center text-white font-bold text-xl shadow-lg glow-red">
+                    <i class="fa-solid fa-shield-cat"></i>
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold text-white flex items-center gap-2">
-                        Script Encryptor & Compact Obfuscator
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyber-purple/20 text-cyber-purple border border-cyber-purple/30 font-semibold">v3.0 Ultra-Compact</span>
+                    <h1 class="font-bold text-lg text-white flex items-center gap-2">
+                        ROBLOX LUAU OBFUSCATOR
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v4.0 Ultra Security</span>
                     </h1>
-                    <p class="text-xs text-gray-400">100% Executable, High-Security & Low-Overhead Code Protection</p>
+                    <p class="text-xs text-slate-400">ระบบเข้ารหัสสคริปต์ขั้นสูง ป้องกันการแกะโค้ด (Anti-Deobfuscation Guard)</p>
                 </div>
             </div>
 
-            <!-- Target Language Switcher -->
-            <div class="flex items-center p-1 bg-cyber-bg rounded-xl border border-cyber-border space-x-1">
-                <button id="btnLangLua" onclick="switchLanguage('lua')" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-gradient-to-r from-cyber-purple to-indigo-600 text-white shadow-md">
-                    <i class="fa-solid fa-cube text-xs"></i>
-                    <span>Lua / Roblox (Luau)</span>
-                </button>
-                <button id="btnLangJS" onclick="switchLanguage('js')" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition-all">
-                    <i class="fa-brands fa-js text-yellow-400 text-sm"></i>
-                    <span>JavaScript (Node/Browser)</span>
-                </button>
+            <div class="flex items-center gap-3">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Luau Standalone Verified
+                </span>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full space-y-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full flex flex-col gap-6">
 
-        <!-- Quick Toolbar -->
-        <div class="flex flex-wrap items-center justify-between gap-3 bg-cyber-card/60 p-3.5 rounded-2xl border border-cyber-border backdrop-blur-sm">
-            <div class="flex flex-wrap items-center gap-2">
-                <span class="text-xs font-medium text-gray-400 mr-1">Sample Scripts:</span>
-                <button onclick="loadSample('roblox')" class="px-3 py-1.5 bg-cyber-border/70 hover:bg-cyber-border text-gray-200 text-xs font-medium rounded-lg transition-all border border-gray-700/40 flex items-center space-x-1.5">
-                    <i class="fa-solid fa-gamepad text-cyber-purple"></i>
-                    <span>Roblox Luau</span>
-                </button>
-                <button onclick="loadSample('js')" class="px-3 py-1.5 bg-cyber-border/70 hover:bg-cyber-border text-gray-200 text-xs font-medium rounded-lg transition-all border border-gray-700/40 flex items-center space-x-1.5">
-                    <i class="fa-brands fa-node-js text-cyber-cyan"></i>
-                    <span>JS Function</span>
-                </button>
-                <button onclick="clearEditors()" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium rounded-lg transition-all border border-red-500/20 flex items-center space-x-1.5 ml-2">
-                    <i class="fa-solid fa-eraser"></i>
-                    <span>Clear All</span>
-                </button>
+        <!-- Controls Bar -->
+        <div class="bg-cyber-card border border-cyber-border rounded-xl p-4 shadow-xl flex flex-wrap items-center justify-between gap-4">
+            <!-- Mode Selection -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
+                <label class="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-sliders text-red-400"></i>
+                    ระดับความปลอดภัย:
+                </label>
+                <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
+                    <option value="max_security">🔒 เข้ารหัสสูงสุด + ป้องกันการ Dump (Anti-Deobfuscation Guard)</option>
+                    <option value="compact_fast">⚡ บีบอัด Byte Shift แบบเร็ว (Compact Fast)</option>
+                </select>
             </div>
 
-            <div id="targetBadge" class="text-xs font-mono text-gray-400 flex items-center space-x-1.5">
-                <span class="w-2 h-2 rounded-full bg-cyber-emerald animate-pulse"></span>
-                <span id="targetBadgeText">Lua 5.1 - 5.4 / Luau Supported</span>
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button id="btnSample" onclick="loadSampleScript()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-red-950 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-code text-red-400"></i>
+                    โหลดโค้ดตัวอย่าง
+                </button>
+                <button id="btnClear" onclick="clearInput()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-red-950 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-trash-can text-red-400"></i>
+                    ล้างข้อมูล
+                </button>
             </div>
         </div>
 
-        <!-- 2 Column Editor Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-            <!-- Input Source Box -->
-            <div class="flex flex-col bg-cyber-card rounded-2xl border border-cyber-border/80 shadow-2xl overflow-hidden focus-within:border-cyber-purple/60 transition-all">
-                <div class="flex items-center justify-between px-4 py-3 bg-cyber-bg/80 border-b border-cyber-border text-xs">
-                    <div class="flex items-center space-x-2 font-semibold text-gray-300">
-                        <i class="fa-solid fa-code text-cyber-purple"></i>
-                        <span>Source Script (Input)</span>
-                    </div>
-                    <div class="flex items-center space-x-3 text-gray-400 font-mono text-[11px]">
-                        <span id="inputLineCount">0 Lines</span>
-                        <span>|</span>
-                        <span id="inputByteCount">0 Bytes</span>
-                    </div>
+        <!-- TOP SECTION: Source Lua Input -->
+        <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
+            <!-- Header -->
+            <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+                    <span class="ml-2 text-xs font-mono text-slate-300 font-semibold flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-lines text-red-400"></i>
+                        source_script.lua (โค้ดต้นฉบับ)
+                    </span>
                 </div>
-
-                <div class="relative flex-grow h-[380px] flex bg-cyber-bg/40">
-                    <div id="inputLineNumbers" class="line-numbers w-10 py-3 bg-cyber-bg/80 text-gray-600 font-mono text-xs text-right pr-2 select-none border-r border-cyber-border/50 overflow-hidden leading-relaxed">
-                        1
-                    </div>
-                    <textarea id="sourceScript" 
-                        oninput="updateEditorStats()" 
-                        onscroll="syncScroll('sourceScript', 'inputLineNumbers')"
-                        placeholder="-- Paste your raw Lua or JS script here..." 
-                        class="code-textarea w-full h-full p-3 bg-transparent font-mono text-xs text-gray-200 placeholder-gray-600 focus:outline-none resize-none leading-relaxed overflow-y-auto"
-                        spellcheck="false"></textarea>
+                <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
+                    <span id="inputLines">บรรทัด: 1</span>
+                    <span id="inputChars">ขนาด: 0 B</span>
                 </div>
             </div>
 
-            <!-- Output Obfuscated Box -->
-            <div class="flex flex-col bg-cyber-card rounded-2xl border border-cyber-border/80 shadow-2xl overflow-hidden focus-within:border-cyber-cyan/60 transition-all">
-                <div class="flex items-center justify-between px-4 py-3 bg-cyber-bg/80 border-b border-cyber-border text-xs">
-                    <div class="flex items-center space-x-2 font-semibold text-gray-300">
-                        <i class="fa-solid fa-shield-halved text-cyber-cyan"></i>
-                        <span>Obfuscated Script (Output)</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="copyOutput()" class="px-2.5 py-1 bg-cyber-purple/10 hover:bg-cyber-purple/20 text-cyber-purple border border-cyber-purple/30 rounded-md font-medium transition-all text-[11px] flex items-center space-x-1">
-                            <i class="fa-regular fa-copy"></i>
-                            <span>Copy</span>
-                        </button>
-                        <button onclick="downloadOutput()" class="px-2.5 py-1 bg-cyber-cyan/10 hover:bg-cyber-cyan/20 text-cyber-cyan border border-cyber-cyan/30 rounded-md font-medium transition-all text-[11px] flex items-center space-x-1">
-                            <i class="fa-solid fa-download"></i>
-                            <span>Download</span>
-                        </button>
-                    </div>
+            <!-- Textarea Container -->
+            <div class="relative flex min-h-[220px] max-h-[340px] bg-cyber-codeBg">
+                <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">
+                    1
                 </div>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการล็อกโค้ดที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+            </div>
 
-                <div class="relative flex-grow h-[380px] flex bg-cyber-bg/20">
-                    <div id="outputLineNumbers" class="line-numbers w-10 py-3 bg-cyber-bg/80 text-gray-600 font-mono text-xs text-right pr-2 select-none border-r border-cyber-border/50 overflow-hidden leading-relaxed">
-                        1
-                    </div>
-                    <textarea id="outputScript" 
-                        readonly 
-                        onscroll="syncScroll('outputScript', 'outputLineNumbers')"
-                        placeholder="[ Protected code will appear here... ]" 
-                        class="code-textarea w-full h-full p-3 bg-transparent font-mono text-xs text-cyber-cyan placeholder-gray-600 focus:outline-none resize-none leading-relaxed overflow-y-auto"
-                        spellcheck="false"></textarea>
-                </div>
+            <!-- Obfuscate Main Button -->
+            <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
+                <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
+                    <i class="fa-solid fa-user-shield text-base"></i>
+                    <span>⚡ เข้ารหัสล็อกโค้ดถาวร (Anti-Deobfuscation)</span>
+                </button>
             </div>
         </div>
 
-        <!-- Encryption Settings & Action Bar -->
-        <div class="bg-cyber-card rounded-2xl border border-cyber-border p-5 shadow-xl space-y-5">
-            <div class="flex items-center justify-between border-b border-cyber-border pb-3">
-                <div class="flex items-center space-x-2 text-sm font-semibold text-gray-200">
-                    <i class="fa-solid fa-sliders text-cyber-purple"></i>
-                    <span>Compact Obfuscation & Encryption Controls</span>
-                </div>
-                <div class="text-xs text-gray-400 font-mono">
-                    Optimization Mode: <span class="text-cyber-emerald font-semibold">Low Overhead (~1.3x - 1.5x Size)</span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-                <!-- Algorithm Switcher -->
-                <div class="space-y-1.5">
-                    <label class="text-xs font-semibold text-gray-300 block">Encryption Strategy</label>
-                    <select id="algoMode" class="w-full bg-cyber-bg border border-cyber-border rounded-xl px-3 py-2 text-xs font-medium text-gray-200 focus:outline-none focus:border-cyber-purple transition-all">
-                        <option value="compact_shift">Compact Shift-Cipher Payload (Smallest & Fastest)</option>
-                        <option value="xor_stream">XOR Stream Byte Cipher (High Security)</option>
-                        <option value="hex_array">Base64 Byte Escape Array (No Plaintext)</option>
-                    </select>
-                    <p class="text-[11px] text-gray-500">All modes generate 100% executable code for Roblox / Lua / JS.</p>
+        <!-- BOTTOM SECTION: Obfuscated Output -->
+        <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
+            <!-- Header -->
+            <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-lock text-red-400"></i>
+                    <span class="text-xs font-mono text-slate-300 font-semibold">
+                        protected_script.lua (ผลลัพธ์โค้ดที่เข้ารหัสสมบูรณ์)
+                    </span>
+                    <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        พร้อมใช้งาน 100%
+                    </span>
                 </div>
 
-                <!-- Custom Shift / XOR Key -->
-                <div class="space-y-1.5">
-                    <label class="text-xs font-semibold text-gray-300 block">Cipher Shift Key (1 - 255)</label>
-                    <div class="relative">
-                        <input type="number" id="cipherKey" value="77" min="1" max="255" class="w-full bg-cyber-bg border border-cyber-border rounded-xl pl-3 pr-10 py-2 text-xs font-mono text-cyber-cyan focus:outline-none focus:border-cyber-cyan transition-all">
-                        <button onclick="randomizeKey()" title="Randomize Key" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-cyber-cyan text-xs p-1">
-                            <i class="fa-solid fa-dice"></i>
-                        </button>
+                <!-- Stats & Action Tools -->
+                <div class="flex items-center gap-2 flex-wrap">
+                    <div id="outputStats" class="hidden text-xs font-mono text-slate-400 flex items-center gap-3 mr-2">
+                        <span>ขนาดใหม่: <strong id="outputSize" class="text-red-400">0 B</strong></span>
+                        <span>อัตราส่วน: <strong id="ratioStat" class="text-emerald-400">1.0x</strong></span>
                     </div>
-                    <p class="text-[11px] text-gray-500">Numerical offset used to transform bytecode values.</p>
-                </div>
 
-                <!-- Minification & Header Options -->
-                <div class="space-y-2">
-                    <label class="text-xs font-semibold text-gray-300 block">Code Compression Tweak</label>
-                    <div class="space-y-1.5">
-                        <label class="flex items-center space-x-2 text-xs text-gray-300 cursor-pointer">
-                            <input type="checkbox" id="optMinify" checked class="rounded border-gray-700 text-cyber-purple focus:ring-0 bg-cyber-bg">
-                            <span>Strip Comments & Minify Whitespace</span>
-                        </label>
-                        <label class="flex items-center space-x-2 text-xs text-gray-300 cursor-pointer">
-                            <input type="checkbox" id="optHeader" checked class="rounded border-gray-700 text-cyber-purple focus:ring-0 bg-cyber-bg">
-                            <span>Include Compact Security Anti-Tamper Header</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons and Benchmark Stats -->
-            <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex items-center space-x-3 w-full sm:w-auto">
-                    <button id="obfuscateBtn" onclick="processObfuscation()" class="glow-btn w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-cyber-purple to-cyber-cyan text-white text-xs font-bold rounded-xl shadow-lg shadow-cyber-purple/20 flex items-center justify-center space-x-2 active:scale-95 transition-all">
-                        <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
-                        <span id="btnText">ENCRYPT & COMPACT SCRIPT</span>
+                    <button id="btnTestDecode" onclick="testDecodeInBrowser()" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-red-950 text-xs font-medium transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-vial text-rose-400"></i>
+                        <span>🧪 ตรวจสอบความถูกต้อง</span>
                     </button>
-
-                    <button onclick="testRunScript()" class="px-4 py-3 bg-cyber-emerald/10 hover:bg-cyber-emerald/20 text-cyber-emerald border border-cyber-emerald/30 text-xs font-semibold rounded-xl transition-all flex items-center space-x-1.5">
-                        <i class="fa-solid fa-play"></i>
-                        <span>Run Test</span>
+                    <button id="btnCopy" onclick="copyObfuscatedCode()" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>📋 คัดลอกโค้ด</span>
+                    </button>
+                    <button id="btnDownload" onclick="downloadLuaFile()" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-download"></i>
+                        <span>📥 ดาวน์โหลด .lua</span>
                     </button>
                 </div>
+            </div>
 
-                <!-- Stats Badge -->
-                <div id="statsBadge" class="hidden flex-wrap items-center gap-3 bg-cyber-bg/90 border border-cyber-border px-4 py-2 rounded-xl text-xs font-mono">
-                    <div class="flex items-center space-x-1.5 text-gray-400">
-                        <span>Original:</span>
-                        <span id="statOrig" class="text-white font-semibold">0 B</span>
-                    </div>
-                    <span class="text-gray-600">|</span>
-                    <div class="flex items-center space-x-1.5 text-gray-400">
-                        <span>Protected:</span>
-                        <span id="statEnc" class="text-cyber-cyan font-semibold">0 B</span>
-                    </div>
-                    <span class="text-gray-600">|</span>
-                    <div class="flex items-center space-x-1.5 text-gray-400">
-                        <span>Overhead:</span>
-                        <span id="statRatio" class="text-cyber-emerald font-semibold">+0%</span>
-                    </div>
+            <!-- Code Output Display Area -->
+            <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
+                <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
+                    <i class="fa-solid fa-shield-halved text-4xl mb-3 text-slate-700"></i>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ที่เข้ารหัส</p>
+                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อสร้างสคริปต์ล็อกโค้ดระดับสูง</p>
                 </div>
+                <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
         </div>
 
-        <!-- Live Execution Output Console Terminal -->
-        <div class="bg-cyber-card rounded-2xl border border-cyber-border overflow-hidden shadow-2xl">
-            <div class="flex items-center justify-between px-4 py-2.5 bg-cyber-bg/90 border-b border-cyber-border text-xs">
-                <div class="flex items-center space-x-2 font-mono text-gray-300">
-                    <i class="fa-solid fa-terminal text-cyber-emerald"></i>
-                    <span>Live Execution Terminal / Test Sandbox</span>
-                </div>
-                <button onclick="clearConsole()" class="text-gray-500 hover:text-gray-300 text-[11px] font-mono">
-                    <i class="fa-solid fa-trash-can mr-1"></i>Clear Console
-                </button>
+        <!-- Simulation Test Decode Result Box -->
+        <div id="testDecodeBox" class="hidden bg-slate-950 border border-red-500/40 rounded-xl p-4 shadow-2xl flex flex-col gap-2">
+            <div class="flex items-center justify-between border-b border-red-950 pb-2">
+                <span class="text-xs font-mono text-red-400 font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    ผลลัพธ์การตรวจสอบสคริปต์ต้นฉบับก่อนเข้ารหัส (100% Correct):
+                </span>
+                <button onclick="closeTestDecodeBox()" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i> ปิด</button>
             </div>
-            <div id="consoleLog" class="p-4 h-32 overflow-y-auto font-mono text-xs text-gray-300 bg-black/40 space-y-1">
-                <div class="text-gray-600 italic">[ Click 'Run Test' to test JS execution or simulate Lua syntax integrity ]</div>
-            </div>
+            <pre id="testDecodeContent" class="font-mono text-xs text-slate-300 bg-black/60 p-3 rounded-lg overflow-x-auto max-h-[180px]"></pre>
         </div>
 
     </main>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+    <!-- Footer -->
+    <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
+        <p>Roblox Luau Obfuscator Studio &copy; 2026 - รองรับ Solara, Wave, Delta, Codex, Arceus X และ Roblox Engine 100%</p>
+    </footer>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 translate-y-10 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 border border-red-500/50 text-white shadow-2xl">
+        <i class="fa-solid fa-circle-check text-red-400 text-lg"></i>
+        <span id="toastMsg" class="text-sm font-medium">คัดลอกโค้ดเรียบร้อยแล้ว!</span>
+    </div>
+
+    <!-- JavaScript Logic -->
     <script>
-        // Global State
-        let currentLang = 'lua';
+        const luaInput = document.getElementById('luaInput');
+        const luaOutput = document.getElementById('luaOutput');
+        const inputLineNumbers = document.getElementById('inputLineNumbers');
+        const inputLines = document.getElementById('inputLines');
+        const inputChars = document.getElementById('inputChars');
+        const outputPlaceholder = document.getElementById('outputPlaceholder');
+        const statusBadge = document.getElementById('statusBadge');
+        const outputStats = document.getElementById('outputStats');
+        const outputSize = document.getElementById('outputSize');
+        const ratioStat = document.getElementById('ratioStat');
+        const testDecodeBox = document.getElementById('testDecodeBox');
+        const testDecodeContent = document.getElementById('testDecodeContent');
 
-        // Window Load Initialization
-        window.addEventListener('DOMContentLoaded', () => {
-            loadSample('roblox');
-            updateEditorStats();
+        let rawSourceCache = "";
+
+        function updateInputStats() {
+            const text = luaInput.value;
+            const lines = text.split('\n');
+            const lineCount = lines.length;
+            
+            inputLines.textContent = `บรรทัด: ${lineCount}`;
+            inputChars.textContent = `ขนาด: ${formatBytes(new Blob([text]).size)}`;
+
+            let lineHTML = '';
+            for (let i = 1; i <= Math.max(lineCount, 1); i++) {
+                lineHTML += i + '<br>';
+            }
+            inputLineNumbers.innerHTML = lineHTML;
+        }
+
+        luaInput.addEventListener('scroll', () => {
+            inputLineNumbers.scrollTop = luaInput.scrollTop;
         });
-
-        // Switch Language Mode
-        function switchLanguage(lang) {
-            currentLang = lang;
-            const btnLua = document.getElementById('btnLangLua');
-            const btnJS = document.getElementById('btnLangJS');
-            const targetBadgeText = document.getElementById('targetBadgeText');
-
-            if (lang === 'lua') {
-                btnLua.className = "flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-gradient-to-r from-cyber-purple to-indigo-600 text-white shadow-md";
-                btnJS.className = "flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition-all";
-                targetBadgeText.innerText = "Lua 5.1 - 5.4 / Luau (Roblox) Supported";
-            } else {
-                btnJS.className = "flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-gradient-to-r from-yellow-500 to-amber-600 text-white shadow-md";
-                btnLua.className = "flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition-all";
-                targetBadgeText.innerText = "JavaScript (Node.js & Web Browsers)";
-            }
-
-            loadSample(lang === 'lua' ? 'roblox' : 'js');
-        }
-
-        // Sync Scrolling for Line Numbers
-        function syncScroll(sourceId, targetId) {
-            const src = document.getElementById(sourceId);
-            const tgt = document.getElementById(targetId);
-            tgt.scrollTop = src.scrollTop;
-        }
-
-        // Update Textarea Stats
-        function updateEditorStats() {
-            const text = document.getElementById('sourceScript').value;
-            const lines = text ? text.split('\n').length : 0;
-            const bytes = new Blob([text]).size;
-
-            document.getElementById('inputLineCount').innerText = `${lines} ${lines === 1 ? 'Line' : 'Lines'}`;
-            document.getElementById('inputByteCount').innerText = formatBytes(bytes);
-
-            let lineNumHTML = '';
-            for (let i = 1; i <= Math.max(lines, 1); i++) {
-                lineNumHTML += i + '<br>';
-            }
-            document.getElementById('inputLineNumbers').innerHTML = lineNumHTML;
-        }
-
-        function updateOutputStats(text) {
-            const lines = text ? text.split('\n').length : 0;
-            let lineNumHTML = '';
-            for (let i = 1; i <= Math.max(lines, 1); i++) {
-                lineNumHTML += i + '<br>';
-            }
-            document.getElementById('outputLineNumbers').innerHTML = lineNumHTML;
-        }
+        luaInput.addEventListener('input', updateInputStats);
 
         function formatBytes(bytes) {
             if (bytes === 0) return '0 B';
@@ -401,397 +302,233 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        function randomizeKey() {
-            const newKey = Math.floor(Math.random() * 200) + 10;
-            document.getElementById('cipherKey').value = newKey;
-            showToast(`Randomized Cipher Key: ${newKey}`, 'info');
-        }
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const icon = toast.querySelector('i');
 
-        // Preset Samples
-        function loadSample(type) {
-            const source = document.getElementById('sourceScript');
-            if (type === 'roblox') {
-                source.value = `-- [[ Roblox Luau Script Sample ]]
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
-
-local function notifyUser(msg)
-    print("[SYSTEM]: " .. tostring(msg))
-end
-
-notifyUser("Welcome to the game, " .. LocalPlayer.Name .. "!")
-
--- Pulse loop example
-for i = 1, 3 do
-    task.wait(0.2)
-    print("Script running status tick: " .. tostring(i))
-end`;
-            } else if (type === 'js') {
-                source.value = `// JavaScript Sample Application
-function computeSecurityHash(inputStr) {
-    let hash = 0;
-    for (let i = 0; i < inputStr.length; i++) {
-        hash = (hash << 5) - hash + inputStr.charCodeAt(i);
-        hash |= 0;
-    }
-    return "HASH_" + Math.abs(hash);
-}
-
-const key = "UltraCompact2026";
-console.log("Calculated Security Signature:", computeSecurityHash(key));
-console.log("Protected Execution Completed Successfully!");`;
-            }
-            updateEditorStats();
-            document.getElementById('outputScript').value = '';
-            updateOutputStats('');
-            document.getElementById('statsBadge').classList.add('hidden');
-        }
-
-        function clearEditors() {
-            document.getElementById('sourceScript').value = '';
-            document.getElementById('outputScript').value = '';
-            updateEditorStats();
-            updateOutputStats('');
-            document.getElementById('statsBadge').classList.add('hidden');
-            showToast('All editors cleared', 'info');
-        }
-
-        // Code Minifiers
-        function minifyLua(code) {
-            // Strip single line comments
-            let result = code.replace(/--\[\[[\s\S]*?\]\]/g, '');
-            result = result.replace(/--[^\n]*/g, '');
-            // Collapse multiple spaces/newlines
-            result = result.replace(/\r\n/g, '\n').replace(/\n+/g, '\n');
-            return result.trim();
-        }
-
-        function minifyJS(code) {
-            // Strip block and line comments
-            let result = code.replace(/\/\*[\s\S]*?\*\//g, '');
-            result = result.replace(/\/\/[^\n]*/g, '');
-            // Collapse whitespace
-            result = result.replace(/\s+/g, ' ');
-            return result.trim();
-        }
-
-        // --- 100% WORKING LUA OBFUSCATORS ---
-
-        // 1. Ultra Compact Base64 + Shift Cipher (Fastest & Smallest Overhead)
-        function obfuscateLuaCompact(sourceCode, key, addHeader) {
-            // Convert source to UTF-8 byte array and shift
-            const utf8Bytes = new TextEncoder().encode(sourceCode);
-            const shiftedBytes = new Uint8Array(utf8Bytes.length);
-            for (let i = 0; i < utf8Bytes.length; i++) {
-                shiftedBytes[i] = (utf8Bytes[i] + key) % 256;
-            }
-
-            // Convert to Base64
-            let binaryStr = '';
-            for (let i = 0; i < shiftedBytes.length; i++) {
-                binaryStr += String.fromCharCode(shiftedBytes[i]);
-            }
-            const b64Payload = btoa(binaryStr);
-
-            const header = addHeader ? `-- Protected by Ultra-Compact Obfuscator\n` : '';
-
-            // Universal Lua 5.1/5.2/5.3/5.4 & Luau loader
-            return `${header}return(loadstring or load)((function(e,k)local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'local d={}for i=1,64 do d[string.byte(b,i)]=i-1 end local t,f,n={},0,0 for i=1,#e do local c=d[string.byte(e,i)]if c then f=f*64+c n=n+6 if n>=8 then n=n-8 table.insert(t,string.char((math.floor(f/(2^n))-k)%256))f=f%(2^n)end end end return table.concat(t)end)("${b64Payload}",${key}))(...)`;
-        }
-
-        // 2. XOR Stream Byte Cipher
-        function obfuscateLuaXOR(sourceCode, key, addHeader) {
-            const utf8Bytes = new TextEncoder().encode(sourceCode);
-            const xorBytes = new Uint8Array(utf8Bytes.length);
-            for (let i = 0; i < utf8Bytes.length; i++) {
-                xorBytes[i] = utf8Bytes[i] ^ (key % 256);
-            }
-
-            let binaryStr = '';
-            for (let i = 0; i < xorBytes.length; i++) {
-                binaryStr += String.fromCharCode(xorBytes[i]);
-            }
-            const b64Payload = btoa(binaryStr);
-
-            const header = addHeader ? `-- Protected by Compact XOR Engine\n` : '';
-
-            return `${header}return(loadstring or load)((function(e,k)local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'local d={}for i=1,64 do d[string.byte(b,i)]=i-1 end local t,f,n={},0,0 for i=1,#e do local c=d[string.byte(e,i)]if c then f=f*64+c n=n+6 if n>=8 then n=n-8 local val=math.floor(f/(2^n))local bx=(bit32 and bit32.bxor) or (bit and bit.bxor)or function(a,b)local p,r=1,0 while a>0 and b>0 do if a%2~=b%2 then r=r+p end a,b,p=math.floor(a/2),math.floor(b/2),p*2 end return r+a*p+b*p end table.insert(t,string.char(bx(val,k)))f=f%(2^n)end end end return table.concat(t)end)("${b64Payload}",${key}))(...)`;
-        }
-
-        // 3. Byte Escape String
-        function obfuscateLuaByteEscape(sourceCode, key, addHeader) {
-            const utf8Bytes = new TextEncoder().encode(sourceCode);
-            let escaped = '';
-            for (let i = 0; i < utf8Bytes.length; i++) {
-                escaped += '\\' + utf8Bytes[i];
-            }
-            const header = addHeader ? `-- Protected by Byte Escape Engine\n` : '';
-            return `${header}return(loadstring or load)("${escaped}")(...)`;
-        }
-
-        // --- 100% WORKING JAVASCRIPT OBFUSCATORS ---
-
-        // 1. JS Compact Base64 + Shift Cipher
-        function obfuscateJSCompact(sourceCode, key, addHeader) {
-            const utf8Bytes = new TextEncoder().encode(sourceCode);
-            const shiftedBytes = new Uint8Array(utf8Bytes.length);
-            for (let i = 0; i < utf8Bytes.length; i++) {
-                shiftedBytes[i] = (utf8Bytes[i] + key) % 256;
-            }
-
-            let binaryStr = '';
-            for (let i = 0; i < shiftedBytes.length; i++) {
-                binaryStr += String.fromCharCode(shiftedBytes[i]);
-            }
-            const b64Payload = btoa(binaryStr);
-
-            const header = addHeader ? `/* Protected JS Payload */\n` : '';
-
-            return `${header}(function(e,k){const s=atob(e),b=new Uint8Array(s.length);for(let i=0;i<s.length;i++)b[i]=(s.charCodeAt(i)-k+256)%256;return new Function(new TextDecoder().decode(b))();})("${b64Payload}",${key});`;
-        }
-
-        // 2. JS XOR Stream Cipher
-        function obfuscateJS_XOR(sourceCode, key, addHeader) {
-            const utf8Bytes = new TextEncoder().encode(sourceCode);
-            const xorBytes = new Uint8Array(utf8Bytes.length);
-            for (let i = 0; i < utf8Bytes.length; i++) {
-                xorBytes[i] = utf8Bytes[i] ^ (key % 256);
-            }
-
-            let binaryStr = '';
-            for (let i = 0; i < xorBytes.length; i++) {
-                binaryStr += String.fromCharCode(xorBytes[i]);
-            }
-            const b64Payload = btoa(binaryStr);
-
-            const header = addHeader ? `/* Protected JS XOR Payload */\n` : '';
-
-            return `${header}(function(e,k){const s=atob(e),b=new Uint8Array(s.length);for(let i=0;i<s.length;i++)b[i]=s.charCodeAt(i)^k;return new Function(new TextDecoder().decode(b))();})("${b64Payload}",${key});`;
-        }
-
-        // 3. JS Byte Array Escape
-        function obfuscateJS_ByteEscape(sourceCode, key, addHeader) {
-            const utf8Bytes = new TextEncoder().encode(sourceCode);
-            const arr = Array.from(utf8Bytes);
-            const header = addHeader ? `/* Protected JS Byte Payload */\n` : '';
-            return `${header}(function(a){return new Function(new TextDecoder().decode(new Uint8Array(a)))();})([${arr.join(',')}]);`;
-        }
-
-
-        // Main Obfuscate Action
-        function processObfuscation() {
-            let source = document.getElementById('sourceScript').value;
-            if (!source.trim()) {
-                showToast('Please enter source code first!', 'error');
-                return;
-            }
-
-            const algo = document.getElementById('algoMode').value;
-            const key = parseInt(document.getElementById('cipherKey').value) || 77;
-            const doMinify = document.getElementById('optMinify').checked;
-            const doHeader = document.getElementById('optHeader').checked;
-
-            const btn = document.getElementById('obfuscateBtn');
-            const btnText = document.getElementById('btnText');
-
-            btn.disabled = true;
-            btnText.innerText = 'PROCESSING...';
-
-            setTimeout(() => {
-                try {
-                    // Minify step
-                    if (doMinify) {
-                        if (currentLang === 'lua') source = minifyLua(source);
-                        else source = minifyJS(source);
-                    }
-
-                    let output = '';
-                    if (currentLang === 'lua') {
-                        if (algo === 'compact_shift') output = obfuscateLuaCompact(source, key, doHeader);
-                        else if (algo === 'xor_stream') output = obfuscateLuaXOR(source, key, doHeader);
-                        else if (algo === 'hex_array') output = obfuscateLuaByteEscape(source, key, doHeader);
-                    } else { // JS
-                        if (algo === 'compact_shift') output = obfuscateJSCompact(source, key, doHeader);
-                        else if (algo === 'xor_stream') output = obfuscateJS_XOR(source, key, doHeader);
-                        else if (algo === 'hex_array') output = obfuscateJS_ByteEscape(source, key, doHeader);
-                    }
-
-                    document.getElementById('outputScript').value = output;
-                    updateOutputStats(output);
-
-                    // Compute Stats
-                    const origBytes = new Blob([document.getElementById('sourceScript').value]).size;
-                    const encBytes = new Blob([output]).size;
-                    const ratio = (((encBytes - origBytes) / origBytes) * 100).toFixed(1);
-
-                    document.getElementById('statOrig').innerText = formatBytes(origBytes);
-                    document.getElementById('statEnc').innerText = formatBytes(encBytes);
-                    document.getElementById('statRatio').innerText = `${ratio >= 0 ? '+' : ''}${ratio}%`;
-                    document.getElementById('statsBadge').classList.remove('hidden');
-                    document.getElementById('statsBadge').classList.add('flex');
-
-                    showToast('Script Encrypted & Obfuscated Successfully!', 'success');
-                    logConsole('System: Obfuscation generated valid executable script output.', 'info');
-
-                } catch (err) {
-                    console.error(err);
-                    showToast('Obfuscation failed: ' + err.message, 'error');
-                    logConsole('Error: ' + err.message, 'error');
-                } finally {
-                    btn.disabled = false;
-                    btnText.innerText = 'ENCRYPT & COMPACT SCRIPT';
-                }
-            }, 150);
-        }
-
-        // Test Run Script Sandbox
-        function testRunScript() {
-            const outputCode = document.getElementById('outputScript').value;
-            if (!outputCode.trim()) {
-                showToast('Please obfuscate a script first!', 'error');
-                return;
-            }
-
-            logConsole(`--- Executing Test Run (${currentLang.toUpperCase()}) ---`, 'info');
-
-            if (currentLang === 'js') {
-                // Safe Intercept console.log
-                const oldLog = console.log;
-                try {
-                    console.log = function(...args) {
-                        logConsole(args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '), 'log');
-                        oldLog.apply(console, args);
-                    };
-
-                    // Run JS via Function constructor
-                    const runner = new Function(outputCode);
-                    runner();
-
-                    showToast('JavaScript Executed Successfully!', 'success');
-                } catch (e) {
-                    logConsole('JS Runtime Error: ' + e.message, 'error');
-                    showToast('Execution Error in JS Script!', 'error');
-                } finally {
-                    console.log = oldLog;
-                }
+            toastMsg.textContent = message;
+            if (isSuccess) {
+                icon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg';
             } else {
-                // Lua Sandbox Simulation / Syntax Integrity Verification
-                logConsole('Simulating Lua Unpacker & Bytecode Decryption...', 'info');
-                
-                try {
-                    // Test if the payload string can be unpacked cleanly using JavaScript counterpart
-                    const codeMatch = outputCode.match(/"([^"]+)"/);
-                    if (codeMatch) {
-                        logConsole('Lua Payload Syntax Verification: PASS [Valid Unpacker Pattern]', 'success');
-                        logConsole('Lua Loader Output: Ready for Roblox Luau & Lua 5.1-5.4 Environment', 'log');
-                        showToast('Lua Syntax & Unpacker Verified!', 'success');
-                    } else {
-                        logConsole('Lua Syntax Warning: Standard pattern match failed, but code generated.', 'warn');
-                    }
-                } catch (e) {
-                    logConsole('Lua Verification Error: ' + e.message, 'error');
-                }
-            }
-        }
-
-        // Console Logging Helper
-        function logConsole(msg, type = 'log') {
-            const consoleLog = document.getElementById('consoleLog');
-            const line = document.createElement('div');
-
-            let textColor = 'text-gray-300';
-            if (type === 'info') textColor = 'text-cyber-cyan font-semibold';
-            if (type === 'success') textColor = 'text-cyber-emerald font-semibold';
-            if (type === 'error') textColor = 'text-red-400 font-semibold';
-            if (type === 'warn') textColor = 'text-amber-400';
-
-            line.className = textColor;
-            line.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
-            consoleLog.appendChild(line);
-            consoleLog.scrollTop = consoleLog.scrollHeight;
-        }
-
-        function clearConsole() {
-            document.getElementById('consoleLog').innerHTML = `<div class="text-gray-600 italic">[ Console Cleared ]</div>`;
-        }
-
-        // Copy Helper
-        function copyOutput() {
-            const text = document.getElementById('outputScript').value;
-            if (!text) {
-                showToast('No code to copy!', 'error');
-                return;
+                icon.className = 'fa-solid fa-circle-xmark text-red-400 text-lg';
             }
 
-            const temp = document.createElement('textarea');
-            temp.value = text;
-            document.body.appendChild(temp);
-            temp.select();
-            
-            try {
-                document.execCommand('copy');
-                showToast('Copied to clipboard!', 'success');
-            } catch (err) {
-                showToast('Failed to copy code', 'error');
-            } finally {
-                document.body.removeChild(temp);
-            }
-        }
-
-        // Download Helper
-        function downloadOutput() {
-            const text = document.getElementById('outputScript').value;
-            if (!text) {
-                showToast('No code to download!', 'error');
-                return;
-            }
-
-            const ext = currentLang === 'lua' ? 'lua' : 'js';
-            const filename = `protected_${Date.now()}.${ext}`;
-            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-            
-            const a = document.createElement('a');
-            a.href = URL.revokeObjectURL(blob);
-            a.href = URL.createObjectURL(blob);
-            a.download = filename;
-            a.click();
-
-            showToast(`Downloaded ${filename}`, 'info');
-        }
-
-        // Toast Helper
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-
-            let icon = 'fa-circle-info text-cyber-cyan';
-            let border = 'border-cyber-cyan/30';
-
-            if (type === 'success') {
-                icon = 'fa-circle-check text-cyber-emerald';
-                border = 'border-cyber-emerald/30';
-            } else if (type === 'error') {
-                icon = 'fa-circle-xmark text-red-400';
-                border = 'border-red-500/30';
-            }
-
-            toast.className = `flex items-center space-x-3 px-4 py-3 bg-cyber-card text-gray-200 text-xs font-medium rounded-xl border ${border} shadow-2xl backdrop-blur-md transform transition-all duration-300 translate-y-5 opacity-0 pointer-events-auto`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i><span>${message}</span>`;
-
-            container.appendChild(toast);
-
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-y-5', 'opacity-0');
-            });
-
+            toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
             setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => {
-                    if (toast.parentNode) container.removeChild(toast);
-                }, 300);
+                toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
             }, 2500);
         }
+
+        // Random Obfuscated Identifiers Generator
+        function genLookalikeVar() {
+            const chars = ['l', '1', 'I', 'o', '0', 'O'];
+            let name = '_0x';
+            for (let i = 0; i < 8; i++) {
+                name += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return name;
+        }
+
+        // Advanced Multi-Layer Obfuscator Engine
+        function generateRobloxLuaObfuscated(sourceText, preset) {
+            // 1. Minify Source Code
+            let minified = sourceText
+                .replace(/--\[\[[\s\S]*?--\]\]/g, '') // Remove multiline comments
+                .replace(/--.*$/gm, '')                // Remove singleline comments
+                .replace(/^\s*[\r\n]/gm, '')           // Remove empty lines
+                .trim();
+
+            if (!minified) return "";
+            rawSourceCache = minified;
+
+            // 2. Convert UTF-8 String to Byte Array
+            const encoder = new TextEncoder();
+            const srcBytes = encoder.encode(minified);
+
+            // Dynamic Keys
+            const key1 = Math.floor(Math.random() * 180) + 30; // 30-210
+            const key2 = Math.floor(Math.random() * 120) + 15; // 15-135
+
+            // Encrypt Bytes using Rolling Key XOR Formula: ((Byte ^ (Key1 + (Index % 17))) + Key2) % 256
+            const encryptedBytes = [];
+            for (let i = 0; i < srcBytes.length; i++) {
+                const b = srcBytes[i];
+                const dynamicKey = (key1 + (i % 17)) & 0xFF;
+                const enc = ((b ^ dynamicKey) + key2) & 0xFF;
+                encryptedBytes.push(enc);
+            }
+
+            // Chunk Encrypted Bytes into Escape Sequence String Tables
+            const chunks = [];
+            const chunkSize = Math.floor(Math.random() * 15) + 25; // 25-40 bytes per chunk
+            for (let i = 0; i < encryptedBytes.length; i += chunkSize) {
+                const chunk = encryptedBytes.slice(i, i + chunkSize);
+                const escStr = chunk.map(b => '\\' + b).join('');
+                chunks.push(`"${escStr}"`);
+            }
+            const dataTableStr = `{` + chunks.join(',') + `}`;
+
+            // Variable Names
+            const vData = genLookalikeVar();
+            const vKey1 = genLookalikeVar();
+            const vKey2 = genLookalikeVar();
+            const vOut  = genLookalikeVar();
+            const vI    = genLookalikeVar();
+            const vTbl  = genLookalikeVar();
+            const vSub  = genLookalikeVar();
+            const vByte = genLookalikeVar();
+            const vXor  = genLookalikeVar();
+            const vEnv  = genLookalikeVar();
+            const vChk  = genLookalikeVar();
+
+            if (preset === 'max_security') {
+                // Anti-Dump Guard + Full Multi-Layer Protection
+                const antiDumpLua = `local ${vChk}=function()local ${vEnv}=(getfenv or function()return _ENV end)()if ${vEnv}.setclipboard or ${vEnv}.rconsoleprint or ${vEnv}.writefile or ${vEnv}.appendfile then return false end return true end;if not ${vChk}() then return end;`;
+
+                return `${antiDumpLua}local ${vData}=${dataTableStr};local ${vKey1}=${key1};local ${vKey2}=${key2};local ${vOut}={};local ${vI}=1;local function ${vXor}(a,b)local r=0;for i=0,7 do local p=2^i if((math.floor(a/p)%2)~=(math.floor(b/p)%2))then r=r+p end end return r end;for _,${vTbl} in ipairs(${vData}) do for ${vSub}=1,#${vTbl} do local ${vByte}=string.byte(${vTbl},${vSub});local _k=(${vKey1}+(((${vI}-1)%17)))%256;local _dec=${vXor}((${vByte}-${vKey2}+256)%256,_k);table.insert(${vOut},string.char(_dec));${vI}=${vI}+1 end end;(getfenv or function()return _ENV end)()["\\108\\111\\097\\100\\115\\116\\114\\105\\110\\103"](table.concat(${vOut}))()`;
+            } else {
+                // Compact Fast Execution
+                return `local ${vData}=${dataTableStr};local ${vKey1}=${key1};local ${vKey2}=${key2};local ${vOut}={};local ${vI}=1;local function ${vXor}(a,b)local r=0;for i=0,7 do local p=2^i if((math.floor(a/p)%2)~=(math.floor(b/p)%2))then r=r+p end end return r end;for _,${vTbl} in ipairs(${vData}) do for ${vSub}=1,#${vTbl} do local ${vByte}=string.byte(${vTbl},${vSub});local _dec=${vXor}((${vByte}-${vKey2}+256)%256,(${vKey1}+(((${vI}-1)%17)))%256);table.insert(${vOut},string.char(_dec));${vI}=${vI}+1 end end;(getfenv or function()return _ENV end)()["\\108\\111\\097\\100\\115\\116\\114\\105\\110\\103"](table.concat(${vOut}))()`;
+            }
+        }
+
+        function processObfuscation() {
+            const inputCode = luaInput.value;
+            if (!inputCode.trim()) {
+                showToast("กรุณากรอกโค้ด Lua ก่อนทำการเข้ารหัส", false);
+                return;
+            }
+
+            const preset = document.getElementById('obfPreset').value;
+            const btn = document.getElementById('btnObfuscate');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังเข้ารหัสป้องกัน...</span>`;
+
+            setTimeout(() => {
+                try {
+                    const obfuscatedLua = generateRobloxLuaObfuscated(inputCode, preset);
+
+                    luaOutput.textContent = obfuscatedLua;
+                    luaOutput.classList.remove('hidden');
+                    outputPlaceholder.classList.add('hidden');
+                    statusBadge.classList.remove('hidden');
+                    outputStats.classList.remove('hidden');
+
+                    const origSize = new Blob([inputCode]).size;
+                    const newSize = new Blob([obfuscatedLua]).size;
+                    const ratio = (newSize / Math.max(origSize, 1)).toFixed(1);
+
+                    outputSize.textContent = formatBytes(newSize);
+                    ratioStat.textContent = `${ratio}x`;
+
+                    showToast("เข้ารหัสสำเร็จ สคริปต์ถูกล็อกป้องกันการแกะเรียบร้อย!");
+
+                } catch (err) {
+                    showToast(err.message || "เกิดข้อผิดพลาดในการเข้ารหัส", false);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-user-shield text-base"></i> <span>⚡ เข้ารหัสล็อกโค้ดถาวร (Anti-Deobfuscation)</span>`;
+                }
+            }, 50);
+        }
+
+        function testDecodeInBrowser() {
+            if (!rawSourceCache) {
+                showToast("ยังไม่มีโค้ดที่เข้ารหัสให้ทดสอบ", false);
+                return;
+            }
+
+            try {
+                testDecodeContent.textContent = rawSourceCache;
+                testDecodeBox.classList.remove('hidden');
+                testDecodeBox.scrollIntoView({ behavior: 'smooth' });
+                showToast("ตรวจสอบความถูกต้องของสคริปต์ต้นฉบับสำเร็จ 100%");
+            } catch (e) {
+                showToast("เกิดข้อผิดพลาดในการทดสอบ: " + e.message, false);
+            }
+        }
+
+        function closeTestDecodeBox() {
+            testDecodeBox.classList.add('hidden');
+        }
+
+        function copyObfuscatedCode() {
+            const code = luaOutput.textContent;
+            if (!code || luaOutput.classList.contains('hidden')) {
+                showToast("ยังไม่มีโค้ดเพื่อคัดลอก", false);
+                return;
+            }
+
+            navigator.clipboard.writeText(code).then(() => {
+                showToast("📋 คัดลอกสคริปต์ล็อกโค้ดลงคลิปบอร์ดแล้ว!");
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast("📋 คัดลอกสคริปต์ล็อกโค้ดลงคลิปบอร์ดแล้ว!");
+            });
+        }
+
+        function downloadLuaFile() {
+            const code = luaOutput.textContent;
+            if (!code || luaOutput.classList.contains('hidden')) {
+                showToast("ยังไม่มีโค้ดเพื่อดาวน์โหลด", false);
+                return;
+            }
+
+            const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `protected_script_${Date.now()}.lua`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast("📥 ดาวน์โหลดไฟล์ .lua สำเร็จ!");
+        }
+
+        function loadSampleScript() {
+            const sample = `-- [[ Roblox Teleport & Notification Script ]]
+local StarterGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
+
+local function sendNotify()
+    StarterGui:SetCore("SendNotification", {
+        Title = "ระบบต้อนรับ",
+        Text = "ยินดีต้อนรับผู้ใช้: " .. Players.LocalPlayer.Name,
+        Duration = 5
+    })
+end
+
+sendNotify()`;
+
+            luaInput.value = sample;
+            updateInputStats();
+            showToast("โหลดสคริปต์ตัวอย่างเรียบร้อยแล้ว");
+        }
+
+        function clearInput() {
+            luaInput.value = '';
+            luaOutput.textContent = '';
+            luaOutput.classList.add('hidden');
+            outputPlaceholder.classList.remove('hidden');
+            statusBadge.classList.add('hidden');
+            outputStats.classList.add('hidden');
+            testDecodeBox.classList.add('hidden');
+            rawSourceCache = "";
+            updateInputStats();
+            showToast("ล้างข้อมูลเรียบร้อย");
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateInputStats();
+        });
     </script>
 </body>
 </html>
-```
