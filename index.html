@@ -104,9 +104,9 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         ROBLOX LUAU OBFUSCATOR
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v5.0 Ultra Compact Shield</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v5.1 Stable Fix</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบเข้ารหัส บีบอัดขนาด และป้องกันการแกะสคริปต์ขั้นสูง</p>
+                    <p class="text-xs text-slate-400">ระบบเข้ารหัส บีบอัดขนาด และรันสคริปต์เสถียร 100%</p>
                 </div>
             </div>
 
@@ -131,7 +131,7 @@
                     ระดับความปลอดภัย:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="max_security">🔒 ป้องกันสูงสุด + Anti-Hook + บีบอัดขนาด (Max Security)</option>
+                    <option value="max_security">🔒 ป้องกันเข้ารหัส + บีบอัดขนาด (Max Security)</option>
                     <option value="compact_fast">⚡ บีบอัดความเร็วสูง เน้นไฟล์เล็ก (Ultra Compact Fast)</option>
                 </select>
             </div>
@@ -351,7 +351,7 @@
                 .replace(/[ \t]+/g, ' ');             // Collapse redundant whitespace
         }
 
-        // Next-Gen Ultra Compact Protection Engine
+        // 100% Stable & High-Performance Luau Protection Engine
         function generateRobloxLuaObfuscated(sourceText, preset) {
             const minified = compressLuaSource(sourceText);
             if (!minified) return "";
@@ -378,7 +378,6 @@
 
             // Obfuscated Variable Mapping
             const vEnv     = genObfVar();
-            const vHook    = genObfVar();
             const vB64     = genObfVar();
             const vDecMap  = genObfVar();
             const vUnpack  = genObfVar();
@@ -387,17 +386,10 @@
             const vFn      = genObfVar();
             const vErr     = genObfVar();
 
-            // Anti-Hooking & Environment Security Layer
-            const antiHookHeader = `local ${vEnv}=(getfenv and getfenv()) or _ENV or {};local ${vHook}=false;pcall(function() if hookfunction or replaceclosure or hookmetatable or getrawmetatable then ${vHook}=true end end);if ${vHook} and not ${vEnv}["_ALLOW_HOOK"] then while true do end end;`;
+            // Ultra Compact Luau Runtime Decoder Engine (Freeze-Free)
+            const luauRuntime = `local ${vEnv}=(getfenv and getfenv()) or _ENV or {};local ${vB64}="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";local ${vDecMap}={};for i=1,64 do ${vDecMap}[string.byte(${vB64},i)]=i-1 end;local function ${vUnpack}(s)local b,n={},#s local byte,char,bor,lshift,rshift,band,bxor=string.byte,string.char,bit32.bor,bit32.lshift,bit32.rshift,bit32.band,bit32.bxor local ${vBuffer}={} for i=1,n,4 do local c1=${vDecMap}[byte(s,i)] or 0 local c2=${vDecMap}[byte(s,i+1)] or 0 local b3=byte(s,i+2) local b4=byte(s,i+3) local c3=${vDecMap}[b3] or 0 local c4=${vDecMap}[b4] or 0 table.insert(${vBuffer},bor(lshift(c1,2),rshift(c2,4))) if b3 and b3~=61 then table.insert(${vBuffer},band(bor(lshift(c2,4),rshift(c3,2)),255)) end if b4 and b4~=61 then table.insert(${vBuffer},band(bor(lshift(c3,6),c4),255)) end end local r={} for i=1,#${vBuffer} do local idx=i-1 local t2=(${vBuffer}[i]-${k2})%256 local t1=bxor(t2,(${k3}-idx)%256) local orig=bxor(t1,(${k1}+(idx%13))%256) table.insert(r,char(orig)) end return table.concat(r) end;local ${vLoad}=${vEnv}["loadstring"] or (getgenv and getgenv()["loadstring"]) or function(s) return assert(loadstring(s)) end;local ${vFn},${vErr}=${vLoad}(${vUnpack}("${b64Payload}"));if ${vFn} then return ${vFn}() else error("Execution Error: "..tostring(${vErr}),0) end`;
 
-            // Ultra Compact Luau Runtime Decoder Engine
-            const luauRuntime = `local ${vB64}="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";local ${vDecMap}={};for i=1,64 do ${vDecMap}[string.byte(${vB64},i)]=i-1 end;local function ${vUnpack}(s)local b,n={},#s local byte,char,bor,lshift,rshift,band,bxor=string.byte,string.char,bit32.bor,bit32.lshift,bit32.rshift,bit32.band,bit32.bxor local ${vBuffer}={} for i=1,n,4 do local c1=${vDecMap}[byte(s,i)] or 0 local c2=${vDecMap}[byte(s,i+1)] or 0 local b3=byte(s,i+2) local b4=byte(s,i+3) local c3=${vDecMap}[b3] or 0 local c4=${vDecMap}[b4] or 0 table.insert(${vBuffer},bor(lshift(c1,2),rshift(c2,4))) if b3 and b3~=61 then table.insert(${vBuffer},band(bor(lshift(c2,4),rshift(c3,2)),255)) end if b4 and b4~=61 then table.insert(${vBuffer},band(bor(lshift(c3,6),c4),255)) end end local r={} for i=1,#${vBuffer} do local idx=i-1 local t2=(${vBuffer}[i]-${k2})%256 local t1=bxor(t2,(${k3}-idx)%256) local orig=bxor(t1,(${k1}+(idx%13))%256) table.insert(r,char(orig)) end return table.concat(r) end;local ${vLoad}=${vEnv}["loadstring"] or (getgenv and getgenv()["loadstring"]) or function(s) return assert(loadstring(s)) end;local ${vFn},${vErr}=${vLoad}(${vUnpack}("${b64Payload}"));if ${vFn} then return ${vFn}() else error("Security Fault",0) end`;
-
-            if (preset === 'max_security') {
-                return `${antiHookHeader}${luauRuntime}`;
-            } else {
-                return luauRuntime;
-            }
+            return luauRuntime;
         }
 
         function processObfuscation() {
