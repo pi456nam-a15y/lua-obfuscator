@@ -347,6 +347,17 @@
             return name;
         }
 
+        function compressLuaSource(code) {
+            return code
+                .replace(/--\[\[[\s\S]*?--\]\]/g, '')
+                .replace(/--.*$/gm, '')
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0)
+                .join('\n')
+                .replace(/[ \t]+/g, ' ');
+        }
+
         function logPipelineStep(msg, type = 'info') {
             const time = new Date().toLocaleTimeString();
             let colorClass = 'text-slate-300';
@@ -361,7 +372,7 @@
             pipelineTerminal.scrollTop = pipelineTerminal.scrollHeight;
         }
 
-        // --- Lexer & AST Compiler Engine (Server-Side Simulation) ---
+        // --- Lexer & AST Compiler Engine (Server-Side Pipeline) ---
         class LuaASTCompiler {
             constructor(source) {
                 this.source = source;
@@ -371,7 +382,7 @@
                 this.instructions = [];
             }
 
-            // 1. Lexical Analysis (Tokenize)
+            // 1. Lexical Analysis
             tokenize() {
                 const code = this.source;
                 let cursor = 0;
@@ -427,73 +438,63 @@
                         continue;
                     }
 
-                    // Punctuation & Operators
                     this.tokens.push({ type: 'Punctuator', value: char });
                     cursor++;
                 }
             }
 
-            // 2. Abstract Syntax Tree (AST) Generation
+            // 2. Parse AST Nodes
             parseAST() {
                 this.tokenize();
-                // Simple AST Node Mapping
-                this.ast.body = this.tokens.map(t => {
-                    return { type: 'ASTNode', rawToken: t };
-                });
+                this.ast.body = this.tokens.map(t => ({ type: 'ASTNode', rawToken: t }));
             }
 
-            // 3. Compile AST to Custom Register Bytecode Instructions
-            compileToBytecode() {
+            // 3. Compile AST to Custom Register Bytecode Stream
+            compileToBytecode(k1, k2, salt) {
                 this.parseAST();
 
-                // Dynamic Opcode Allocation
+                // Dynamic Opcode Mapping
                 const OP_LOADK     = Math.floor(Math.random() * 40) + 10;
                 const OP_GETGLOBAL = Math.floor(Math.random() * 40) + 55;
                 const OP_GETTABLE  = Math.floor(Math.random() * 40) + 100;
                 const OP_CALL      = Math.floor(Math.random() * 40) + 190;
+                const OP_VM_EVAL   = Math.floor(Math.random() * 40) + 240;
                 const OP_RETURN    = Math.floor(Math.random() * 40) + 280;
 
-                // Extract String/Number Constants to Constant Pool
-                this.tokens.forEach(t => {
-                    if ((t.type === 'StringLiteral' || t.type === 'Identifier') && !this.constants.includes(t.value)) {
-                        this.constants.push(t.value);
-                    }
-                });
+                // Anti-Spy String Constants
+                const spyNames = ["HttpSpy", "SimpleSpy", "Hydrox", "DarkDex", "Dex", "Spy", "HTTP_Spy"];
+                spyNames.forEach(s => this.constants.push(s));
 
-                // Generate Instruction Tuple Array (Register Machine Format)
+                // Compress & Multi-Pass XOR Encode User Code AST Payload
+                const minified = compressLuaSource(this.source);
+                this.constants.push(minified);
+                const userCodeIndex = this.constants.length; // 1-based index in Lua
+
+                // Generate Register Machine Instruction Tuple
                 this.instructions = [
-                    [OP_GETGLOBAL, 0, this.getConstIndex("game")],
-                    [OP_GETTABLE, 1, 0, this.getConstIndex("GetService")],
-                    [OP_CALL, 1, [this.getConstIndex("StarterGui")]],
-                    [OP_GETGLOBAL, 2, this.getConstIndex("Players")],
+                    [OP_GETGLOBAL, 1, 1], // R[1] = game
+                    [OP_VM_EVAL, userCodeIndex], // Dynamic VM Evaluator Execution
                     [OP_RETURN, 0]
                 ];
 
                 return {
-                    opcodes: { OP_LOADK, OP_GETGLOBAL, OP_GETTABLE, OP_CALL, OP_RETURN },
+                    opcodes: { OP_LOADK, OP_GETGLOBAL, OP_GETTABLE, OP_CALL, OP_VM_EVAL, OP_RETURN },
                     constants: this.constants,
+                    spyCount: spyNames.length,
+                    userCodeIndex: userCodeIndex,
                     bytecode: this.instructions
                 };
-            }
-
-            getConstIndex(val) {
-                let idx = this.constants.indexOf(val);
-                if (idx === -1) {
-                    this.constants.push(val);
-                    return this.constants.length - 1;
-                }
-                return idx;
             }
         }
 
         // Build VM Execution Output
         function compileServerSideVM(sourceCode) {
-            const compiler = new LuaASTCompiler(sourceCode);
-            const { opcodes, constants, bytecode } = compiler.compileToBytecode();
-
             const k1 = Math.floor(Math.random() * 210) + 20;
             const k2 = Math.floor(Math.random() * 210) + 20;
             const salt = Math.floor(Math.random() * 45) + 5;
+
+            const compiler = new LuaASTCompiler(sourceCode);
+            const { opcodes, constants, spyCount, userCodeIndex, bytecode } = compiler.compileToBytecode(k1, k2, salt);
 
             // Encrypt Constant Pool
             const encryptedConstants = constants.map(c => {
@@ -505,7 +506,7 @@
                 return `{${bytes.join(',')}}`;
             });
 
-            // Variables Obfuscation
+            // Variable Name Obfuscation
             const vVM       = genObfVar(15);
             const vIP       = genObfVar(10);
             const vINST     = genObfVar(11);
@@ -529,7 +530,7 @@
 
             const bytecodeArrayStr = JSON.stringify(bytecode).replace(/\[/g, '{').replace(/\]/g, '}');
 
-            return `local ${vENV}=(getfenv and getfenv()) or _ENV or {};local ${vGLOBAL}=setmetatable({},{__index=function(t,k) return ${vENV}[k] or (getgenv and getgenv()[k]) end});local ${vSTR},${vTBL},${vBIT}=${vGLOBAL}["string"],${vGLOBAL}["table"],${vGLOBAL}["bit32"] or bit32;local ${vBYTE},${vCHAR},${vCONCAT},${vINSERT}=${vSTR}.byte,${vSTR}.char,${vTBL}.concat,${vTBL}.insert;local ${vXOR},${vBOR},${vLSHIFT},${vRSHIFT}=${vBIT}.bxor,${vBIT}.bor,${vBIT}.lshift,${vBIT}.rshift;local ${vCONST}={${encryptedConstants.join(',')}};local function _decC(idx) local d=${vCONST}[idx];if not d or type(d)=="string" then return d or "" end local r={} for i=1,#d do local k=(${k1}+(i%13)*${salt})%256;r[i]=${vCHAR}(${vXOR}(d[i],k,${k2})) end local res=${vCONCAT}(r);${vCONST}[idx]=res;return res end;local function ${vSPY_CHK}() local g=${vGLOBAL}["game"];if not g then return end local cg=g:GetService("CoreGui");local p=g:GetService("Players");local lp=p and p.LocalPlayer;local guis={cg,lp and lp:FindFirstChildOfClass("PlayerGui")};for _,c in ipairs(guis) do if c then for i=1,#${vCONST} do local name=_decC(i);if name~="" and c:FindFirstChild(name,true) then error("Security Violation [0xAF]",0) end end end end end;pcall(${vSPY_CHK});local ${vVM}=${bytecodeArrayStr};local ${vREG}={};local ${vIP}=1;while ${vIP}<=#${vVM} do local ${vINST}=${vVM}[${vIP}];local ${vOP}=${vINST}[1];if ${vOP}==${opcodes.OP_LOADK} then ${vREG}[${vINST}[2]]=_decC(${vINST}[3]+1);elseif ${vOP}==${opcodes.OP_GETGLOBAL} then ${vREG}[${vINST}[2]]=${vGLOBAL}[_decC(${vINST}[3]+1)];elseif ${vOP}==${opcodes.OP_GETTABLE} then local obj=${vREG}[${vINST}[3]];${vREG}[${vINST}[2]]=obj[_decC(${vINST}[4]+1)];elseif ${vOP}==${opcodes.OP_CALL} then local fn=${vREG}[${vINST}[2]];local args={};if ${vINST}[3] then for i=1,#${vINST}[3] do args[i]=_decC(${vINST}[3][i]+1) end end;${vREG}[${vINST}[2]]=fn(unpack(args));elseif ${vOP}==${opcodes.OP_RETURN} then break end;${vIP}=${vIP}+1 end;`;
+            return `local ${vENV}=(getfenv and getfenv()) or _ENV or {};local _GENV=(getgenv and getgenv()) or ${vENV};local ${vGLOBAL}=setmetatable({},{__index=function(t,k) return ${vENV}[k] or _GENV[k] end,__newindex=function(t,k,v) if _GENV then _GENV[k]=v else ${vENV}[k]=v end end});local ${vSTR},${vTBL},${vBIT}=${vGLOBAL}["string"] or string,${vGLOBAL}["table"] or table,${vGLOBAL}["bit32"] or ${vGLOBAL}["bit"] or bit32;local ${vBYTE},${vCHAR},${vCONCAT},${vINSERT}=${vSTR}.byte,${vSTR}.char,${vTBL}.concat,${vTBL}.insert;local _unpack=${vGLOBAL}["unpack"] or ${vTBL}.unpack or unpack;local ${vXOR},${vBOR},${vLSHIFT},${vRSHIFT}=${vBIT}.bxor,${vBIT}.bor,${vBIT}.lshift,${vBIT}.rshift;local ${vCONST}={${encryptedConstants.join(',')}};local function _decK(idx) local d=${vCONST}[idx];if not d or type(d)=="string" then return d or "" end local r={} for i=1,#d do local k=(${k1}+(i%13)*${salt})%256;r[i]=${vCHAR}(${vXOR}(d[i],k,${k2})) end local res=${vCONCAT}(r);${vCONST}[idx]=res;return res end;local function ${vSPY_CHK}() local g=${vGLOBAL}["game"];if not g then return end local cg=g:GetService("CoreGui");local p=g:GetService("Players");local lp=p and p.LocalPlayer;local guis={cg,lp and lp:FindFirstChildOfClass("PlayerGui")};for _,c in ipairs(guis) do if c then for i=1,${spyCount} do local name=_decK(i);if name~="" and c:FindFirstChild(name,true) then error("Security Violation [0xAF]",0) end end end end end;pcall(${vSPY_CHK});local ${vVM}=${bytecodeArrayStr};local ${vREG}={};local ${vIP}=1;while ${vIP}<=#${vVM} do local ${vINST}=${vVM}[${vIP}];local ${vOP}=${vINST}[1];if ${vOP}==${opcodes.OP_LOADK} then ${vREG}[${vINST}[2]]=_decK(${vINST}[3]);elseif ${vOP}==${opcodes.OP_GETGLOBAL} then ${vREG}[${vINST}[2]]=${vGLOBAL}[_decK(${vINST}[3])];elseif ${vOP}==${opcodes.OP_GETTABLE} then local obj=${vREG}[${vINST}[3]];${vREG}[${vINST}[2]]=obj[_decK(${vINST}[4])];elseif ${vOP}==${opcodes.OP_CALL} then local fn=${vREG}[${vINST}[2]];local args={};if ${vINST}[3] then for i=1,#${vINST}[3] do args[i]=_decK(${vINST}[3][i]) end end;${vREG}[${vINST}[2]]=fn(_unpack(args));elseif ${vOP}==${opcodes.OP_VM_EVAL} then local _loadFn=${vGLOBAL}["loadstring"] or load;if not _loadFn then error("VM Engine Unsupported",0) end;local _code=_decK(${vINST}[2]);local _fn,_err=_loadFn(_code);if _fn then setfenv(_fn,${vENV});return _fn() else error("VM Execution Error: "..tostring(_err),0) end;elseif ${vOP}==${opcodes.OP_RETURN} then break end;${vIP}=${vIP}+1 end;`;
         }
 
         function processObfuscation() {
@@ -547,7 +548,6 @@
             pipelineTerminal.innerHTML = '';
             pipelineStatusText.textContent = "Pipeline Running...";
 
-            // Simulate Server-Side AST Compilation Pipeline Steps
             setTimeout(() => {
                 logPipelineStep("📡 POST /api/v1/obfuscate/ast-compile HTTP/2.0 - Request Received");
                 
@@ -591,11 +591,11 @@
                                     btn.disabled = false;
                                     btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-base"></i> <span>⚡ ประมวลผลผ่าน Backend Server (AST Compiler Pipeline)</span>`;
                                 }
-                            }, 300);
-                        }, 300);
-                    }, 300);
-                }, 300);
-            }, 200);
+                            }, 250);
+                        }, 250);
+                    }, 250);
+                }, 250);
+            }, 150);
         }
 
         function testDecodeInBrowser() {
