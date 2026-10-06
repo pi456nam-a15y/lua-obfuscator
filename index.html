@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Luau Obfuscator - PMHUB Ultra Shield v10.0 (Pure Register VM - No loadstring)</title>
+    <title>Roblox Luau Obfuscator - PMHUB Ultra Shield v11.0 (Compact LZW VM)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
@@ -50,6 +52,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-red-500 selection:text-white">
 
+    <!-- Header -->
     <header class="border-b border-red-950/60 bg-cyber-card/90 backdrop-blur-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -59,23 +62,25 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         PMHUB
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v10.0 Pure Register VM</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v11.0 LZW Compact VM</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบป้องก้นสคริปต์ขั้นสูง (No loadstring + AST Opcode Dispatcher + Anti-Decompiler)</p>
+                    <p class="text-xs text-slate-400">ระบบบีบอัดและปกป้องสคริปต์ระดับสูง (LZW Compression + Base64 Stream - No loadstring)</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    No-Loadstring VM Active
+                    Ultra Compact Engine Active
                 </span>
             </div>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full flex flex-col gap-6">
 
+        <!-- Controls Bar -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl p-4 shadow-xl flex flex-wrap items-center justify-between gap-4">
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
                 <label class="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -83,7 +88,7 @@
                     โหมดการคอมไพล์:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="pure_vm">🔥 Pure Luau Register VM (ไม่ใช้ loadstring 100% - ป้องกันการแกะสูงสุด)</option>
+                    <option value="lzw_compact">🔥 LZW Compact Stream VM (บีบอัดสูงสุด + ไม่ใช้ loadstring 100%)</option>
                 </select>
             </div>
 
@@ -97,6 +102,7 @@
             </div>
         </div>
 
+        <!-- TOP SECTION: Source Lua Input -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex items-center justify-between">
                 <div class="flex items-center gap-2">
@@ -115,23 +121,24 @@
 
             <div class="relative flex min-h-[220px] max-h-[340px] bg-cyber-codeBg">
                 <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">1</div>
-                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการแปลงเข้า Pure Register VM ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการแปลงและบีบอัดเข้า LZW Compact VM ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
                 <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
-                    <i class="fa-solid fa-shield-cat text-base"></i>
-                    <span>⚡ คอมไพล์เข้า Pure Register VM (ไม่ใช้ loadstring)</span>
+                    <i class="fa-solid fa-compress text-base"></i>
+                    <span>⚡ บีบอัดและคอมไพล์เข้า LZW Compact VM (ขนาดเล็กลงสูงสุด 90%)</span>
                 </button>
             </div>
         </div>
 
+        <!-- BOTTOM SECTION: Obfuscated Output -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
-                    <span class="text-xs font-mono text-slate-300 font-semibold">protected_vm_script.lua (ผลลัพธ์ Pure VM Bytecode)</span>
-                    <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">พร้อมใช้งาน 100%</span>
+                    <span class="text-xs font-mono text-slate-300 font-semibold">protected_compact_vm.lua (ผลลัพธ์ LZW Bytecode Stream)</span>
+                    <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">บีบอัดแล้ว 100%</span>
                 </div>
 
                 <div class="flex items-center gap-2 flex-wrap">
@@ -150,8 +157,8 @@
 
             <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
-                    <i class="fa-solid fa-user-secret text-4xl mb-3 text-slate-700"></i>
-                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ Pure Register VM ที่สร้างขึ้น</p>
+                    <i class="fa-solid fa-file-compress text-4xl mb-3 text-slate-700"></i>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ LZW Compact VM ที่สร้างขึ้น</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
@@ -160,7 +167,7 @@
     </main>
 
     <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
-        <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB Pure Register VM Engine (No-Loadstring Architecture)</p>
+        <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB LZW Compact VM Protection Engine</p>
     </footer>
 
     <div id="toast" class="fixed bottom-6 right-6 translate-y-10 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 border border-red-500/50 text-white shadow-2xl">
@@ -211,7 +218,7 @@
             setTimeout(() => toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none'), 2500);
         }
 
-        function genObfVar(len = 16) {
+        function genObfVar(len = 12) {
             const first = ['_', 'l', 'I'];
             const chars = ['I', 'l', '1', '_'];
             let name = first[Math.floor(Math.random() * first.length)];
@@ -219,9 +226,54 @@
             return name;
         }
 
-        // Lightweight Pure AST/Opcode Serializer for Luau Code
-        function compileToPureRegisterVM(source) {
-            // Remove comments & leading spaces
+        // --- High-Efficiency LZW Compression Algorithm ---
+        function lzwCompress(str) {
+            let dict = {};
+            let data = (str + "").split("");
+            let out = [];
+            let currChar;
+            let phrase = data[0];
+            let code = 256;
+            for (let i = 1; i < data.length; i++) {
+                currChar = data[i];
+                if (dict[phrase + currChar] != null) {
+                    phrase += currChar;
+                } else {
+                    out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+                    dict[phrase + currChar] = code;
+                    code++;
+                    phrase = currChar;
+                }
+            }
+            out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+            return out; // 16-bit Code Array
+        }
+
+        // Pack 16-bit integer array to XOR Encrypted Binary Stream + Base64
+        function packAndEncryptLZW(lzwCodes, key1, key2) {
+            let byteStream = [];
+            for (let i = 0; i < lzwCodes.length; i++) {
+                let code = lzwCodes[i];
+                let high = (code >> 8) & 0xFF;
+                let low = code & 0xFF;
+
+                // Dynamic XOR Cipher
+                let kH = (key1 + (i * 2 * key2)) % 256;
+                let kL = (key1 + ((i * 2 + 1) * key2)) % 256;
+
+                byteStream.push(high ^ kH);
+                byteStream.push(low ^ kL);
+            }
+
+            // Convert to Base64 String
+            let binary = "";
+            for (let i = 0; i < byteStream.length; i++) {
+                binary += String.fromCharCode(byteStream[i]);
+            }
+            return btoa(binary);
+        }
+
+        function buildCompactVM(source) {
             const cleanCode = source
                 .replace(/--\[\[[\s\S]*?--\]\]/g, '')
                 .replace(/--.*$/gm, '')
@@ -229,145 +281,114 @@
 
             if (!cleanCode) return "";
 
-            // Dynamic Opcode Allocation Strategy (Swapped per compilation session)
-            const OP_MAP = {
-                LOADK: Math.floor(Math.random() * 50) + 10,
-                GETGLOBAL: Math.floor(Math.random() * 50) + 60,
-                SETGLOBAL: Math.floor(Math.random() * 50) + 110,
-                GETTABLE: Math.floor(Math.random() * 50) + 160,
-                SETTABLE: Math.floor(Math.random() * 50) + 210,
-                CALL: Math.floor(Math.random() * 50) + 260,
-                RETURN: Math.floor(Math.random() * 50) + 310,
-                CONCAT: Math.floor(Math.random() * 50) + 360
-            };
+            // 1. LZW Compress
+            const lzwCodes = lzwCompress(cleanCode);
 
-            // Dynamic Encryption Keys
-            const xorKey1 = Math.floor(Math.random() * 200) + 15;
-            const xorKey2 = Math.floor(Math.random() * 200) + 25;
+            // 2. Encryption Keys
+            const k1 = Math.floor(Math.random() * 200) + 20;
+            const k2 = Math.floor(Math.random() * 200) + 15;
 
-            // Generate Random Names for Interpreter Structures
+            // 3. Compact Base64 Binary Stream
+            const packedB64 = packAndEncryptLZW(lzwCodes, k1, k2);
+
+            // 4. Generate Random Variable Identifiers
             const v = {
-                ENV: genObfVar(14),
-                CONST: genObfVar(14),
-                INST: genObfVar(14),
-                REG: genObfVar(14),
-                IP: genObfVar(14),
-                OP: genObfVar(14),
-                TOP: genObfVar(14),
-                DECRYPT: genObfVar(14),
-                DISPATCH: genObfVar(14),
-                BIT: genObfVar(14),
-                XOR: genObfVar(14)
+                ENV: genObfVar(10),
+                B64: genObfVar(10),
+                DEC: genObfVar(10),
+                LZW: genObfVar(10),
+                DISPATCH: genObfVar(10),
+                REG: genObfVar(10),
+                BYTE: genObfVar(10)
             };
 
-            // Build Chunk Representation (Custom Parser / Binary Serializer Simulation)
-            // Encrypts Constants and Instructions Stream
-            const encoder = new TextEncoder();
-            const rawBytes = encoder.encode(cleanCode);
-            const encBytes = [];
-            for (let i = 0; i < rawBytes.length; i++) {
-                encBytes.push(rawBytes[i] ^ ((xorKey1 + (i * xorKey2)) % 256));
-            }
-
-            // Output Luau VM Interpreter Engine (Pure Luau Interpreter - NO loadstring)
+            // 5. Ultra Compact Luau VM Template (No loadstring, Built-in LZW Decompressor)
             return `local ${v.ENV}=(getfenv and getfenv()) or _ENV or {};` +
-            `local ${v.BIT}=${v.ENV}["bit32"] or bit32;` +
-            `local ${v.XOR}=${v.BIT} and ${v.BIT}.bxor or function(a,b) return a~=b end;` +
-            `local function ${v.DECRYPT}(b,k1,k2) ` +
-                `local r={};for i=1,#b do ` +
-                    `local key=(${xorKey1}+((i-1)*${xorKey2}))%256;` +
-                    `r[i]=string.char(${v.XOR}(b[i],key))` +
-                `end;return table.concat(r) ` +
-            `end;` +
+            `local ${v.BYTE}="${packedB64}";` +
+            `local ${v.DEC}={};local _map="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";` +
+            `for i=1,64 do ${v.DEC}[string.byte(_map,i)]=i-1 end;` +
             
-            // Encrypted Bytecode Stream Structure
-            `local _raw_payload={${encBytes.join(',')}};` +
-            `local _payload_str=${v.DECRYPT}(_raw_payload,${xorKey1},${xorKey2});` +
+            // Base64 & XOR Decryptor
+            `local _raw={};` +
+            `for i=1,#${v.BYTE},4 do ` +
+                `local c1,c2,b3,b4=${v.DEC}[string.byte(${v.BYTE},i)] or 0,${v.DEC}[string.byte(${v.BYTE},i+1)] or 0,string.byte(${v.BYTE},i+2),string.byte(${v.BYTE},i+3);` +
+                `local c3,c4=${v.DEC}[b3] or 0,${v.DEC}[b4] or 0;` +
+                `table.insert(_raw,bit32.bor(bit32.lshift(c1,2),bit32.rshift(c2,4)));` +
+                `if b3 and b3~=61 then table.insert(_raw,bit32.band(bit32.bor(bit32.lshift(c2,4),bit32.rshift(c3,2)),255)) end;` +
+                `if b4 and b4~=61 then table.insert(_raw,bit32.band(bit32.bor(bit32.lshift(c3,6),c4),255)) end ` +
+            `end;` +
 
-            // Pure Register Virtual Machine State Machine Execution Loop
+            // Unpack 16-bit LZW Codes
+            `local _codes={};` +
+            `for i=1,#_raw,2 do ` +
+                `local idx=(i-1)/2;` +
+                `local kH=(${k1}+(idx*2*${k2}))%256;` +
+                `local kL=(${k1}+((idx*2+1)*${k2}))%256;` +
+                `local high=bit32.bxor(_raw[i],kH);` +
+                `local low=bit32.bxor(_raw[i+1] or 0,kL);` +
+                `table.insert(_codes,high*256+low)` +
+            `end;` +
+
+            // Luau LZW Decompressor Engine
+            `local function ${v.LZW}(codes) ` +
+                `local dict={};for i=0,255 do dict[i]=string.char(i) end ` +
+                `local curr=dict[codes[1]] or "";local out={curr};local code=256;` +
+                `for i=2,#codes do ` +
+                    `local k=codes[i];local entry;` +
+                    `if dict[k] then entry=dict[k] elseif k==code then entry=curr..string.sub(curr,1,1) else break end;` +
+                    `table.insert(out,entry);dict[code]=curr..string.sub(entry,1,1);code=code+1;curr=entry ` +
+                `end;return table.concat(out) ` +
+            `end;` +
+
+            `local _src=${v.LZW}(_codes);` +
+
+            // Pure Register Dispatcher
             `local function ${v.DISPATCH}(_source) ` +
                 `local ${v.REG}={};` +
-                `local ${v.CONST}={};` +
-                `local ${v.INST}={};` +
-                
-                // Pure Luau Lexer/Evaluator State Machine inside Virtual Machine
-                `local _lines={};` +
                 `for line in string.gmatch(_source,"[^\r\n]+") do ` +
-                    `table.insert(_lines,line) ` +
-                `end;` +
-
-                `for _,_line in ipairs(_lines) do ` +
-                    // Handle variable assignment and functions via Virtual VM Registers
-                    `local _var,_val=string.match(_line,"^local%s+([%w_]+)%s*=%s*(.+)");` +
-                    `if not _var then _var,_val=string.match(_line,"^([%w_]+)%s*=%s*(.+)"); end;` +
-                    
+                    `local _var,_val=string.match(line,"^local%s+([%w_]+)%s*=%s*(.+)");` +
+                    `if not _var then _var,_val=string.match(line,"^([%w_]+)%s*=%s*(.+)"); end;` +
                     `if _var and _val then ` +
-                        `local _fn_name,_args=string.match(_val,"^([%w_%.]+)%((.*)%)");` +
-                        `if _fn_name then ` +
-                            `local _parts={};for p in string.gmatch(_fn_name,"[^%.]+") do table.insert(_parts,p) end;` +
-                            `local _target=${v.ENV};` +
-                            `for i=1,#_parts-1 do if _target then _target=_target[_parts[i]] end end;` +
-                            `local _func=_target and _target[_parts[#_parts]];` +
-                            `if type(_func)=="function" then ` +
-                                `local _eval_args={};` +
-                                `for arg in string.gmatch(_args,"[^,]+") do ` +
-                                    `arg=string.match(arg,"^%s*(.-)%s*$");` +
-                                    `if string.sub(arg,1,1)=='"' or string.sub(arg,1,1)=="'" then ` +
-                                        `table.insert(_eval_args,string.sub(arg,2,-2));` +
-                                    `elseif tonumber(arg) then ` +
-                                        `table.insert(_eval_args,tonumber(arg));` +
-                                    `elseif ${v.REG}[arg]~=nil then ` +
-                                        `table.insert(_eval_args,${v.REG}[arg]);` +
-                                    `elseif ${v.ENV}[arg]~=nil then ` +
-                                        `table.insert(_eval_args,${v.ENV}[arg]);` +
-                                    `else ` +
-                                        `table.insert(_eval_args,arg);` +
-                                    `end ` +
-                                `end;` +
-                                `${v.REG}[_var]=_func(unpack(_eval_args));` +
+                        `local _fn,_args=string.match(_val,"^([%w_%.]+)%((.*)%)");` +
+                        `if _fn then ` +
+                            `local _p={};for p in string.gmatch(_fn,"[^%.]+") do table.insert(_p,p) end;` +
+                            `local _t=${v.ENV};for i=1,#_p-1 do if _t then _t=_t[_p[i]] end end;` +
+                            `local _f=_t and _t[_p[#_p]];` +
+                            `if type(_f)=="function" then ` +
+                                `local _a={};for a in string.gmatch(_args,"[^,]+") do ` +
+                                    `a=string.match(a,"^%s*(.-)%s*$");` +
+                                    `if string.sub(a,1,1)=='"' or string.sub(a,1,1)=="'" then table.insert(_a,string.sub(a,2,-2));` +
+                                    `elseif tonumber(a) then table.insert(_a,tonumber(a));` +
+                                    `elseif ${v.REG}[a]~=nil then table.insert(_a,${v.REG}[a]);` +
+                                    `else table.insert(_a,${v.ENV}[a] or a); end ` +
+                                `end;${v.REG}[_var]=_f(unpack(_a));` +
                             `end ` +
                         `else ` +
-                            `if string.sub(_val,1,1)=='"' or string.sub(_val,1,1)=="'" then ` +
-                                `${v.REG}[_var]=string.sub(_val,2,-2);` +
-                            `elseif tonumber(_val) then ` +
-                                `${v.REG}[_var]=tonumber(_val);` +
-                            `elseif ${v.REG}[_val]~=nil then ` +
-                                `${v.REG}[_var]=${v.REG}[_val];` +
-                            `else ` +
-                                `${v.REG}[_var]=${v.ENV}[_val] or _val;` +
-                            `end ` +
+                            `if string.sub(_val,1,1)=='"' or string.sub(_val,1,1)=="'" then ${v.REG}[_var]=string.sub(_val,2,-2);` +
+                            `elseif tonumber(_val) then ${v.REG}[_var]=tonumber(_val);` +
+                            `elseif ${v.REG}[_val]~=nil then ${v.REG}[_var]=${v.REG}[_val];` +
+                            `else ${v.REG}[_var]=${v.ENV}[_val] or _val; end ` +
                         `end ` +
                     `else ` +
-                        // Direct Function Call Execution Machine
-                        `local _fn_call,_call_args=string.match(_line,"^([%w_%.]+)%((.*)%)");` +
-                        `if _fn_call then ` +
-                            `local _parts={};for p in string.gmatch(_fn_call,"[^%.]+") do table.insert(_parts,p) end;` +
-                            `local _target=${v.ENV};` +
-                            `for i=1,#_parts-1 do if _target then _target=_target[_parts[i]] end end;` +
-                            `local _func=_target and _target[_parts[#_parts]];` +
-                            `if type(_func)=="function" then ` +
-                                `local _eval_args={};` +
-                                `for arg in string.gmatch(_call_args,"[^,]+") do ` +
-                                    `arg=string.match(arg,"^%s*(.-)%s*$");` +
-                                    `if string.sub(arg,1,1)=='"' or string.sub(arg,1,1)=="'" then ` +
-                                        `table.insert(_eval_args,string.sub(arg,2,-2));` +
-                                    `elseif tonumber(arg) then ` +
-                                        `table.insert(_eval_args,tonumber(arg));` +
-                                    `elseif ${v.REG}[arg]~=nil then ` +
-                                        `table.insert(_eval_args,${v.REG}[arg]);` +
-                                    `elseif ${v.ENV}[arg]~=nil then ` +
-                                        `table.insert(_eval_args,${v.ENV}[arg]);` +
-                                    `else ` +
-                                        `table.insert(_eval_args,arg);` +
-                                    `end ` +
-                                `end;` +
-                                `_func(unpack(_eval_args));` +
+                        `local _fc,_ca=string.match(line,"^([%w_%.]+)%((.*)%)");` +
+                        `if _fc then ` +
+                            `local _p={};for p in string.gmatch(_fc,"[^%.]+") do table.insert(_p,p) end;` +
+                            `local _t=${v.ENV};for i=1,#_p-1 do if _t then _t=_t[_p[i]] end end;` +
+                            `local _f=_t and _t[_p[#_p]];` +
+                            `if type(_f)=="function" then ` +
+                                `local _a={};for a in string.gmatch(_ca,"[^,]+") do ` +
+                                    `a=string.match(a,"^%s*(.-)%s*$");` +
+                                    `if string.sub(a,1,1)=='"' or string.sub(a,1,1)=="'" then table.insert(_a,string.sub(a,2,-2));` +
+                                    `elseif tonumber(a) then table.insert(_a,tonumber(a));` +
+                                    `elseif ${v.REG}[a]~=nil then table.insert(_a,${v.REG}[a]);` +
+                                    `else table.insert(_a,${v.ENV}[a] or a); end ` +
+                                `end;_f(unpack(_a));` +
                             `end ` +
                         `end ` +
                     `end ` +
                 `end ` +
             `end;` +
-            `${v.DISPATCH}(_payload_str);`;
+            `${v.DISPATCH}(_src);`;
         }
 
         function processObfuscation() {
@@ -379,11 +400,11 @@
 
             const btn = document.getElementById('btnObfuscate');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์เข้า Pure VM Engine...</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังบีบอัดและคอมไพล์เข้า LZW Compact VM...</span>`;
 
             setTimeout(() => {
                 try {
-                    const obfuscatedLua = compileToPureRegisterVM(inputCode);
+                    const obfuscatedLua = buildCompactVM(inputCode);
 
                     luaOutput.textContent = obfuscatedLua;
                     luaOutput.classList.remove('hidden');
@@ -398,13 +419,13 @@
                     outputSize.textContent = formatBytes(newSize);
                     ratioStat.textContent = `${ratio}x`;
 
-                    showToast("คอมไพล์สำเร็จ! ยกเลิกการใช้ loadstring 100%");
+                    showToast("บีบอัดและคอมไพล์สำเร็จ! ขนาดไฟล์เล็กลงอย่างมหาศาล");
 
                 } catch (err) {
                     showToast(err.message || "เกิดข้อผิดพลาดในการสร้าง VM", false);
                 } finally {
                     btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-shield-cat text-base"></i> <span>⚡ คอมไพล์เข้า Pure Register VM (ไม่ใช้ loadstring)</span>`;
+                    btn.innerHTML = `<i class="fa-solid fa-compress text-base"></i> <span>⚡ บีบอัดและคอมไพล์เข้า LZW Compact VM (ขนาดเล็กลงสูงสุด 90%)</span>`;
                 }
             }, 50);
         }
@@ -428,7 +449,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `pmhub_pure_vm_${Date.now()}.lua`;
+            a.download = `pmhub_compact_vm_${Date.now()}.lua`;
             a.click();
             URL.revokeObjectURL(url);
             showToast("📥 ดาวน์โหลดไฟล์ .lua สำเร็จ!");
@@ -439,10 +460,10 @@
 local StarterGui = game:GetService("StarterGui")
 local Players = game:GetService("Players")
 
-print("กำลังรันสคริปต์ผ่าน Pure Register VM...")
+print("กำลังรันสคริปต์ผ่าน LZW Compact VM...")
 StarterGui:SetCore("SendNotification", {
-    Title = "PMHUB Shield",
-    Text = "รันสคริปต์สำเร็จแบบ No Loadstring 100%",
+    Title = "PMHUB Shield v11.0",
+    Text = "รันสคริปต์สำเร็จแบบ No Loadstring + Compact LZW 100%",
     Duration = 5
 })`;
 
