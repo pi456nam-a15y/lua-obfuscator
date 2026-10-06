@@ -358,6 +358,7 @@
                         this.pos++;
                     } else if (ch === '-' && this.input[this.pos + 1] === '-') {
                         this.pos += 2;
+                        while (this.pos < this.len && this.input[this.pos] === ' ') this.pos++;
                         if (this.input[this.pos] === '[') {
                             let sep = this.getLongStringSep();
                             if (sep !== null) {
@@ -436,7 +437,7 @@
                         str += this.input[this.pos++];
                     }
                     const keywords = [
-                        'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function',
+                        'and', 'break', 'continue', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function',
                         'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then', 'true',
                         'until', 'while'
                     ];
@@ -449,16 +450,26 @@
                 if (this.isDigit(ch) || (ch === '.' && this.isDigit(this.input[this.pos + 1]))) {
                     let numStr = '';
                     if (ch === '0' && (this.input[this.pos + 1] === 'x' || this.input[this.pos + 1] === 'X')) {
-                        numStr += this.input[this.pos++]; numStr += this.input[this.pos++];
+                        this.pos += 2;
                         while (this.pos < this.len && /[0-9a-fA-F]/.test(this.input[this.pos])) {
                             numStr += this.input[this.pos++];
                         }
-                        return { type: 'NUMBER', value: parseInt(numStr, 16), line: this.line };
+                        return { type: 'NUMBER', value: parseInt(numStr, 16) || 0, line: this.line };
                     }
-                    while (this.pos < this.len && (this.isDigit(this.input[this.pos]) || this.input[this.pos] === '.' || this.input[this.pos] === 'e' || this.input[this.pos] === 'E')) {
-                        numStr += this.input[this.pos++];
+                    while (this.pos < this.len) {
+                        let c = this.input[this.pos];
+                        if (this.isDigit(c) || c === '.') {
+                            numStr += this.input[this.pos++];
+                        } else if (c === 'e' || c === 'E') {
+                            numStr += this.input[this.pos++];
+                            if (this.input[this.pos] === '+' || this.input[this.pos] === '-') {
+                                numStr += this.input[this.pos++];
+                            }
+                        } else {
+                            break;
+                        }
                     }
-                    return { type: 'NUMBER', value: parseFloat(numStr), line: this.line };
+                    return { type: 'NUMBER', value: parseFloat(numStr) || 0, line: this.line };
                 }
 
                 if (ch === '"' || ch === "'") {
@@ -609,9 +620,25 @@
             }
 
             parseStatement() {
+                if (this.match('SYMBOL', ';')) return;
+
                 let tok = this.peek();
 
                 if (tok.type === 'KEYWORD') {
+                    if (tok.value === 'do') {
+                        this.consume();
+                        this.parseChunk();
+                        this.expect('KEYWORD', 'end');
+                        return;
+                    }
+
+                    if (tok.value === 'continue') {
+                        this.consume();
+                        this.emit(OP_JUMP, 0, 0, 0);
+                        this.match('SYMBOL', ';');
+                        return;
+                    }
+
                     if (tok.value === 'local') {
                         this.consume();
                         if (this.peek().value === 'function') {
@@ -828,6 +855,7 @@
                     if (tok.value === 'break') {
                         this.consume();
                         this.emit(OP_JUMP, 0, 0, 0);
+                        this.match('SYMBOL', ';');
                         return;
                     }
                 }
@@ -880,6 +908,8 @@
                     else if (opStr === '-=') this.emit(OP_SUB, resReg, lhsReg, rhsReg);
                     else if (opStr === '*=') this.emit(OP_MUL, resReg, lhsReg, rhsReg);
                     else if (opStr === '/=') this.emit(OP_DIV, resReg, lhsReg, rhsReg);
+                    else if (opStr === '%=') this.emit(OP_MOD, resReg, lhsReg, rhsReg);
+                    else if (opStr === '^=') this.emit(OP_POW, resReg, lhsReg, rhsReg);
                     else if (opStr === '..=') this.emit(OP_CONCAT, resReg, lhsReg, rhsReg);
 
                     this.assignLhs(lhs, resReg);
@@ -944,8 +974,27 @@
                     else if (opStr === '^') this.emit(OP_POW, resReg, leftReg, rightReg);
                     else if (opStr === '..') this.emit(OP_CONCAT, resReg, leftReg, rightReg);
                     else if (opStr === '==') this.emit(OP_EQ, resReg, leftReg, rightReg);
+                    else if (opStr === '~=') {
+                        let eqReg = this.allocReg();
+                        this.emit(OP_EQ, eqReg, leftReg, rightReg);
+                        this.emit(OP_NOT, resReg, eqReg, 0);
+                    }
                     else if (opStr === '<') this.emit(OP_LESS, resReg, leftReg, rightReg);
+                    else if (opStr === '>') this.emit(OP_LESS, resReg, rightReg, leftReg);
                     else if (opStr === '<=') this.emit(OP_LESSEQ, resReg, leftReg, rightReg);
+                    else if (opStr === '>=') this.emit(OP_LESSEQ, resReg, rightReg, leftReg);
+                    else if (opStr === 'and') {
+                        let jmp = this.emit(OP_JUMPIFNOT, leftReg, 2, 0);
+                        this.emit(OP_MOVE, resReg, rightReg, 0);
+                        let jmpEnd = this.emit(OP_JUMP, 1, 0, 0);
+                        this.emit(OP_MOVE, resReg, leftReg, 0);
+                    }
+                    else if (opStr === 'or') {
+                        let jmp = this.emit(OP_JUMPIF, leftReg, 2, 0);
+                        this.emit(OP_MOVE, resReg, rightReg, 0);
+                        let jmpEnd = this.emit(OP_JUMP, 1, 0, 0);
+                        this.emit(OP_MOVE, resReg, leftReg, 0);
+                    }
 
                     leftReg = resReg;
                 }
@@ -1035,7 +1084,6 @@
                     return reg;
                 }
 
-                // ANONYMOUS FUNCTION EXPRESSION FIX
                 if (tok.type === 'KEYWORD' && tok.value === 'function') {
                     this.consume();
                     let protoCompiler = new LuaCompiler(this.lexer, this);
@@ -1060,6 +1108,8 @@
                     if (!this.match('SYMBOL', '}')) {
                         let arrIdx = 1;
                         do {
+                            if (this.peek().value === '}') break;
+
                             let t1 = this.peek();
                             let t2 = this.lexer.peekNextToken();
 
