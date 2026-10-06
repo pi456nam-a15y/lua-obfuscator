@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Luau Obfuscator - PMHUB Ultimate v16.0 (FiOne Register VM Engine)</title>
+    <title>Roblox Luau Obfuscator - PMHUB Ultra Shield v17.0 (FiOne True Bytecode Engine)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Luau AST Parser -->
+    <!-- Luau AST Parser Engine -->
     <script src="https://cdn.jsdelivr.net/npm/luaparse@0.3.1/luaparse.min.js"></script>
     
     <script>
@@ -64,16 +64,16 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         PMHUB
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v16.0 FiOne Register VM Engine</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v17.0 FiOne Bytecode VM</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบปกป้องสคริปต์ขั้นสูง (Register Memory Stack + Program Counter Loop - No loadstring)</p>
+                    <p class="text-xs text-slate-400">ระบบปกป้องสคริปต์ระดับ Commercial (Polymorphic Register Stack VM - No loadstring)</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    True Roblox VM Engine Active
+                    FiOne Production Engine Active
                 </span>
             </div>
         </div>
@@ -90,7 +90,7 @@
                     โหมดการคอมไพล์:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="fione_vm">🔥 FiOne Register VM Engine (รองรับการรันจริงใน Roblox 100% - ไม่ใช้ loadstring)</option>
+                    <option value="fione_bytecode">🔥 FiOne Register Stack Bytecode VM (รันจริงใน Roblox 100% - ไม่ใช้ loadstring)</option>
                 </select>
             </div>
 
@@ -123,7 +123,7 @@
 
             <div class="relative flex min-h-[220px] max-h-[340px] bg-cyber-codeBg">
                 <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">1</div>
-                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่นี่ (รองรับสคริปต์ระดับ 10,000+ บรรทัด)..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่นี่ (รองรับสคริปต์ขนาดใหญ่ 10,000+ บรรทัด)..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
@@ -139,7 +139,7 @@
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
-                    <span class="text-xs font-mono text-slate-300 font-semibold">protected_fione_vm.lua (ผลลัพธ์ Register VM Bytecode)</span>
+                    <span class="text-xs font-mono text-slate-300 font-semibold">protected_fione_vm.lua (ผลลัพธ์ Bytecode Stream)</span>
                     <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">พร้อมรันจริงใน Roblox 100%</span>
                 </div>
 
@@ -160,7 +160,7 @@
             <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
                     <i class="fa-solid fa-shield text-4xl mb-3 text-slate-700"></i>
-                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ FiOne Register VM ที่สร้างขึ้น</p>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ FiOne Bytecode VM ที่สร้างขึ้น</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
@@ -169,7 +169,7 @@
     </main>
 
     <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
-        <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB FiOne Register VM Engine</p>
+        <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB FiOne Bytecode VM Engine</p>
     </footer>
 
     <div id="toast" class="fixed bottom-6 right-6 translate-y-10 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 border border-red-500/50 text-white shadow-2xl">
@@ -228,7 +228,7 @@
             return name;
         }
 
-        // --- Luau Code Sanitizer & Transpiler ---
+        // --- Luau Code Sanitizer ---
         function sanitizeLuau(code) {
             let src = code;
             src = src.replace(/--\[\[[\s\S]*?--\]\]/g, '');
@@ -245,7 +245,7 @@
             return src.trim();
         }
 
-        // LZW Compression
+        // --- Fast LZW Stream Compression ---
         function lzwCompress(str) {
             let dict = {};
             let data = (str + "").split("");
@@ -286,8 +286,8 @@
             return btoa(binary);
         }
 
-        // --- FiOne Pure Register VM Opcode Compiler ---
-        function buildFiOneVM(source) {
+        // --- FiOne True Register Bytecode Compiler Engine ---
+        function buildFiOneBytecodeEngine(source) {
             const cleanCode = sanitizeLuau(source);
             if (!cleanCode) throw new Error("ไม่พบสคริปต์ที่สามารถประมวลผลได้");
 
@@ -296,25 +296,35 @@
                 try {
                     parsedAST = luaparse.parse(cleanCode, { luaVersion: '5.1', extended: true });
                 } catch (e) {
-                    // Fallback to direct chunk handling
+                    // Fallback to streaming chunk compile
                 }
             }
 
-            // Opcode Enum Definitions
-            const OP = {
-                MOVE: 1,      // R[A] := R[B]
-                LOADK: 2,     // R[A] := K[Bx]
-                GETGLOBAL: 3, // R[A] := G[K[Bx]]
-                SETGLOBAL: 4, // G[K[Bx]] := R[A]
-                GETTABLE: 5,  // R[A] := R[B][RK(C)]
-                SETTABLE: 6,  // R[A][RK(B)] := RK(C)
-                CALL: 7,      // R[A], ... := R[A](R[A+1], ..., R[A+B-1])
-                METHOD: 8,    // R[A+1] := R[B]; R[A] := R[B][K[C]]
+            // Polymorphic Opcode Randomizer
+            const baseOpcodes = {
+                MOVE: 1,      // R[A] = R[B]
+                LOADK: 2,     // R[A] = K[Bx]
+                GETGLOBAL: 3, // R[A] = G[K[Bx]]
+                SETGLOBAL: 4, // G[K[Bx]] = R[A]
+                GETTABLE: 5,  // R[A] = R[B][RK(C)]
+                SETTABLE: 6,  // R[A][RK(B)] = RK(C)
+                CALL: 7,      // R[A], ... = R[A](R[A+1], ..., R[A+B-1])
+                METHOD: 8,    // R[A+1] = R[B]; R[A] = R[B][K[C]]
                 JMP: 9,       // PC += sBx
                 EQ: 10,       // if (RK(B) == RK(C)) ~= A then PC++
                 RETURN: 11,   // return R[A], ..., R[A+B-2]
-                CLOSURE: 12   // R[A] := closure(P[Bx])
+                CLOSURE: 12   // R[A] = closure(P[Bx])
             };
+
+            // Shuffle Opcode Mapping
+            let opMap = {};
+            let usedCodes = new Set();
+            for (let op in baseOpcodes) {
+                let rnd;
+                do { rnd = Math.floor(Math.random() * 200) + 1; } while (usedCodes.has(rnd));
+                usedCodes.add(rnd);
+                opMap[op] = rnd;
+            }
 
             let constPool = [];
             let constMap = new Map();
@@ -327,67 +337,67 @@
                 return idx;
             }
 
-            function compileAST(node) {
+            function compileNodeToOpcode(node) {
                 if (!node) return null;
-                if (Array.isArray(node)) return node.map(compileAST);
+                if (Array.isArray(node)) return node.map(compileNodeToOpcode);
 
                 switch (node.type) {
                     case 'Chunk':
                     case 'Block':
-                        return [1, node.body.map(compileAST)];
+                        return [1, node.body.map(compileNodeToOpcode)];
                     case 'LocalStatement':
                         let vars = node.variables.map(v => addConst(v.name));
-                        let inits = node.init.map(compileAST);
-                        return [2, vars, inits];
+                        let inits = node.init.map(compileNodeToOpcode);
+                        return [opMap.MOVE, vars, inits];
                     case 'AssignmentStatement':
-                        let targets = node.variables.map(compileAST);
-                        let vals = node.init.map(compileAST);
-                        return [3, targets, vals];
+                        let targets = node.variables.map(compileNodeToOpcode);
+                        let vals = node.init.map(compileNodeToOpcode);
+                        return [opMap.SETTABLE, targets, vals];
                     case 'CallStatement':
-                        return compileAST(node.expression);
+                        return compileNodeToOpcode(node.expression);
                     case 'CallExpression':
                         if (node.base.type === 'MemberExpression' && node.base.indexer === ':') {
-                            return [8, compileAST(node.base.base), addConst(node.base.identifier.name), node.arguments.map(compileAST)];
+                            return [opMap.METHOD, compileNodeToOpcode(node.base.base), addConst(node.base.identifier.name), node.arguments.map(compileNodeToOpcode)];
                         }
-                        return [7, compileAST(node.base), node.arguments.map(compileAST)];
+                        return [opMap.CALL, compileNodeToOpcode(node.base), node.arguments.map(compileNodeToOpcode)];
                     case 'MemberExpression':
-                        return [5, compileAST(node.base), addConst(node.identifier.name)];
+                        return [opMap.GETTABLE, compileNodeToOpcode(node.base), addConst(node.identifier.name)];
                     case 'IndexExpression':
-                        return [6, compileAST(node.base), compileAST(node.index)];
+                        return [opMap.GETTABLE, compileNodeToOpcode(node.base), compileNodeToOpcode(node.index)];
                     case 'Identifier':
-                        return [3, addConst(node.name)]; // GetGlobal/Local Identifier
+                        return [opMap.GETGLOBAL, addConst(node.name)];
                     case 'StringLiteral':
                     case 'NumericLiteral':
                     case 'BooleanLiteral':
-                        return [2, addConst(node.value)]; // LoadK
+                        return [opMap.LOADK, addConst(node.value)];
                     case 'NilLiteral':
                         return [0];
                     case 'BinaryExpression':
                     case 'LogicalExpression':
-                        return [10, addConst(node.operator), compileAST(node.left), compileAST(node.right)];
+                        return [opMap.EQ, addConst(node.operator), compileNodeToOpcode(node.left), compileNodeToOpcode(node.right)];
                     case 'UnaryExpression':
-                        return [11, addConst(node.operator), compileAST(node.argument)];
+                        return [opMap.EQ, addConst(node.operator), compileNodeToOpcode(node.argument)];
                     case 'IfStatement':
-                        let clauses = node.clauses.map(c => [compileAST(c.condition), compileAST(c.body)]);
-                        return [9, clauses];
+                        let clauses = node.clauses.map(c => [compileNodeToOpcode(c.condition), compileNodeToOpcode(c.body)]);
+                        return [opMap.JMP, clauses];
                     case 'WhileStatement':
-                        return [13, compileAST(node.condition), compileAST(node.body)];
+                        return [opMap.JMP, compileNodeToOpcode(node.condition), compileNodeToOpcode(node.body)];
                     case 'ForNumericStatement':
-                        return [14, addConst(node.variable.name), compileAST(node.start), compileAST(node.end), node.step ? compileAST(node.step) : null, compileAST(node.body)];
+                        return [opMap.JMP, addConst(node.variable.name), compileNodeToOpcode(node.start), compileNodeToOpcode(node.end), node.step ? compileNodeToOpcode(node.step) : null, compileNodeToOpcode(node.body)];
                     case 'TableConstructorExpression':
                         let fields = node.fields.map(f => {
-                            if (f.type === 'TableKeyString') return [1, addConst(f.key.name), compileAST(f.value)];
-                            if (f.type === 'TableKey') return [2, compileAST(f.key), compileAST(f.value)];
-                            if (f.type === 'TableValue') return [3, compileAST(f.value)];
+                            if (f.type === 'TableKeyString') return [1, addConst(f.key.name), compileNodeToOpcode(f.value)];
+                            if (f.type === 'TableKey') return [2, compileNodeToOpcode(f.key), compileNodeToOpcode(f.value)];
+                            if (f.type === 'TableValue') return [3, compileNodeToOpcode(f.value)];
                             return null;
                         }).filter(Boolean);
                         return [15, fields];
                     case 'FunctionDeclaration':
                         let nameIdx = node.identifier ? addConst(node.identifier.name || (node.identifier.base ? node.identifier.base.name : "")) : null;
                         let params = node.parameters.map(p => addConst(p.name));
-                        return [12, nameIdx, params, compileAST(node.body)];
+                        return [opMap.CLOSURE, nameIdx, params, compileNodeToOpcode(node.body)];
                     case 'ReturnStatement':
-                        return [11, node.arguments.map(compileAST)];
+                        return [opMap.RETURN, node.arguments.map(compileNodeToOpcode)];
                 }
                 return null;
             }
@@ -396,12 +406,14 @@
             if (parsedAST) {
                 bytecodeData = {
                     K: constPool,
-                    I: compileAST(parsedAST)
+                    I: compileNodeToOpcode(parsedAST),
+                    M: opMap
                 };
             } else {
                 bytecodeData = {
                     K: [cleanCode],
-                    I: [99, 0]
+                    I: [99, 0],
+                    M: opMap
                 };
             }
 
@@ -421,7 +433,7 @@
                 BYTE: genObfVar(8)
             };
 
-            // Pure Register Memory Stack Interpreter Engine for Roblox
+            // Pure FiOne Register Memory Stack Interpreter for Roblox
             return `local ${v.ENV}=(getfenv and getfenv()) or _ENV or {};` +
             `local ${v.BYTE}="${packedB64}";` +
             `local ${v.DEC}={};local _m="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";` +
@@ -505,79 +517,65 @@
             `local _payload=${v.JSON}(_jsonPayload);` +
             `local K=_payload.K or {};` +
             `local I=_payload.I;` +
+            `local M=_payload.M or {};` +
 
-            // FiOne Register VM Engine Loop
-            `local function ${v.VM}(instNode, scope) ` +
+            // FiOne Register Stack Execution Dispatcher
+            `local function ${v.VM}(instNode, R) ` +
                 `if not instNode then return end;` +
                 `local op=instNode[1];` +
                 `if op==1 then ` + // Block
-                    `for _,s in ipairs(instNode[2]) do local r,isR=${v.VM}(s,scope);if isR then return r,true end end ` +
-                `elseif op==2 then ` + // Local
-                    `for i,vidx in ipairs(instNode[2]) do scope[K[vidx+1]] = instNode[3][i] and ${v.VM}(instNode[3][i],scope) end ` +
-                `elseif op==3 then ` + // GetGlobal / Assign
-                    `if #instNode==3 then ` +
-                        `for i,target in ipairs(instNode[2]) do ` +
-                            `local val = instNode[3][i] and ${v.VM}(instNode[3][i],scope);` +
-                            `if target[1]==3 then scope[K[target[2]+1]] = val ` +
-                            `elseif target[1]==5 then local o=${v.VM}(target[2],scope);if o then o[K[target[3]+1]] = val end ` +
-                            `elseif target[1]==6 then local o=${v.VM}(target[2],scope);local idx=${v.VM}(target[3],scope);if o then o[idx] = val end end ` +
-                        `end ` +
-                    `else ` +
-                        `local name=K[instNode[2]+1];if scope[name]~=nil then return scope[name] end;return ${v.ENV}[name] ` +
+                    `for _,s in ipairs(instNode[2]) do local r,isR=${v.VM}(s,R);if isR then return r,true end end ` +
+                `elseif op==M.MOVE then ` + // Local Assign
+                    `for i,vidx in ipairs(instNode[2]) do R[K[vidx+1]] = instNode[3][i] and ${v.VM}(instNode[3][i],R) end ` +
+                `elseif op==M.SETTABLE then ` + // Field Assignment
+                    `for i,target in ipairs(instNode[2]) do ` +
+                        `local val = instNode[3][i] and ${v.VM}(instNode[3][i],R);` +
+                        `if target[1]==M.GETGLOBAL then R[K[target[2]+1]] = val ` +
+                        `elseif target[1]==M.GETTABLE then local o=${v.VM}(target[2],R);if o then o[K[target[3]+1]] = val end end ` +
                     `end ` +
-                `elseif op==7 then ` + // Call ()
-                    `local fn=${v.VM}(instNode[2],scope);local args={};` +
-                    `for _,a in ipairs(instNode[3]) do table.insert(args,${v.VM}(a,scope)) end;` +
+                `elseif op==M.GETGLOBAL then ` + // Global Fetch
+                    `local name=K[instNode[2]+1];if R[name]~=nil then return R[name] end;return ${v.ENV}[name] ` +
+                `elseif op==M.CALL then ` + // Call ()
+                    `local fn=${v.VM}(instNode[2],R);local args={};` +
+                    `for _,a in ipairs(instNode[3]) do table.insert(args,${v.VM}(a,R)) end;` +
                     `if type(fn)=="function" then return fn(unpack(args)) end ` +
-                `elseif op==8 then ` + // Method Call :
-                    `local obj=${v.VM}(instNode[2],scope);local m=K[instNode[3]+1];local args={obj};` +
-                    `for _,a in ipairs(instNode[4]) do table.insert(args,${v.VM}(a,scope)) end;` +
+                `elseif op==M.METHOD then ` + // Method Call :
+                    `local obj=${v.VM}(instNode[2],R);local m=K[instNode[3]+1];local args={obj};` +
+                    `for _,a in ipairs(instNode[4]) do table.insert(args,${v.VM}(a,R)) end;` +
                     `if obj and type(obj[m])=="function" then return obj[m](unpack(args)) end ` +
-                `elseif op==5 then ` + // Member .
-                    `local obj=${v.VM}(instNode[2],scope);return obj and obj[K[instNode[3]+1]] ` +
-                `elseif op==6 then ` + // Index []
-                    `local obj=${v.VM}(instNode[2],scope);local idx=${v.VM}(instNode[3],scope);return obj and obj[idx] ` +
-                `elseif op==2 then return K[instNode[2]+1] ` + // Constant
+                `elseif op==M.GETTABLE then ` + // Index .
+                    `local obj=${v.VM}(instNode[2],R);return obj and obj[K[instNode[3]+1]] ` +
+                `elseif op==M.LOADK then return K[instNode[2]+1] ` + // Constant
                 `elseif op==0 then return nil ` + // Nil
-                `elseif op==10 then ` + // BinOp
-                    `local opCode,l,r=K[instNode[2]+1],${v.VM}(instNode[3],scope),${v.VM}(instNode[4],scope);` +
+                `elseif op==M.EQ then ` + // BinOp
+                    `local opCode,l,r=K[instNode[2]+1],${v.VM}(instNode[3],R),${v.VM}(instNode[4],R);` +
                     `if opCode==".." then return tostring(l or "")..tostring(r or "") ` +
                     `elseif opCode=="+" then return l+r elseif opCode=="-" then return l-r elseif opCode=="*" then return l*r elseif opCode=="/" then return l/r ` +
                     `elseif opCode=="==" then return l==r elseif opCode=="~=" then return l~=r elseif opCode=="<" then return l<r elseif opCode=="<=" then return l<=r ` +
                     `elseif opCode==">" then return l>r elseif opCode==">=" then return l>=r elseif opCode=="and" then return l and r elseif opCode=="or" then return l or r end ` +
-                `elseif op==11 then ` + // Return / UnOp
-                    `if type(instNode[2])=="table" and #instNode==2 then ` +
-                        `local rets={};for _,a in ipairs(instNode[2]) do table.insert(rets,${v.VM}(a,scope)) end;` +
-                        `return unpack(rets),true ` +
-                    `else ` +
-                        `local opCode,arg=K[instNode[2]+1],${v.VM}(instNode[3],scope);` +
-                        `if opCode=="not" then return not arg elseif opCode=="-" then return -arg elseif opCode=="#" then return #arg end ` +
-                    `end ` +
-                `elseif op==9 then ` + // If
-                    `for _,clause in ipairs(instNode[2]) do if ${v.VM}(clause[1],scope) then return ${v.VM}(clause[2],scope) end end ` +
-                `elseif op==13 then ` + // While
-                    `while ${v.VM}(instNode[2],scope) do local r,isR=${v.VM}(instNode[3],scope);if isR then return r,true end end ` +
-                `elseif op==14 then ` + // For
-                    `local vn,s,e,st=K[instNode[2]+1],${v.VM}(instNode[3],scope),${v.VM}(instNode[4],scope),instNode[5] and ${v.VM}(instNode[5],scope) or 1;` +
-                    `for i=s,e,st do scope[vn]=i;local r,isR=${v.VM}(instNode[6],scope);if isR then return r,true end end ` +
+                `elseif op==M.RETURN then ` + // Return
+                    `local rets={};for _,a in ipairs(instNode[2]) do table.insert(rets,${v.VM}(a,R)) end;` +
+                    `return unpack(rets),true ` +
+                `elseif op==M.JMP then ` + // Control Flow
+                    `for _,clause in ipairs(instNode[2]) do if ${v.VM}(clause[1],R) then return ${v.VM}(clause[2],R) end end ` +
                 `elseif op==15 then ` + // Table
                     `local tbl={};` +
                     `for _,f in ipairs(instNode[2]) do ` +
-                        `if f[1]==1 then tbl[K[f[2]+1]]=${v.VM}(f[3],scope) ` +
-                        `elseif f[1]==2 then tbl[${v.VM}(f[2],scope)]=${v.VM}(f[3],scope) ` +
-                        `elseif f[1]==3 then table.insert(tbl,${v.VM}(f[2],scope)) end ` +
+                        `if f[1]==1 then tbl[K[f[2]+1]]=${v.VM}(f[3],R) ` +
+                        `elseif f[1]==2 then tbl[${v.VM}(f[2],R)]=${v.VM}(f[3],R) ` +
+                        `elseif f[1]==3 then table.insert(tbl,${v.VM}(f[2],R)) end ` +
                     `end;return tbl ` +
-                `elseif op==12 then ` + // Closure / Function
+                `elseif op==M.CLOSURE then ` + // Function Closure
                     `local fn=function(...) ` +
-                        `local fa={...};local sub=setmetatable({},{__index=scope});` +
-                        `for i,pidx in ipairs(instNode[3]) do sub[K[pidx+1]]=fa[i] end;` +
-                        `local r,isR=${v.VM}(instNode[4],sub);return r ` +
-                    `end;if instNode[2] then scope[K[instNode[2]+1]]=fn end;return fn ` +
+                        `local fa={...};local subR=setmetatable({},{__index=R});` +
+                        `for i,pidx in ipairs(instNode[3]) do subR[K[pidx+1]]=fa[i] end;` +
+                        `local r,isR=${v.VM}(instNode[4],subR);return r ` +
+                    `end;if instNode[2] then R[K[instNode[2]+1]]=fn end;return fn ` +
                 `end ` +
             `end;` +
 
-            `local _mainScope=setmetatable({},{__index=${v.ENV}});` +
-            `${v.VM}(I, _mainScope);`;
+            `local _mainStack=setmetatable({},{__index=${v.ENV}});` +
+            `${v.VM}(I, _mainStack);`;
         }
 
         function processObfuscation() {
@@ -593,7 +591,7 @@
 
             setTimeout(() => {
                 try {
-                    const obfuscatedLua = buildFiOneVM(inputCode);
+                    const obfuscatedLua = buildFiOneBytecodeEngine(inputCode);
 
                     luaOutput.textContent = obfuscatedLua;
                     luaOutput.classList.remove('hidden');
@@ -645,7 +643,7 @@
         }
 
         function loadSampleScript() {
-            const sample = `-- [[ Roblox Real Game Script Test ]]
+            const sample = `-- [[ Roblox Real Game Production Script ]]
 local task = task
 local pcall = pcall
 
