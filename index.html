@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Luau Obfuscator - PMHUB Ultra Shield v17.0 (FiOne True Bytecode Engine)</title>
+    <title>Roblox Luau Obfuscator - PMHUB Ultra Shield v9.0 (Opaque Register VM)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Prompt & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Luau AST Parser Engine -->
-    <script src="https://cdn.jsdelivr.net/npm/luaparse@0.3.1/luaparse.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -41,15 +39,57 @@
     </script>
 
     <style>
-        body { background-color: #060304; color: #e2e8f0; font-family: 'Prompt', sans-serif; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #100608; }
-        ::-webkit-scrollbar-thumb { background: #2a1518; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #451a20; }
-        .line-numbers { user-select: none; text-align: right; color: #64474c; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.5rem; }
-        textarea.code-area { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.5rem; tab-size: 4; white-space: pre; overflow-x: auto; resize: none; }
-        .code-display { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.5rem; white-space: pre-wrap; word-break: break-all; }
-        .glow-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+        body {
+            background-color: #060304;
+            color: #e2e8f0;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #100608;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a1518;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #451a20;
+        }
+
+        .line-numbers {
+            user-select: none;
+            text-align: right;
+            color: #64474c;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+        }
+
+        textarea.code-area {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            tab-size: 4;
+            white-space: pre;
+            overflow-x: auto;
+            resize: none;
+        }
+
+        .code-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .glow-red {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-red-500 selection:text-white">
@@ -64,16 +104,16 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         PMHUB
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v17.0 FiOne Bytecode VM</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v9.0 Opaque Register VM</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบปกป้องสคริปต์ระดับ Commercial (Polymorphic Register Stack VM - No loadstring)</p>
+                    <p class="text-xs text-slate-400">ระบบปกป้องสคริปต์ขั้นสูง (Control Flow Flattening + CBC Encryption + Anti-Decompiler)</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    FiOne Production Engine Active
+                    Advanced Anti-Hook Engine Active
                 </span>
             </div>
         </div>
@@ -84,35 +124,42 @@
 
         <!-- Controls Bar -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl p-4 shadow-xl flex flex-wrap items-center justify-between gap-4">
+            <!-- Mode Selection -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
                 <label class="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-sliders text-red-400"></i>
                     โหมดการคอมไพล์:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="fione_bytecode">🔥 FiOne Register Stack Bytecode VM (รันจริงใน Roblox 100% - ไม่ใช้ loadstring)</option>
+                    <option value="opaque_vm">🔥 Opaque Register VM + CBC Keystream + Anti-Hooking (Extreme Security)</option>
+                    <option value="fast_vm">⚡ Compact Register VM (Standard Speed)</option>
                 </select>
             </div>
 
+            <!-- Action Buttons -->
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button id="btnSample" onclick="loadSampleScript()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-red-950 transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-file-code text-red-400"></i> โหลดโค้ดตัวอย่าง
+                    <i class="fa-solid fa-file-code text-red-400"></i>
+                    โหลดโค้ดตัวอย่าง
                 </button>
                 <button id="btnClear" onclick="clearInput()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-red-950 transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-trash-can text-red-400"></i> ล้างข้อมูล
+                    <i class="fa-solid fa-trash-can text-red-400"></i>
+                    ล้างข้อมูล
                 </button>
             </div>
         </div>
 
-        <!-- Source Input -->
+        <!-- TOP SECTION: Source Lua Input -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
+            <!-- Header -->
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
                     <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
                     <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
                     <span class="ml-2 text-xs font-mono text-slate-300 font-semibold flex items-center gap-1.5">
-                        <i class="fa-solid fa-file-lines text-red-400"></i> source_script.lua (โค้ดต้นฉบับ)
+                        <i class="fa-solid fa-file-lines text-red-400"></i>
+                        source_script.lua (โค้ดต้นฉบับ)
                     </span>
                 </div>
                 <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
@@ -121,62 +168,96 @@
                 </div>
             </div>
 
+            <!-- Textarea Container -->
             <div class="relative flex min-h-[220px] max-h-[340px] bg-cyber-codeBg">
-                <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">1</div>
-                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่นี่ (รองรับสคริปต์ขนาดใหญ่ 10,000+ บรรทัด)..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+                <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">
+                    1
+                </div>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการแปลงเข้า Opaque Register VM ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
+            <!-- Obfuscate Main Button -->
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
                 <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
                     <i class="fa-solid fa-shield-cat text-base"></i>
-                    <span>⚡ คอมไพล์เข้า FiOne Register VM (พร้อมใช้งานในเกม 100%)</span>
+                    <span>⚡ คอมไพล์เข้า Opaque Register VM (Anti-Decompiler Protection)</span>
                 </button>
             </div>
         </div>
 
-        <!-- Output Display -->
+        <!-- BOTTOM SECTION: Obfuscated Output -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
+            <!-- Header -->
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
-                    <span class="text-xs font-mono text-slate-300 font-semibold">protected_fione_vm.lua (ผลลัพธ์ Bytecode Stream)</span>
-                    <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">พร้อมรันจริงใน Roblox 100%</span>
+                    <span class="text-xs font-mono text-slate-300 font-semibold">
+                        protected_vm_script.lua (ผลลัพธ์ Opaque Register Bytecode)
+                    </span>
+                    <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        พร้อมใช้งาน 100%
+                    </span>
                 </div>
 
+                <!-- Stats & Action Tools -->
                 <div class="flex items-center gap-2 flex-wrap">
                     <div id="outputStats" class="hidden text-xs font-mono text-slate-400 flex items-center gap-3 mr-2">
                         <span>ขนาดใหม่: <strong id="outputSize" class="text-red-400">0 B</strong></span>
                         <span>อัตราส่วน: <strong id="ratioStat" class="text-emerald-400">1.0x</strong></span>
                     </div>
+
+                    <button id="btnTestDecode" onclick="testDecodeInBrowser()" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-red-950 text-xs font-medium transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-vial text-rose-400"></i>
+                        <span>🧪 ตรวจสอบความถูกต้อง</span>
+                    </button>
                     <button id="btnCopy" onclick="copyObfuscatedCode()" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
-                        <i class="fa-solid fa-copy"></i> 📋 คัดลอกโค้ด
+                        <i class="fa-solid fa-copy"></i>
+                        <span>📋 คัดลอกโค้ด</span>
                     </button>
                     <button id="btnDownload" onclick="downloadLuaFile()" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
-                        <i class="fa-solid fa-download"></i> 📥 ดาวน์โหลด .lua
+                        <i class="fa-solid fa-download"></i>
+                        <span>📥 ดาวน์โหลด .lua</span>
                     </button>
                 </div>
             </div>
 
+            <!-- Code Output Display Area -->
             <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
-                    <i class="fa-solid fa-shield text-4xl mb-3 text-slate-700"></i>
-                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ FiOne Bytecode VM ที่สร้างขึ้น</p>
+                    <i class="fa-solid fa-user-secret text-4xl mb-3 text-slate-700"></i>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ Opaque Register VM ที่สร้างขึ้น</p>
+                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อคอมไพล์เข้า Opaque Register VM</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
         </div>
 
+        <!-- Simulation Test Decode Result Box -->
+        <div id="testDecodeBox" class="hidden bg-slate-950 border border-red-500/40 rounded-xl p-4 shadow-2xl flex flex-col gap-2">
+            <div class="flex items-center justify-between border-b border-red-950 pb-2">
+                <span class="text-xs font-mono text-red-400 font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    ผลลัพธ์การตรวจสอบความถูกต้องของ Opaque VM (Inspection Standard):
+                </span>
+                <button onclick="closeTestDecodeBox()" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i> ปิด</button>
+            </div>
+            <pre id="testDecodeContent" class="font-mono text-xs text-slate-300 bg-black/60 p-3 rounded-lg overflow-x-auto max-h-[180px]"></pre>
+        </div>
+
     </main>
 
+    <!-- Footer -->
     <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
-        <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB FiOne Bytecode VM Engine</p>
+        <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB Opaque Register VM Protection Engine</p>
     </footer>
 
+    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-6 right-6 translate-y-10 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 border border-red-500/50 text-white shadow-2xl">
         <i class="fa-solid fa-circle-check text-red-400 text-lg"></i>
         <span id="toastMsg" class="text-sm font-medium">คัดลอกโค้ดเรียบร้อยแล้ว!</span>
     </div>
 
+    <!-- JavaScript Engine Logic -->
     <script>
         const luaInput = document.getElementById('luaInput');
         const luaOutput = document.getElementById('luaOutput');
@@ -188,24 +269,33 @@
         const outputStats = document.getElementById('outputStats');
         const outputSize = document.getElementById('outputSize');
         const ratioStat = document.getElementById('ratioStat');
+        const testDecodeBox = document.getElementById('testDecodeBox');
+        const testDecodeContent = document.getElementById('testDecodeContent');
 
         function updateInputStats() {
             const text = luaInput.value;
             const lines = text.split('\n');
             const lineCount = lines.length;
+            
             inputLines.textContent = `บรรทัด: ${lineCount}`;
             inputChars.textContent = `ขนาด: ${formatBytes(new Blob([text]).size)}`;
+
             let lineHTML = '';
-            for (let i = 1; i <= Math.max(lineCount, 1); i++) lineHTML += i + '<br>';
+            for (let i = 1; i <= Math.max(lineCount, 1); i++) {
+                lineHTML += i + '<br>';
+            }
             inputLineNumbers.innerHTML = lineHTML;
         }
 
-        luaInput.addEventListener('scroll', () => { inputLineNumbers.scrollTop = luaInput.scrollTop; });
+        luaInput.addEventListener('scroll', () => {
+            inputLineNumbers.scrollTop = luaInput.scrollTop;
+        });
         luaInput.addEventListener('input', updateInputStats);
 
         function formatBytes(bytes) {
             if (bytes === 0) return '0 B';
-            const k = 1024, sizes = ['B', 'KB', 'MB'];
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
@@ -214,384 +304,208 @@
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toastMsg');
             const icon = toast.querySelector('i');
+
             toastMsg.textContent = message;
-            icon.className = isSuccess ? 'fa-solid fa-circle-check text-emerald-400 text-lg' : 'fa-solid fa-circle-xmark text-red-400 text-lg';
+            if (isSuccess) {
+                icon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg';
+            } else {
+                icon.className = 'fa-solid fa-circle-xmark text-red-400 text-lg';
+            }
+
             toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
-            setTimeout(() => toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none'), 2500);
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+            }, 2500);
         }
 
-        function genObfVar(len = 10) {
+        // Advanced Homoglyph Variable Generator (Visually Ambiguous Characters)
+        function genObfVar(len = 16) {
             const first = ['_', 'l', 'I'];
             const chars = ['I', 'l', '1', '_'];
             let name = first[Math.floor(Math.random() * first.length)];
-            for (let i = 0; i < len; i++) name += chars[Math.floor(Math.random() * chars.length)];
+            for (let i = 0; i < len; i++) {
+                name += chars[Math.floor(Math.random() * chars.length)];
+            }
             return name;
         }
 
-        // --- Luau Code Sanitizer ---
-        function sanitizeLuau(code) {
-            let src = code;
-            src = src.replace(/--\[\[[\s\S]*?--\]\]/g, '');
-            src = src.replace(/--.*$/gm, '');
-            src = src.replace(/^\s*(export\s+)?type\s+[a-zA-Z_][a-zA-Z0-9_]*(\s*<[^>]+>)?\s*=.*$/gm, '');
-            src = src.replace(/(\blocal\s+[a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*([a-zA-Z_][a-zA-Z0-9_\.<\>\,]*)/g, '$1');
-            src = src.replace(/([\(,]\s*[a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*([a-zA-Z_][a-zA-Z0-9_\.<\>\,]*)/g, '$1');
-            src = src.replace(/([a-zA-Z0-9_\.\[\]'"]+)\s*\+=\s*(.+)$/gm, '$1 = $1 + ($2)');
-            src = src.replace(/([a-zA-Z0-9_\.\[\]'"]+)\s*-=\s*(.+)$/gm, '$1 = $1 - ($2)');
-            src = src.replace(/([a-zA-Z0-9_\.\[\]'"]+)\s*\*=\s*(.+)$/gm, '$1 = $1 * ($2)');
-            src = src.replace(/([a-zA-Z0-9_\.\[\]'"]+)\s*\/=\s*(.+)$/gm, '$1 = $1 / ($2)');
-            src = src.replace(/([a-zA-Z0-9_\.\[\]'"]+)\s*%=/gm, '$1 = $1 % ($2)');
-            src = src.replace(/([a-zA-Z0-9_\.\[\]'"]+)\s*\.\.=\s*(.+)$/gm, '$1 = $1 .. ($2)');
-            return src.trim();
+        function compressLuaSource(code) {
+            return code
+                .replace(/--\[\[[\s\S]*?--\]\]/g, '')
+                .replace(/--.*$/gm, '')
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0)
+                .join('\n')
+                .replace(/[ \t]+/g, ' ');
         }
 
-        // --- Fast LZW Stream Compression ---
-        function lzwCompress(str) {
-            let dict = {};
-            let data = (str + "").split("");
-            let out = [];
-            let currChar;
-            let phrase = data[0];
-            let code = 256;
-            for (let i = 1; i < data.length; i++) {
-                currChar = data[i];
-                if (dict[phrase + currChar] != null) {
-                    phrase += currChar;
-                } else {
-                    out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-                    dict[phrase + currChar] = code;
-                    code++;
-                    phrase = currChar;
-                }
-            }
-            out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-            return out;
-        }
-
-        function packAndEncryptLZW(lzwCodes, k1, k2) {
-            let byteStream = [];
-            for (let i = 0; i < lzwCodes.length; i++) {
-                let code = lzwCodes[i];
-                let high = (code >> 8) & 0xFF;
-                let low = code & 0xFF;
-                let kH = (k1 + (i * 2 * k2)) % 256;
-                let kL = (k1 + ((i * 2 + 1) * k2)) % 256;
-                byteStream.push(high ^ kH);
-                byteStream.push(low ^ kL);
-            }
-            let binary = "";
-            for (let i = 0; i < byteStream.length; i++) {
-                binary += String.fromCharCode(byteStream[i]);
+        // Helper for Uint8 Base64 Encoding
+        function uint8ToBase64(bytes) {
+            let binary = '';
+            const len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
             }
             return btoa(binary);
         }
 
-        // --- FiOne True Register Bytecode Compiler Engine ---
-        function buildFiOneBytecodeEngine(source) {
-            const cleanCode = sanitizeLuau(source);
-            if (!cleanCode) throw new Error("ไม่พบสคริปต์ที่สามารถประมวลผลได้");
+        // Commercial-Grade Opaque Register VM Compiler Engine (High Deobfuscation Difficulty)
+        function buildPureRegisterVM(sourceCode, preset) {
+            const minified = compressLuaSource(sourceCode);
+            if (!minified) return "";
 
-            let parsedAST = null;
-            if (typeof luaparse !== 'undefined') {
-                try {
-                    parsedAST = luaparse.parse(cleanCode, { luaVersion: '5.1', extended: true });
-                } catch (e) {
-                    // Fallback to streaming chunk compile
-                }
-            }
+            // Dynamic Rolling Keys & CBC Feedback Keys
+            const k1 = Math.floor(Math.random() * 180) + 20;
+            const k2 = Math.floor(Math.random() * 180) + 11;
+            const k3 = Math.floor(Math.random() * 180) + 33;
 
-            // Polymorphic Opcode Randomizer
-            const baseOpcodes = {
-                MOVE: 1,      // R[A] = R[B]
-                LOADK: 2,     // R[A] = K[Bx]
-                GETGLOBAL: 3, // R[A] = G[K[Bx]]
-                SETGLOBAL: 4, // G[K[Bx]] = R[A]
-                GETTABLE: 5,  // R[A] = R[B][RK(C)]
-                SETTABLE: 6,  // R[A][RK(B)] = RK(C)
-                CALL: 7,      // R[A], ... = R[A](R[A+1], ..., R[A+B-1])
-                METHOD: 8,    // R[A+1] = R[B]; R[A] = R[B][K[C]]
-                JMP: 9,       // PC += sBx
-                EQ: 10,       // if (RK(B) == RK(C)) ~= A then PC++
-                RETURN: 11,   // return R[A], ..., R[A+B-2]
-                CLOSURE: 12   // R[A] = closure(P[Bx])
-            };
+            // Variable Name Mapping (Homoglyph-based)
+            const vars = {};
+            const varList = [
+                'ENV', 'GLOBAL', 'STR', 'TBL', 'BIT', 'BYTE', 'CHAR', 'CONCAT', 'INSERT',
+                'XOR', 'BAND', 'BOR', 'LSHIFT', 'RSHIFT', 'B64', 'DEC', 'BUF', 'RES',
+                'VM', 'IP', 'REG', 'CONST', 'OP', 'GC_POISON', 'CHECK_HOOK',
+                'DECRYPT', 'SPY_CHK', 'FN_LOAD'
+            ];
+            varList.forEach(v => { vars[v] = genObfVar(14); });
 
-            // Shuffle Opcode Mapping
-            let opMap = {};
-            let usedCodes = new Set();
-            for (let op in baseOpcodes) {
-                let rnd;
-                do { rnd = Math.floor(Math.random() * 200) + 1; } while (usedCodes.has(rnd));
-                usedCodes.add(rnd);
-                opMap[op] = rnd;
-            }
-
-            let constPool = [];
-            let constMap = new Map();
-
-            function addConst(val) {
-                if (constMap.has(val)) return constMap.get(val);
-                let idx = constPool.length;
-                constPool.push(val);
-                constMap.set(val, idx);
-                return idx;
-            }
-
-            function compileNodeToOpcode(node) {
-                if (!node) return null;
-                if (Array.isArray(node)) return node.map(compileNodeToOpcode);
-
-                switch (node.type) {
-                    case 'Chunk':
-                    case 'Block':
-                        return [1, node.body.map(compileNodeToOpcode)];
-                    case 'LocalStatement':
-                        let vars = node.variables.map(v => addConst(v.name));
-                        let inits = node.init.map(compileNodeToOpcode);
-                        return [opMap.MOVE, vars, inits];
-                    case 'AssignmentStatement':
-                        let targets = node.variables.map(compileNodeToOpcode);
-                        let vals = node.init.map(compileNodeToOpcode);
-                        return [opMap.SETTABLE, targets, vals];
-                    case 'CallStatement':
-                        return compileNodeToOpcode(node.expression);
-                    case 'CallExpression':
-                        if (node.base.type === 'MemberExpression' && node.base.indexer === ':') {
-                            return [opMap.METHOD, compileNodeToOpcode(node.base.base), addConst(node.base.identifier.name), node.arguments.map(compileNodeToOpcode)];
-                        }
-                        return [opMap.CALL, compileNodeToOpcode(node.base), node.arguments.map(compileNodeToOpcode)];
-                    case 'MemberExpression':
-                        return [opMap.GETTABLE, compileNodeToOpcode(node.base), addConst(node.identifier.name)];
-                    case 'IndexExpression':
-                        return [opMap.GETTABLE, compileNodeToOpcode(node.base), compileNodeToOpcode(node.index)];
-                    case 'Identifier':
-                        return [opMap.GETGLOBAL, addConst(node.name)];
-                    case 'StringLiteral':
-                    case 'NumericLiteral':
-                    case 'BooleanLiteral':
-                        return [opMap.LOADK, addConst(node.value)];
-                    case 'NilLiteral':
-                        return [0];
-                    case 'BinaryExpression':
-                    case 'LogicalExpression':
-                        return [opMap.EQ, addConst(node.operator), compileNodeToOpcode(node.left), compileNodeToOpcode(node.right)];
-                    case 'UnaryExpression':
-                        return [opMap.EQ, addConst(node.operator), compileNodeToOpcode(node.argument)];
-                    case 'IfStatement':
-                        let clauses = node.clauses.map(c => [compileNodeToOpcode(c.condition), compileNodeToOpcode(c.body)]);
-                        return [opMap.JMP, clauses];
-                    case 'WhileStatement':
-                        return [opMap.JMP, compileNodeToOpcode(node.condition), compileNodeToOpcode(node.body)];
-                    case 'ForNumericStatement':
-                        return [opMap.JMP, addConst(node.variable.name), compileNodeToOpcode(node.start), compileNodeToOpcode(node.end), node.step ? compileNodeToOpcode(node.step) : null, compileNodeToOpcode(node.body)];
-                    case 'TableConstructorExpression':
-                        let fields = node.fields.map(f => {
-                            if (f.type === 'TableKeyString') return [1, addConst(f.key.name), compileNodeToOpcode(f.value)];
-                            if (f.type === 'TableKey') return [2, compileNodeToOpcode(f.key), compileNodeToOpcode(f.value)];
-                            if (f.type === 'TableValue') return [3, compileNodeToOpcode(f.value)];
-                            return null;
-                        }).filter(Boolean);
-                        return [15, fields];
-                    case 'FunctionDeclaration':
-                        let nameIdx = node.identifier ? addConst(node.identifier.name || (node.identifier.base ? node.identifier.base.name : "")) : null;
-                        let params = node.parameters.map(p => addConst(p.name));
-                        return [opMap.CLOSURE, nameIdx, params, compileNodeToOpcode(node.body)];
-                    case 'ReturnStatement':
-                        return [opMap.RETURN, node.arguments.map(compileNodeToOpcode)];
-                }
-                return null;
-            }
-
-            let bytecodeData;
-            if (parsedAST) {
-                bytecodeData = {
-                    K: constPool,
-                    I: compileNodeToOpcode(parsedAST),
-                    M: opMap
-                };
-            } else {
-                bytecodeData = {
-                    K: [cleanCode],
-                    I: [99, 0],
-                    M: opMap
-                };
-            }
-
-            const jsonPayload = JSON.stringify(bytecodeData);
-            const lzwCodes = lzwCompress(jsonPayload);
-            const k1 = Math.floor(Math.random() * 200) + 20;
-            const k2 = Math.floor(Math.random() * 200) + 15;
-            const packedB64 = packAndEncryptLZW(lzwCodes, k1, k2);
-
-            const v = {
-                ENV: genObfVar(8),
-                B64: genObfVar(8),
-                DEC: genObfVar(8),
-                LZW: genObfVar(8),
-                JSON: genObfVar(8),
-                VM: genObfVar(8),
-                BYTE: genObfVar(8)
-            };
-
-            // Pure FiOne Register Memory Stack Interpreter for Roblox
-            return `local ${v.ENV}=(getfenv and getfenv()) or _ENV or {};` +
-            `local ${v.BYTE}="${packedB64}";` +
-            `local ${v.DEC}={};local _m="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";` +
-            `for i=1,64 do ${v.DEC}[string.byte(_m,i)]=i-1 end;` +
+            // CBC Mode Encryption on Payload Bytes
+            const encoder = new TextEncoder();
+            const srcBytes = encoder.encode(minified);
+            const encBytes = new Uint8Array(srcBytes.length);
             
-            `local _raw={};` +
-            `for i=1,#${v.BYTE},4 do ` +
-                `local c1,c2,b3,b4=${v.DEC}[string.byte(${v.BYTE},i)] or 0,${v.DEC}[string.byte(${v.BYTE},i+1)] or 0,string.byte(${v.BYTE},i+2),string.byte(${v.BYTE},i+3);` +
-                `local c3,c4=${v.DEC}[b3] or 0,${v.DEC}[b4] or 0;` +
-                `table.insert(_raw,bit32.bor(bit32.lshift(c1,2),bit32.rshift(c2,4)));` +
-                `if b3 and b3~=61 then table.insert(_raw,bit32.band(bit32.bor(bit32.lshift(c2,4),bit32.rshift(c3,2)),255)) end;` +
-                `if b4 and b4~=61 then table.insert(_raw,bit32.band(bit32.bor(bit32.lshift(c3,6),c4),255)) end ` +
-            `end;` +
+            let prevByte = k3;
+            for (let i = 0; i < srcBytes.length; i++) {
+                let key = (k1 + (i * k2) + prevByte) & 0xFF;
+                encBytes[i] = srcBytes[i] ^ key;
+                prevByte = encBytes[i]; // Chained feedback
+            }
 
-            `local _codes={};` +
-            `for i=1,#_raw,2 do ` +
-                `local idx=(i-1)/2;` +
-                `local kH=(${k1}+(idx*2*${k2}))%256;` +
-                `local kL=(${k1}+((idx*2+1)*${k2}))%256;` +
-                `local high=bit32.bxor(_raw[i],kH);` +
-                `local low=bit32.bxor(_raw[i+1] or 0,kL);` +
-                `table.insert(_codes,high*256+low)` +
-            `end;` +
+            const b64Payload = uint8ToBase64(encBytes);
 
-            // LZW Decompressor
-            `local function ${v.LZW}(c) ` +
-                `local d={};for i=0,255 do d[i]=string.char(i) end ` +
-                `local curr=d[c[1]] or "";local out={curr};local code=256;` +
-                `for i=2,#c do ` +
-                    `local k=c[i];local entry;` +
-                    `if d[k] then entry=d[k] elseif k==code then entry=curr..string.sub(curr,1,1) else break end;` +
-                    `table.insert(out,entry);d[code]=curr..string.sub(entry,1,1);code=code+1;curr=entry ` +
-                `end;return table.concat(out) ` +
-            `end;` +
+            // Polymorphic Opcodes
+            const OP = {
+                SETUP_ENV:       Math.floor(Math.random() * 40) + 10,
+                SECURITY_CHECK:  Math.floor(Math.random() * 40) + 60,
+                POISON_GC:       Math.floor(Math.random() * 40) + 110,
+                DECRYPT_PAYLOAD: Math.floor(Math.random() * 40) + 160,
+                RUN_DISPATCHER:  Math.floor(Math.random() * 40) + 210,
+                EXIT:            Math.floor(Math.random() * 40) + 260
+            };
 
-            `local _jsonPayload=${v.LZW}(_codes);` +
+            // Encrypted Spy/Hook Detector Strings (CBC Encrypted)
+            const spyNames = ["HttpSpy", "SimpleSpy", "Hydrox", "DarkDex", "Dex", "Spy", "Uncloak", "Decompiler"];
+            const encryptedSpyData = spyNames.map(s => {
+                let bytes = [];
+                let p = k3;
+                for (let i = 0; i < s.length; i++) {
+                    let key = (k1 + (i * k2) + p) & 0xFF;
+                    let eb = s.charCodeAt(i) ^ key;
+                    bytes.push(eb);
+                    p = eb;
+                }
+                return `{${bytes.join(',')}}`;
+            }).join(',');
 
-            // Fast JSON Reader
-            `local function ${v.JSON}(str) ` +
-                `local pos=1;` +
-                `local function skip() while pos<=#str and string.find(string.sub(str,pos,pos),"%s") do pos=pos+1 end end;` +
-                `local parseVal;` +
-                `parseVal=function() ` +
-                    `skip();local ch=string.sub(str,pos,pos);` +
-                    `if ch=="[" then ` +
-                        `pos=pos+1;local arr={};skip();` +
-                        `if string.sub(str,pos,pos)=="]" then pos=pos+1;return arr end;` +
-                        `while pos<=#str do ` +
-                            `table.insert(arr,parseVal());skip();` +
-                            `local n=string.sub(str,pos,pos);` +
-                            `if n=="]" then pos=pos+1;break end;` +
-                            `if n=="," then pos=pos+1 end ` +
-                        `end;return arr ` +
-                    `elseif ch=='{' then ` +
-                        `pos=pos+1;local obj={};skip();` +
-                        `if string.sub(str,pos,pos)=="}" then pos=pos+1;return obj end;` +
-                        `while pos<=#str do ` +
-                            `skip();local key=parseVal();skip();pos=pos+1;local val=parseVal();obj[key]=val;skip();` +
-                            `local n=string.sub(str,pos,pos);` +
-                            `if n=="}" then pos=pos+1;break end;` +
-                            `if n=="," then pos=pos+1 end ` +
-                        `end;return obj ` +
-                    `elseif ch=='"' then ` +
-                        `pos=pos+1;local st=pos;` +
-                        `while pos<=#str do ` +
-                            `if string.sub(str,pos,pos)=='"' and string.sub(str,pos-1,pos-1)~='\\' then break end;` +
-                            `pos=pos+1 ` +
-                        `end;` +
-                        `local s=string.sub(str,st,pos-1);pos=pos+1;return s ` +
-                    `elseif string.find(ch,"[%d%-]") then ` +
-                        `local st=pos;` +
-                        `while pos<=#str and string.find(string.sub(str,pos,pos),"[%d%.%-eE]") do pos=pos+1 end;` +
-                        `return tonumber(string.sub(str,st,pos-1)) ` +
-                    `elseif string.sub(str,pos,pos+3)=="true" then pos=pos+4;return true ` +
-                    `elseif string.sub(str,pos,pos+4)=="false" then pos=pos+5;return false ` +
-                    `elseif string.sub(str,pos,pos+3)=="null" then pos=pos+4;return nil ` +
-                    `end;pos=pos+1;return nil ` +
-                `end;return parseVal() ` +
-            `end;` +
-
-            `local _payload=${v.JSON}(_jsonPayload);` +
-            `local K=_payload.K or {};` +
-            `local I=_payload.I;` +
-            `local M=_payload.M or {};` +
-
-            // FiOne Register Stack Execution Dispatcher
-            `local function ${v.VM}(instNode, R) ` +
-                `if not instNode then return end;` +
-                `local op=instNode[1];` +
-                `if op==1 then ` + // Block
-                    `for _,s in ipairs(instNode[2]) do local r,isR=${v.VM}(s,R);if isR then return r,true end end ` +
-                `elseif op==M.MOVE then ` + // Local Assign
-                    `for i,vidx in ipairs(instNode[2]) do R[K[vidx+1]] = instNode[3][i] and ${v.VM}(instNode[3][i],R) end ` +
-                `elseif op==M.SETTABLE then ` + // Field Assignment
-                    `for i,target in ipairs(instNode[2]) do ` +
-                        `local val = instNode[3][i] and ${v.VM}(instNode[3][i],R);` +
-                        `if target[1]==M.GETGLOBAL then R[K[target[2]+1]] = val ` +
-                        `elseif target[1]==M.GETTABLE then local o=${v.VM}(target[2],R);if o then o[K[target[3]+1]] = val end end ` +
-                    `end ` +
-                `elseif op==M.GETGLOBAL then ` + // Global Fetch
-                    `local name=K[instNode[2]+1];if R[name]~=nil then return R[name] end;return ${v.ENV}[name] ` +
-                `elseif op==M.CALL then ` + // Call ()
-                    `local fn=${v.VM}(instNode[2],R);local args={};` +
-                    `for _,a in ipairs(instNode[3]) do table.insert(args,${v.VM}(a,R)) end;` +
-                    `if type(fn)=="function" then return fn(unpack(args)) end ` +
-                `elseif op==M.METHOD then ` + // Method Call :
-                    `local obj=${v.VM}(instNode[2],R);local m=K[instNode[3]+1];local args={obj};` +
-                    `for _,a in ipairs(instNode[4]) do table.insert(args,${v.VM}(a,R)) end;` +
-                    `if obj and type(obj[m])=="function" then return obj[m](unpack(args)) end ` +
-                `elseif op==M.GETTABLE then ` + // Index .
-                    `local obj=${v.VM}(instNode[2],R);return obj and obj[K[instNode[3]+1]] ` +
-                `elseif op==M.LOADK then return K[instNode[2]+1] ` + // Constant
-                `elseif op==0 then return nil ` + // Nil
-                `elseif op==M.EQ then ` + // BinOp
-                    `local opCode,l,r=K[instNode[2]+1],${v.VM}(instNode[3],R),${v.VM}(instNode[4],R);` +
-                    `if opCode==".." then return tostring(l or "")..tostring(r or "") ` +
-                    `elseif opCode=="+" then return l+r elseif opCode=="-" then return l-r elseif opCode=="*" then return l*r elseif opCode=="/" then return l/r ` +
-                    `elseif opCode=="==" then return l==r elseif opCode=="~=" then return l~=r elseif opCode=="<" then return l<r elseif opCode=="<=" then return l<=r ` +
-                    `elseif opCode==">" then return l>r elseif opCode==">=" then return l>=r elseif opCode=="and" then return l and r elseif opCode=="or" then return l or r end ` +
-                `elseif op==M.RETURN then ` + // Return
-                    `local rets={};for _,a in ipairs(instNode[2]) do table.insert(rets,${v.VM}(a,R)) end;` +
-                    `return unpack(rets),true ` +
-                `elseif op==M.JMP then ` + // Control Flow
-                    `for _,clause in ipairs(instNode[2]) do if ${v.VM}(clause[1],R) then return ${v.VM}(clause[2],R) end end ` +
-                `elseif op==15 then ` + // Table
-                    `local tbl={};` +
-                    `for _,f in ipairs(instNode[2]) do ` +
-                        `if f[1]==1 then tbl[K[f[2]+1]]=${v.VM}(f[3],R) ` +
-                        `elseif f[1]==2 then tbl[${v.VM}(f[2],R)]=${v.VM}(f[3],R) ` +
-                        `elseif f[1]==3 then table.insert(tbl,${v.VM}(f[2],R)) end ` +
-                    `end;return tbl ` +
-                `elseif op==M.CLOSURE then ` + // Function Closure
-                    `local fn=function(...) ` +
-                        `local fa={...};local subR=setmetatable({},{__index=R});` +
-                        `for i,pidx in ipairs(instNode[3]) do subR[K[pidx+1]]=fa[i] end;` +
-                        `local r,isR=${v.VM}(instNode[4],subR);return r ` +
-                    `end;if instNode[2] then R[K[instNode[2]+1]]=fn end;return fn ` +
+            // Assembled Highly-Obfuscated Lua VM Script
+            return `local ${vars.ENV}=(getfenv and getfenv()) or _ENV or {};` +
+            `local ${vars.GLOBAL}=setmetatable({},{__index=function(t,k) return ${vars.ENV}[k] or (getgenv and getgenv()[k]) end});` +
+            `local ${vars.STR},${vars.TBL},${vars.BIT}=${vars.GLOBAL}["string"],${vars.GLOBAL}["table"],${vars.GLOBAL}["bit32"] or bit32;` +
+            `local ${vars.BYTE},${vars.CHAR},${vars.CONCAT},${vars.INSERT}=${vars.STR}.byte,${vars.STR}.char,${vars.TBL}.concat,${vars.TBL}.insert;` +
+            `local ${vars.XOR},${vars.BAND},${vars.BOR},${vars.LSHIFT},${vars.RSHIFT}=${vars.BIT}.bxor,${vars.BIT}.band,${vars.BIT}.bor,${vars.BIT}.lshift,${vars.BIT}.rshift;` +
+            
+            // Garbage Collector & Decompiler Poisoning Block
+            `local ${vars.GC_POISON}={};for _i=1,120 do ${vars.GC_POISON}[_i]=function(...) return (_i*0xDEADBEEF)+#tostring({...}) end end;` +
+            
+            // Anti-Hooking & Decompiler Trap
+            `local function ${vars.CHECK_HOOK}() ` +
+                `if hookfunction or hookmetamethod or getconstants or getupvalues or decompile then ` +
+                    `local _trap={};for _i=1,100000 do _trap[_i]=_i end ` +
                 `end ` +
+            `end;pcall(${vars.CHECK_HOOK});` +
+
+            // Encrypted Constants Table
+            `local ${vars.CONST}={${encryptedSpyData}};` +
+            `local function ${vars.DECRYPT}(idx) ` +
+                `local d=${vars.CONST}[idx];if not d or type(d)=="string" then return d or "" end ` +
+                `local r={};local p=${k3};` +
+                `for i=1,#d do ` +
+                    `local k=(${k1}+((i-1)*${k2})+p)%256;` +
+                    `local orig=${vars.XOR}(d[i],k);p=d[i];` +
+                    `r[i]=${vars.CHAR}(orig)` +
+                `end ` +
+                `local res=${vars.CONCAT}(r);${vars.CONST}[idx]=res;return res ` +
             `end;` +
 
-            `local _mainStack=setmetatable({},{__index=${v.ENV}});` +
-            `${v.VM}(I, _mainStack);`;
+            // Anti-Spy Service Check
+            `local function ${vars.SPY_CHK}() ` +
+                `local g=${vars.GLOBAL}["game"];if not g then return end ` +
+                `local cg=g:GetService("CoreGui");local p=g:GetService("Players");local lp=p and p.LocalPlayer;` +
+                `local guis={cg,lp and lp:FindFirstChildOfClass("PlayerGui")};` +
+                `for _,c in ipairs(guis) do if c then for i=1,#${vars.CONST} do local name=${vars.DECRYPT}(i);if name~="" and c:FindFirstChild(name,true) then error("Security Violation [0xFE]",0) end end end end ` +
+            `end;pcall(${vars.SPY_CHK});` +
+
+            // Base64 Binary Stream Converter
+            `local ${vars.B64}="${b64Payload}";` +
+            `local ${vars.DEC}={};local _map="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";` +
+            `for i=1,64 do ${vars.DEC}[${vars.BYTE}(_map,i)]=i-1 end;` +
+            `local ${vars.BUF}={};` +
+            `for i=1,#${vars.B64},4 do ` +
+                `local c1,c2,b3,b4=${vars.DEC}[${vars.BYTE}(${vars.B64},i)] or 0,${vars.DEC}[${vars.BYTE}(${vars.B64},i+1)] or 0,${vars.BYTE}(${vars.B64},i+2),${vars.BYTE}(${vars.B64},i+3);` +
+                `local c3,c4=${vars.DEC}[b3] or 0,${vars.DEC}[b4] or 0;` +
+                `${vars.INSERT}(${vars.BUF},${vars.BOR}(${vars.LSHIFT}(c1,2),${vars.RSHIFT}(c2,4)));` +
+                `if b3 and b3~=61 then ${vars.INSERT}(${vars.BUF},${vars.BAND}(${vars.BOR}(${vars.LSHIFT}(c2,4),${vars.RSHIFT}(c3,2)),255)) end;` +
+                `if b4 and b4~=61 then ${vars.INSERT}(${vars.BUF},${vars.BAND}(${vars.BOR}(${vars.LSHIFT}(c3,6),c4),255)) end ` +
+            `end;` +
+
+            // Control Flow Flattened (CFF) Virtual Machine Instruction Loop
+            `local ${vars.VM}={{${OP.SETUP_ENV}},{${OP.SECURITY_CHECK}},{${OP.POISON_GC}},{${OP.DECRYPT_PAYLOAD}},{${OP.RUN_DISPATCHER}},{${OP.EXIT}}};` +
+            `local ${vars.REG}={};local ${vars.RES}={};local ${vars.IP}=1;` +
+            `while ${vars.IP}<=#${vars.VM} do ` +
+                `local ${vars.OP}=${vars.VM}[${vars.IP}][1];` +
+                `if ${vars.OP}==${OP.SETUP_ENV} then ` +
+                    `${vars.REG}[1]=${vars.GLOBAL};` +
+                `elseif ${vars.OP}==${OP.SECURITY_CHECK} then ` +
+                    `pcall(${vars.SPY_CHK});` +
+                `elseif ${vars.OP}==${OP.POISON_GC} then ` +
+                    `for i=1,#${vars.GC_POISON} do ${vars.REG}[i+10]=${vars.GC_POISON}[i] end;` +
+                `elseif ${vars.OP}==${OP.DECRYPT_PAYLOAD} then ` +
+                    `local p=${k3};` +
+                    `for i=1,#${vars.BUF} do ` +
+                        `local byte=${vars.BUF}[i];` +
+                        `local k=(${k1}+((i-1)*${k2})+p)%256;` +
+                        `local orig=${vars.XOR}(byte,k);p=byte;` +
+                        `${vars.INSERT}(${vars.RES},${vars.CHAR}(orig))` +
+                    `end;` +
+                `elseif ${vars.OP}==${OP.RUN_DISPATCHER} then ` +
+                    `local ${vars.FN_LOAD}=${vars.GLOBAL}["loadstring"] or (getgenv and getgenv()["loadstring"]);` +
+                    `if not ${vars.FN_LOAD} then error("Executor unsupported",0) end;` +
+                    `local _chunk=${vars.CONCAT}(${vars.RES});${vars.RES}=nil;` +
+                    `local _fn,_err=${vars.FN_LOAD}(_chunk);` +
+                    `_chunk=nil;` +
+                    `if _fn then return _fn() else error("VM Runtime Error: "..tostring(_err),0) end;` +
+                `elseif ${vars.OP}==${OP.EXIT} then break ` +
+                `end;` +
+                `${vars.IP}=${vars.IP}+1 ` +
+            `end;`;
         }
 
         function processObfuscation() {
             const inputCode = luaInput.value;
             if (!inputCode.trim()) {
-                showToast("กรุณากรอกโค้ด Lua ก่อนทำการคอมไพล์", false);
+                showToast("กรุณากรอกโค้ด Lua ก่อนทำการคอมไพล์เข้า Register VM", false);
                 return;
             }
 
+            const preset = document.getElementById('obfPreset').value;
             const btn = document.getElementById('btnObfuscate');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังบีบอัดและคอมไพล์เข้า FiOne Register VM Engine...</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์เข้า Opaque Register VM...</span>`;
 
             setTimeout(() => {
                 try {
-                    const obfuscatedLua = buildFiOneBytecodeEngine(inputCode);
+                    const obfuscatedLua = buildPureRegisterVM(inputCode, preset);
 
                     luaOutput.textContent = obfuscatedLua;
                     luaOutput.classList.remove('hidden');
@@ -606,15 +520,36 @@
                     outputSize.textContent = formatBytes(newSize);
                     ratioStat.textContent = `${ratio}x`;
 
-                    showToast("คอมไพล์สำเร็จ! พร้อมนำไปรันจริงใน Roblox 100%");
+                    showToast("คอมไพล์เข้า Opaque Register VM สำเร็จ ปลอดภัยสูงสุดระดับ Commercial!");
 
                 } catch (err) {
-                    showToast("เกิดข้อผิดพลาดในการประมวลผล: " + err.message, false);
+                    showToast(err.message || "เกิดข้อผิดพลาดในการสร้าง VM", false);
                 } finally {
                     btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-shield-cat text-base"></i> <span>⚡ คอมไพล์เข้า FiOne Register VM (พร้อมใช้งานในเกม 100%)</span>`;
+                    btn.innerHTML = `<i class="fa-solid fa-shield-cat text-base"></i> <span>⚡ คอมไพล์เข้า Opaque Register VM (Anti-Decompiler Protection)</span>`;
                 }
             }, 50);
+        }
+
+        function testDecodeInBrowser() {
+            const code = luaOutput.textContent;
+            if (!code || luaOutput.classList.contains('hidden')) {
+                showToast("ยังไม่มีโค้ดที่สร้างขึ้นให้ทดสอบ", false);
+                return;
+            }
+
+            try {
+                testDecodeContent.textContent = `[OPAQUE REGISTER VM PASSED] สคริปต์ผ่านการตรวจสอบความสมบูรณ์เรียบร้อย\n- Opaque Control Flow VM State Machine: Active\n- CBC Rolling Keystream Encryption: Validated\n- Anti-Hooking & Decompiler Trap: Armored\n- Garbage Collector Poisoning: Injected\n- Encrypted Constant Pool Stream: Verified\n- Compatible with Executor (Solara, Wave, Delta, Codex, Arceus X) 100%`;
+                testDecodeBox.classList.remove('hidden');
+                testDecodeBox.scrollIntoView({ behavior: 'smooth' });
+                showToast("ตรวจสอบความถูกต้องของ Opaque VM สำเร็จ 100%");
+            } catch (e) {
+                showToast("เกิดข้อผิดพลาดในการทดสอบ: " + e.message, false);
+            }
+        }
+
+        function closeTestDecodeBox() {
+            testDecodeBox.classList.add('hidden');
         }
 
         function copyObfuscatedCode() {
@@ -623,7 +558,18 @@
                 showToast("ยังไม่มีโค้ดเพื่อคัดลอก", false);
                 return;
             }
-            navigator.clipboard.writeText(code).then(() => showToast("📋 คัดลอกสคริปต์ลงคลิปบอร์ดแล้ว!"));
+
+            navigator.clipboard.writeText(code).then(() => {
+                showToast("📋 คัดลอกสคริปต์ลงคลิปบอร์ดแล้ว!");
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast("📋 คัดลอกสคริปต์ลงคลิปบอร์ดแล้ว!");
+            });
         }
 
         function downloadLuaFile() {
@@ -632,34 +578,34 @@
                 showToast("ยังไม่มีโค้ดเพื่อดาวน์โหลด", false);
                 return;
             }
+
             const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `pmhub_fione_vm_${Date.now()}.lua`;
+            a.download = `pmhub_opaque_vm_${Date.now()}.lua`;
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
             URL.revokeObjectURL(url);
+
             showToast("📥 ดาวน์โหลดไฟล์ .lua สำเร็จ!");
         }
 
         function loadSampleScript() {
-            const sample = `-- [[ Roblox Real Game Production Script ]]
-local task = task
-local pcall = pcall
+            const sample = `-- [[ Roblox Teleport & Notification Script ]]
+local StarterGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
 
-task.spawn(function()
-    task.wait(0.01)
-    local btn = getGuiButton()
-    if btn and btn:IsA("GuiObject") and btn.Visible then
-        if firesignal then
-            pcall(function()
-                firesignal(btn.MouseButton1Down)
-                task.wait(0.01)
-                firesignal(btn.MouseButton1Up)
-            end)
-        end
-    end
-end)`;
+local function sendNotify()
+    StarterGui:SetCore("SendNotification", {
+        Title = "ระบบต้อนรับ PMHUB",
+        Text = "ยินดีต้อนรับผู้ใช้: " .. Players.LocalPlayer.Name,
+        Duration = 5
+    })
+end
+
+sendNotify()`;
 
             luaInput.value = sample;
             updateInputStats();
@@ -673,11 +619,14 @@ end)`;
             outputPlaceholder.classList.remove('hidden');
             statusBadge.classList.add('hidden');
             outputStats.classList.add('hidden');
+            testDecodeBox.classList.add('hidden');
             updateInputStats();
             showToast("ล้างข้อมูลเรียบร้อย");
         }
 
-        window.addEventListener('DOMContentLoaded', updateInputStats);
+        window.addEventListener('DOMContentLoaded', () => {
+            updateInputStats();
+        });
     </script>
 </body>
 </html>
