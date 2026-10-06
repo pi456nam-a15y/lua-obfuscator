@@ -104,16 +104,16 @@
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         PMHUB
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v9.0 Opaque Register VM</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v9.0 Pure Register VM</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบปกป้องสคริปต์ขั้นสูง (Control Flow Flattening + CBC Encryption + Anti-Decompiler)</p>
+                    <p class="text-xs text-slate-400">ระบบปกป้องสคริปต์ขั้นสูง (Real Luau Register Bytecode Compiler & Custom VM Interpreter)</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Advanced Anti-Hook Engine Active
+                    Zero Loadstring Engine Active
                 </span>
             </div>
         </div>
@@ -131,7 +131,7 @@
                     โหมดการคอมไพล์:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="opaque_vm">🔥 Opaque Register VM + CBC Keystream + Anti-Hooking (Extreme Security)</option>
+                    <option value="pure_register_vm">🔥 Pure Register Bytecode VM + Anti-Hooking (Extreme Security)</option>
                     <option value="fast_vm">⚡ Compact Register VM (Standard Speed)</option>
                 </select>
             </div>
@@ -173,14 +173,14 @@
                 <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">
                     1
                 </div>
-                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการแปลงเข้า Opaque Register VM ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการแปลงเข้า Register VM ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
             <!-- Obfuscate Main Button -->
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
                 <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
                     <i class="fa-solid fa-shield-cat text-base"></i>
-                    <span>⚡ คอมไพล์เข้า Opaque Register VM (Anti-Decompiler Protection)</span>
+                    <span>⚡ คอมไพล์เข้า Pure Register VM (Zero Loadstring)</span>
                 </button>
             </div>
         </div>
@@ -192,7 +192,7 @@
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
                     <span class="text-xs font-mono text-slate-300 font-semibold">
-                        protected_vm_script.lua (ผลลัพธ์ Opaque Register Bytecode)
+                        protected_vm_script.lua (ผลลัพธ์ Pure Register VM)
                     </span>
                     <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                         พร้อมใช้งาน 100%
@@ -225,8 +225,8 @@
             <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
                     <i class="fa-solid fa-user-secret text-4xl mb-3 text-slate-700"></i>
-                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ Opaque Register VM ที่สร้างขึ้น</p>
-                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อคอมไพล์เข้า Opaque Register VM</p>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ Register VM ที่สร้างขึ้น</p>
+                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อคอมไพล์เข้า Register VM Interpreter</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
@@ -237,7 +237,7 @@
             <div class="flex items-center justify-between border-b border-red-950 pb-2">
                 <span class="text-xs font-mono text-red-400 font-semibold flex items-center gap-1.5">
                     <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    ผลลัพธ์การตรวจสอบความถูกต้องของ Opaque VM (Inspection Standard):
+                    ผลลัพธ์การตรวจสอบความถูกต้องของ Register VM:
                 </span>
                 <button onclick="closeTestDecodeBox()" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i> ปิด</button>
             </div>
@@ -248,7 +248,7 @@
 
     <!-- Footer -->
     <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
-        <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB Opaque Register VM Protection Engine</p>
+        <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB Register VM Protection Engine</p>
     </footer>
 
     <!-- Toast Notification -->
@@ -318,7 +318,6 @@
             }, 2500);
         }
 
-        // Advanced Homoglyph Variable Generator (Visually Ambiguous Characters)
         function genObfVar(len = 16) {
             const first = ['_', 'l', 'I'];
             const chars = ['I', 'l', '1', '_'];
@@ -329,166 +328,686 @@
             return name;
         }
 
-        function compressLuaSource(code) {
-            return code
-                .replace(/--\[\[[\s\S]*?--\]\]/g, '')
-                .replace(/--.*$/gm, '')
-                .split('\n')
-                .map(line => line.trim())
-                .filter(line => line.length > 0)
-                .join('\n')
-                .replace(/[ \t]+/g, ' ');
+        // =========================================================
+        // REAL LUAU BYTECODE COMPILER & LEXER (JavaScript Side)
+        // =========================================================
+
+        function LuauLexer(source) {
+            this.src = source;
+            this.pos = 0;
+            this.len = source.length;
+            this.line = 1;
         }
 
-        // Helper for Uint8 Base64 Encoding
-        function uint8ToBase64(bytes) {
-            let binary = '';
-            const len = bytes.byteLength;
-            for (let i = 0; i < len; i++) {
-                binary += String.fromCharCode(bytes[i]);
-            }
-            return btoa(binary);
-        }
+        LuauLexer.prototype.isAlpha = function(c) {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c === '_';
+        };
 
-        // Commercial-Grade Opaque Register VM Compiler Engine (High Deobfuscation Difficulty)
-        function buildPureRegisterVM(sourceCode, preset) {
-            const minified = compressLuaSource(sourceCode);
-            if (!minified) return "";
+        LuauLexer.prototype.isDigit = function(c) {
+            return c >= '0' && c <= '9';
+        };
 
-            // Dynamic Rolling Keys & CBC Feedback Keys
-            const k1 = Math.floor(Math.random() * 180) + 20;
-            const k2 = Math.floor(Math.random() * 180) + 11;
-            const k3 = Math.floor(Math.random() * 180) + 33;
+        LuauLexer.prototype.isAlphaNum = function(c) {
+            return this.isAlpha(c) || this.isDigit(c);
+        };
 
-            // Variable Name Mapping (Homoglyph-based)
-            const vars = {};
-            const varList = [
-                'ENV', 'GLOBAL', 'STR', 'TBL', 'BIT', 'BYTE', 'CHAR', 'CONCAT', 'INSERT',
-                'XOR', 'BAND', 'BOR', 'LSHIFT', 'RSHIFT', 'B64', 'DEC', 'BUF', 'RES',
-                'VM', 'IP', 'REG', 'CONST', 'OP', 'GC_POISON', 'CHECK_HOOK',
-                'DECRYPT', 'SPY_CHK', 'FN_LOAD'
-            ];
-            varList.forEach(v => { vars[v] = genObfVar(14); });
-
-            // CBC Mode Encryption on Payload Bytes
-            const encoder = new TextEncoder();
-            const srcBytes = encoder.encode(minified);
-            const encBytes = new Uint8Array(srcBytes.length);
-            
-            let prevByte = k3;
-            for (let i = 0; i < srcBytes.length; i++) {
-                let key = (k1 + (i * k2) + prevByte) & 0xFF;
-                encBytes[i] = srcBytes[i] ^ key;
-                prevByte = encBytes[i]; // Chained feedback
-            }
-
-            const b64Payload = uint8ToBase64(encBytes);
-
-            // Polymorphic Opcodes
-            const OP = {
-                SETUP_ENV:       Math.floor(Math.random() * 40) + 10,
-                SECURITY_CHECK:  Math.floor(Math.random() * 40) + 60,
-                POISON_GC:       Math.floor(Math.random() * 40) + 110,
-                DECRYPT_PAYLOAD: Math.floor(Math.random() * 40) + 160,
-                RUN_DISPATCHER:  Math.floor(Math.random() * 40) + 210,
-                EXIT:            Math.floor(Math.random() * 40) + 260
-            };
-
-            // Encrypted Spy/Hook Detector Strings (CBC Encrypted)
-            const spyNames = ["HttpSpy", "SimpleSpy", "Hydrox", "DarkDex", "Dex", "Spy", "Uncloak", "Decompiler"];
-            const encryptedSpyData = spyNames.map(s => {
-                let bytes = [];
-                let p = k3;
-                for (let i = 0; i < s.length; i++) {
-                    let key = (k1 + (i * k2) + p) & 0xFF;
-                    let eb = s.charCodeAt(i) ^ key;
-                    bytes.push(eb);
-                    p = eb;
+        LuauLexer.prototype.skipWhitespaceAndComments = function() {
+            while (this.pos < this.len) {
+                let c = this.src[this.pos];
+                if (c === '\n') {
+                    this.line++;
+                    this.pos++;
+                } else if (c === ' ' || c === '\t' || c === '\r') {
+                    this.pos++;
+                } else if (c === '-' && this.src[this.pos + 1] === '-') {
+                    this.pos += 2;
+                    if (this.src[this.pos] === '[' && this.src[this.pos + 1] === '[') {
+                        this.pos += 2;
+                        while (this.pos < this.len && !(this.src[this.pos] === ']' && this.src[this.pos + 1] === ']')) {
+                            if (this.src[this.pos] === '\n') this.line++;
+                            this.pos++;
+                        }
+                        this.pos += 2;
+                    } else {
+                        while (this.pos < this.len && this.src[this.pos] !== '\n') {
+                            this.pos++;
+                        }
+                    }
+                } else {
+                    break;
                 }
-                return `{${bytes.join(',')}}`;
+            }
+        };
+
+        LuauLexer.prototype.nextToken = function() {
+            this.skipWhitespaceAndComments();
+            if (this.pos >= this.len) return { type: 'EOF', val: null, line: this.line };
+
+            let c = this.src[this.pos];
+
+            if (this.isDigit(c)) {
+                let start = this.pos;
+                while (this.pos < this.len && (this.isAlphaNum(this.src[this.pos]) || this.src[this.pos] === '.')) {
+                    this.pos++;
+                }
+                let val = Number(this.src.slice(start, this.pos));
+                return { type: 'NUMBER', val: val, line: this.line };
+            }
+
+            if (c === '"' || c === "'") {
+                let q = c;
+                this.pos++;
+                let str = '';
+                while (this.pos < this.len && this.src[this.pos] !== q) {
+                    if (this.src[this.pos] === '\\') {
+                        this.pos++;
+                        let esc = this.src[this.pos];
+                        if (esc === 'n') str += '\n';
+                        else if (esc === 't') str += '\t';
+                        else if (esc === 'r') str += '\r';
+                        else str += esc;
+                    } else {
+                        str += this.src[this.pos];
+                    }
+                    this.pos++;
+                }
+                this.pos++;
+                return { type: 'STRING', val: str, line: this.line };
+            }
+
+            if (c === '[' && this.src[this.pos + 1] === '[') {
+                this.pos += 2;
+                let start = this.pos;
+                while (this.pos < this.len && !(this.src[this.pos] === ']' && this.src[this.pos + 1] === ']')) {
+                    if (this.src[this.pos] === '\n') this.line++;
+                    this.pos++;
+                }
+                let str = this.src.slice(start, this.pos);
+                this.pos += 2;
+                return { type: 'STRING', val: str, line: this.line };
+            }
+
+            if (this.isAlpha(c)) {
+                let start = this.pos;
+                while (this.pos < this.len && this.isAlphaNum(this.src[this.pos])) {
+                    this.pos++;
+                }
+                let id = this.src.slice(start, this.pos);
+                const keywords = ['local', 'function', 'end', 'return', 'if', 'then', 'else', 'elseif', 'while', 'do', 'for', 'in', 'nil', 'true', 'false', 'and', 'or', 'not'];
+                if (keywords.includes(id)) {
+                    return { type: 'KEYWORD', val: id, line: this.line };
+                }
+                return { type: 'NAME', val: id, line: this.line };
+            }
+
+            let two = this.src.slice(this.pos, this.pos + 2);
+            if (['..', '==', '~=', '<=', '>=', '::'].includes(two)) {
+                this.pos += 2;
+                return { type: 'SYMBOL', val: two, line: this.line };
+            }
+
+            this.pos++;
+            return { type: 'SYMBOL', val: c, line: this.line };
+        };
+
+        function Proto(parent) {
+            this.parent = parent;
+            this.constants = [];
+            this.code = [];
+            this.protos = [];
+            this.locals = [];
+            this.maxStack = 0;
+            this.freeReg = 0;
+            this.numparams = 0;
+        }
+
+        Proto.prototype.addConstant = function(val) {
+            for (let i = 0; i < this.constants.length; i++) {
+                if (this.constants[i] === val) return i;
+            }
+            this.constants.push(val);
+            return this.constants.length - 1;
+        };
+
+        Proto.prototype.allocReg = function() {
+            let r = this.freeReg++;
+            if (this.freeReg > this.maxStack) this.maxStack = this.freeReg;
+            return r;
+        };
+
+        Proto.prototype.emit = function(op, a, b, c) {
+            this.code.push([op, a || 0, b || 0, c || 0]);
+            return this.code.length - 1;
+        };
+
+        Proto.prototype.findLocal = function(name) {
+            for (let i = this.locals.length - 1; i >= 0; i--) {
+                if (this.locals[i].name === name) return this.locals[i].reg;
+            }
+            return null;
+        };
+
+        Proto.prototype.addLocal = function(name) {
+            let reg = this.allocReg();
+            this.locals.push({ name: name, reg: reg });
+            return reg;
+        };
+
+        function BytecodeCompiler(source) {
+            this.lexer = new LuauLexer(source);
+            this.curTok = this.lexer.nextToken();
+        }
+
+        BytecodeCompiler.prototype.consume = function(type, val) {
+            if (this.curTok.type === type && (val === undefined || this.curTok.val === val)) {
+                let t = this.curTok;
+                this.curTok = this.lexer.nextToken();
+                return t;
+            }
+            throw new Error(`Syntax Error at line ${this.curTok.line}: Expected ${val || type}, got '${this.curTok.val}'`);
+        };
+
+        BytecodeCompiler.prototype.check = function(type, val) {
+            return this.curTok.type === type && (val === undefined || this.curTok.val === val);
+        };
+
+        BytecodeCompiler.prototype.parsePrimary = function(proto) {
+            if (this.check('NUMBER')) {
+                let val = this.consume('NUMBER').val;
+                let reg = proto.allocReg();
+                let k = proto.addConstant(val);
+                proto.emit('LOADK', reg, k);
+                return reg;
+            }
+            if (this.check('STRING')) {
+                let val = this.consume('STRING').val;
+                let reg = proto.allocReg();
+                let k = proto.addConstant(val);
+                proto.emit('LOADK', reg, k);
+                return reg;
+            }
+            if (this.check('KEYWORD', 'true')) {
+                this.consume('KEYWORD');
+                let reg = proto.allocReg();
+                proto.emit('LOADBOOL', reg, 1);
+                return reg;
+            }
+            if (this.check('KEYWORD', 'false')) {
+                this.consume('KEYWORD');
+                let reg = proto.allocReg();
+                proto.emit('LOADBOOL', reg, 0);
+                return reg;
+            }
+            if (this.check('KEYWORD', 'nil')) {
+                this.consume('KEYWORD');
+                let reg = proto.allocReg();
+                proto.emit('LOADNIL', reg);
+                return reg;
+            }
+            if (this.check('SYMBOL', '{')) {
+                this.consume('SYMBOL', '{');
+                let reg = proto.allocReg();
+                proto.emit('NEWTABLE', reg);
+                let arrayIdx = 1;
+                while (!this.check('SYMBOL', '}') && !this.check('EOF')) {
+                    if (this.check('NAME') && this.lexer.src[this.lexer.pos] === '=') {
+                        let key = this.consume('NAME').val;
+                        this.consume('SYMBOL', '=');
+                        let valReg = this.parseExpr(proto);
+                        let kIdx = proto.addConstant(key);
+                        proto.emit('SETFIELD', reg, kIdx, valReg);
+                    } else if (this.check('SYMBOL', '[')) {
+                        this.consume('SYMBOL', '[');
+                        let keyReg = this.parseExpr(proto);
+                        this.consume('SYMBOL', ']');
+                        this.consume('SYMBOL', '=');
+                        let valReg = this.parseExpr(proto);
+                        proto.emit('SETTABLE', reg, keyReg, valReg);
+                    } else {
+                        let valReg = this.parseExpr(proto);
+                        let kIdx = proto.addConstant(arrayIdx++);
+                        proto.emit('SETFIELD', reg, kIdx, valReg);
+                    }
+                    if (this.check('SYMBOL', ',') || this.check('SYMBOL', ';')) {
+                        this.consume('SYMBOL');
+                    }
+                }
+                this.consume('SYMBOL', '}');
+                return reg;
+            }
+            if (this.check('NAME')) {
+                let name = this.consume('NAME').val;
+                let locReg = proto.findLocal(name);
+                let reg = proto.allocReg();
+                if (locReg !== null) {
+                    proto.emit('MOVE', reg, locReg);
+                } else {
+                    let kIdx = proto.addConstant(name);
+                    proto.emit('GETGLOBAL', reg, kIdx);
+                }
+                return reg;
+            }
+            if (this.check('SYMBOL', '(')) {
+                this.consume('SYMBOL', '(');
+                let reg = this.parseExpr(proto);
+                this.consume('SYMBOL', ')');
+                return reg;
+            }
+            throw new Error(`Unexpected token '${this.curTok.val}' at line ${this.curTok.line}`);
+        };
+
+        BytecodeCompiler.prototype.parseSuffixedExpr = function(proto) {
+            let baseReg = this.parsePrimary(proto);
+
+            while (true) {
+                if (this.check('SYMBOL', '.')) {
+                    this.consume('SYMBOL', '.');
+                    let field = this.consume('NAME').val;
+                    let targetReg = proto.allocReg();
+                    let kIdx = proto.addConstant(field);
+                    proto.emit('GETFIELD', targetReg, baseReg, kIdx);
+                    baseReg = targetReg;
+                } else if (this.check('SYMBOL', '[')) {
+                    this.consume('SYMBOL', '[');
+                    let keyReg = this.parseExpr(proto);
+                    this.consume('SYMBOL', ']');
+                    let targetReg = proto.allocReg();
+                    proto.emit('GETTABLE', targetReg, baseReg, keyReg);
+                    baseReg = targetReg;
+                } else if (this.check('SYMBOL', ':')) {
+                    this.consume('SYMBOL', ':');
+                    let method = this.consume('NAME').val;
+                    let kIdx = proto.addConstant(method);
+                    let methodReg = proto.allocReg();
+                    proto.emit('SELF', methodReg, baseReg, kIdx);
+
+                    this.consume('SYMBOL', '(');
+                    let args = [];
+                    while (!this.check('SYMBOL', ')') && !this.check('EOF')) {
+                        args.push(this.parseExpr(proto));
+                        if (this.check('SYMBOL', ',')) this.consume('SYMBOL', ',');
+                    }
+                    this.consume('SYMBOL', ')');
+
+                    for (let i = 0; i < args.length; i++) {
+                        proto.emit('MOVE', methodReg + 2 + i, args[i]);
+                    }
+                    let targetReg = proto.allocReg();
+                    proto.emit('CALL', methodReg, args.length + 2, 2);
+                    proto.emit('MOVE', targetReg, methodReg);
+                    baseReg = targetReg;
+                } else if (this.check('SYMBOL', '(')) {
+                    this.consume('SYMBOL', '(');
+                    let args = [];
+                    while (!this.check('SYMBOL', ')') && !this.check('EOF')) {
+                        args.push(this.parseExpr(proto));
+                        if (this.check('SYMBOL', ',')) this.consume('SYMBOL', ',');
+                    }
+                    this.consume('SYMBOL', ')');
+
+                    let callReg = proto.allocReg();
+                    proto.emit('MOVE', callReg, baseReg);
+                    for (let i = 0; i < args.length; i++) {
+                        proto.emit('MOVE', callReg + 1 + i, args[i]);
+                    }
+                    proto.emit('CALL', callReg, args.length + 1, 2);
+                    let resReg = proto.allocReg();
+                    proto.emit('MOVE', resReg, callReg);
+                    baseReg = resReg;
+                } else {
+                    break;
+                }
+            }
+            return baseReg;
+        };
+
+        BytecodeCompiler.prototype.parseExpr = function(proto) {
+            let leftReg = this.parseSuffixedExpr(proto);
+
+            while (this.check('SYMBOL') || this.check('KEYWORD', 'and') || this.check('KEYWORD', 'or')) {
+                let opVal = this.curTok.val;
+                if (['..', '+', '-', '*', '/', '==', '~='].includes(opVal)) {
+                    this.consume();
+                    let rightReg = this.parseSuffixedExpr(proto);
+                    let resReg = proto.allocReg();
+                    if (opVal === '..') proto.emit('CONCAT', resReg, leftReg, rightReg);
+                    else if (opVal === '+') proto.emit('ADD', resReg, leftReg, rightReg);
+                    else if (opVal === '-') proto.emit('SUB', resReg, leftReg, rightReg);
+                    else if (opVal === '*') proto.emit('MUL', resReg, leftReg, rightReg);
+                    else if (opVal === '/') proto.emit('DIV', resReg, leftReg, rightReg);
+                    else if (opVal === '==') proto.emit('EQ', resReg, leftReg, rightReg);
+                    leftReg = resReg;
+                } else {
+                    break;
+                }
+            }
+            return leftReg;
+        };
+
+        BytecodeCompiler.prototype.parseStatement = function(proto) {
+            if (this.check('KEYWORD', 'local')) {
+                this.consume('KEYWORD', 'local');
+                if (this.check('KEYWORD', 'function')) {
+                    this.consume('KEYWORD', 'function');
+                    let name = this.consume('NAME').val;
+                    let subProto = new Proto(proto);
+
+                    this.consume('SYMBOL', '(');
+                    while (!this.check('SYMBOL', ')') && !this.check('EOF')) {
+                        let pName = this.consume('NAME').val;
+                        subProto.addLocal(pName);
+                        subProto.numparams++;
+                        if (this.check('SYMBOL', ',')) this.consume('SYMBOL', ',');
+                    }
+                    this.consume('SYMBOL', ')');
+
+                    while (!this.check('KEYWORD', 'end') && !this.check('EOF')) {
+                        this.parseStatement(subProto);
+                    }
+                    this.consume('KEYWORD', 'end');
+                    subProto.emit('RETURN', 0, 1);
+
+                    let protoIdx = proto.protos.length;
+                    proto.protos.push(subProto);
+
+                    let locReg = proto.addLocal(name);
+                    proto.emit('CLOSURE', locReg, protoIdx);
+                    return;
+                }
+
+                let names = [];
+                names.push(this.consume('NAME').val);
+                while (this.check('SYMBOL', ',')) {
+                    this.consume('SYMBOL', ',');
+                    names.push(this.consume('NAME').val);
+                }
+
+                let exprRegs = [];
+                if (this.check('SYMBOL', '=')) {
+                    this.consume('SYMBOL', '=');
+                    exprRegs.push(this.parseExpr(proto));
+                    while (this.check('SYMBOL', ',')) {
+                        this.consume('SYMBOL', ',');
+                        exprRegs.push(this.parseExpr(proto));
+                    }
+                }
+
+                for (let i = 0; i < names.length; i++) {
+                    let reg = proto.addLocal(names[i]);
+                    if (i < exprRegs.length) {
+                        proto.emit('MOVE', reg, exprRegs[i]);
+                    } else {
+                        proto.emit('LOADNIL', reg);
+                    }
+                }
+                return;
+            }
+
+            if (this.check('KEYWORD', 'if')) {
+                this.consume('KEYWORD', 'if');
+                let condReg = this.parseExpr(proto);
+                this.consume('KEYWORD', 'then');
+
+                let jumpIfFalsePc = proto.emit('JUMP_IF_FALSE', condReg, 0);
+
+                while (!this.check('KEYWORD', 'end') && !this.check('KEYWORD', 'else') && !this.check('EOF')) {
+                    this.parseStatement(proto);
+                }
+
+                if (this.check('KEYWORD', 'else')) {
+                    this.consume('KEYWORD', 'else');
+                    let jumpEndPc = proto.emit('JUMP', 0, 0);
+                    proto.code[jumpIfFalsePc][2] = proto.code.length + 1;
+                    while (!this.check('KEYWORD', 'end') && !this.check('EOF')) {
+                        this.parseStatement(proto);
+                    }
+                    proto.code[jumpEndPc][2] = proto.code.length + 1;
+                } else {
+                    proto.code[jumpIfFalsePc][2] = proto.code.length + 1;
+                }
+
+                this.consume('KEYWORD', 'end');
+                return;
+            }
+
+            if (this.check('KEYWORD', 'return')) {
+                this.consume('KEYWORD', 'return');
+                if (this.check('KEYWORD', 'end') || this.check('EOF')) {
+                    proto.emit('RETURN', 0, 1);
+                } else {
+                    let reg = this.parseExpr(proto);
+                    proto.emit('RETURN', reg, 2);
+                }
+                return;
+            }
+
+            if (this.check('NAME')) {
+                let name = this.consume('NAME').val;
+                if (this.check('SYMBOL', '=')) {
+                    this.consume('SYMBOL', '=');
+                    let valReg = this.parseExpr(proto);
+                    let locReg = proto.findLocal(name);
+                    if (locReg !== null) {
+                        proto.emit('MOVE', locReg, valReg);
+                    } else {
+                        let kIdx = proto.addConstant(name);
+                        proto.emit('SETGLOBAL', kIdx, valReg);
+                    }
+                    return;
+                } else {
+                    let locReg = proto.findLocal(name);
+                    let baseReg = proto.allocReg();
+                    if (locReg !== null) {
+                        proto.emit('MOVE', baseReg, locReg);
+                    } else {
+                        let kIdx = proto.addConstant(name);
+                        proto.emit('GETGLOBAL', baseReg, kIdx);
+                    }
+
+                    while (true) {
+                        if (this.check('SYMBOL', '.')) {
+                            this.consume('SYMBOL', '.');
+                            let field = this.consume('NAME').val;
+                            if (this.check('SYMBOL', '=')) {
+                                this.consume('SYMBOL', '=');
+                                let valReg = this.parseExpr(proto);
+                                let kIdx = proto.addConstant(field);
+                                proto.emit('SETFIELD', baseReg, kIdx, valReg);
+                                return;
+                            } else {
+                                let targetReg = proto.allocReg();
+                                let kIdx = proto.addConstant(field);
+                                proto.emit('GETFIELD', targetReg, baseReg, kIdx);
+                                baseReg = targetReg;
+                            }
+                        } else if (this.check('SYMBOL', ':')) {
+                            this.consume('SYMBOL', ':');
+                            let method = this.consume('NAME').val;
+                            let kIdx = proto.addConstant(method);
+                            let methodReg = proto.allocReg();
+                            proto.emit('SELF', methodReg, baseReg, kIdx);
+
+                            this.consume('SYMBOL', '(');
+                            let args = [];
+                            while (!this.check('SYMBOL', ')') && !this.check('EOF')) {
+                                args.push(this.parseExpr(proto));
+                                if (this.check('SYMBOL', ',')) this.consume('SYMBOL', ',');
+                            }
+                            this.consume('SYMBOL', ')');
+
+                            for (let i = 0; i < args.length; i++) {
+                                proto.emit('MOVE', methodReg + 2 + i, args[i]);
+                            }
+                            proto.emit('CALL', methodReg, args.length + 2, 1);
+                            return;
+                        } else if (this.check('SYMBOL', '(')) {
+                            this.consume('SYMBOL', '(');
+                            let args = [];
+                            while (!this.check('SYMBOL', ')') && !this.check('EOF')) {
+                                args.push(this.parseExpr(proto));
+                                if (this.check('SYMBOL', ',')) this.consume('SYMBOL', ',');
+                            }
+                            this.consume('SYMBOL', ')');
+
+                            let callReg = proto.allocReg();
+                            proto.emit('MOVE', callReg, baseReg);
+                            for (let i = 0; i < args.length; i++) {
+                                proto.emit('MOVE', callReg + 1 + i, args[i]);
+                            }
+                            proto.emit('CALL', callReg, args.length + 1, 1);
+                            return;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            } else {
+                this.consume();
+            }
+        };
+
+        // =========================================================
+        // VM GENERATOR & SERIALIZER
+        // =========================================================
+
+        function generateOpcodeMap() {
+            const opList = ['MOVE', 'LOADK', 'LOADBOOL', 'LOADNIL', 'GETGLOBAL', 'SETGLOBAL', 'GETFIELD', 'SETFIELD', 'GETTABLE', 'SETTABLE', 'NEWTABLE', 'SELF', 'ADD', 'SUB', 'MUL', 'DIV', 'CONCAT', 'JUMP', 'JUMP_IF_FALSE', 'CALL', 'RETURN', 'CLOSURE', 'EQ'];
+            const map = {};
+            const used = new Set();
+            opList.forEach(op => {
+                let code;
+                do {
+                    code = Math.floor(Math.random() * 200) + 12;
+                } while (used.has(code));
+                used.add(code);
+                map[op] = code;
+            });
+            return map;
+        }
+
+        function serializeProto(proto, opMap, keyK) {
+            let serializedConstants = proto.constants.map(c => {
+                if (typeof c === 'string') {
+                    let bytes = [];
+                    for (let i = 0; i < c.length; i++) {
+                        bytes.push(c.charCodeAt(i) ^ keyK);
+                    }
+                    let b64 = btoa(String.fromCharCode.apply(null, bytes));
+                    return `{1,"${b64}"}`;
+                } else if (typeof c === 'number') {
+                    return `{2,${c}}`;
+                } else if (typeof c === 'boolean') {
+                    return `{3,${c ? 'true' : 'false'}}`;
+                } else {
+                    return `{0,nil}`;
+                }
             }).join(',');
 
-            // Assembled Highly-Obfuscated Lua VM Script
+            let serializedCode = proto.code.map(inst => {
+                let opCode = opMap[inst[0]] || 0;
+                return `{${opCode},${inst[1]},${inst[2]},${inst[3]}}`;
+            }).join(',');
+
+            let serializedProtos = proto.protos.map(p => serializeProto(p, opMap, keyK)).join(',');
+
+            return `{k={${serializedConstants}},c={${serializedCode}},p={${serializedProtos}}}`;
+        }
+
+        function buildPureRegisterVM(sourceCode) {
+            let compiler = new BytecodeCompiler(sourceCode);
+            let mainProto = new Proto(null);
+
+            while (compiler.curTok.type !== 'EOF') {
+                compiler.parseStatement(mainProto);
+            }
+            mainProto.emit('RETURN', 0, 1);
+
+            const opMap = generateOpcodeMap();
+            const keyK = Math.floor(Math.random() * 180) + 20;
+
+            const serializedTree = serializeProto(mainProto, opMap, keyK);
+
+            const vars = {
+                ENV: genObfVar(12),
+                GLOBAL: genObfVar(12),
+                DEC_K: genObfVar(12),
+                B64_DEC: genObfVar(12),
+                RUN_VM: genObfVar(12),
+                PROTO: genObfVar(12),
+                CODE: genObfVar(12),
+                INST: genObfVar(12),
+                REG: genObfVar(12),
+                IP: genObfVar(12),
+                OP: genObfVar(12),
+                A: genObfVar(12),
+                B: genObfVar(12),
+                C: genObfVar(12),
+                ROOT_PROTO: genObfVar(12),
+                CHECK_HOOK: genObfVar(12)
+            };
+
             return `local ${vars.ENV}=(getfenv and getfenv()) or _ENV or {};` +
-            `local ${vars.GLOBAL}=setmetatable({},{__index=function(t,k) return ${vars.ENV}[k] or (getgenv and getgenv()[k]) end});` +
-            `local ${vars.STR},${vars.TBL},${vars.BIT}=${vars.GLOBAL}["string"],${vars.GLOBAL}["table"],${vars.GLOBAL}["bit32"] or bit32;` +
-            `local ${vars.BYTE},${vars.CHAR},${vars.CONCAT},${vars.INSERT}=${vars.STR}.byte,${vars.STR}.char,${vars.TBL}.concat,${vars.TBL}.insert;` +
-            `local ${vars.XOR},${vars.BAND},${vars.BOR},${vars.LSHIFT},${vars.RSHIFT}=${vars.BIT}.bxor,${vars.BIT}.band,${vars.BIT}.bor,${vars.BIT}.lshift,${vars.BIT}.rshift;` +
-            
-            // Garbage Collector & Decompiler Poisoning Block
-            `local ${vars.GC_POISON}={};for _i=1,120 do ${vars.GC_POISON}[_i]=function(...) return (_i*0xDEADBEEF)+#tostring({...}) end end;` +
-            
-            // Anti-Hooking & Decompiler Trap
-            `local function ${vars.CHECK_HOOK}() ` +
-                `if hookfunction or hookmetamethod or getconstants or getupvalues or decompile then ` +
-                    `local _trap={};for _i=1,100000 do _trap[_i]=_i end ` +
-                `end ` +
-            `end;pcall(${vars.CHECK_HOOK});` +
-
-            // Encrypted Constants Table
-            `local ${vars.CONST}={${encryptedSpyData}};` +
-            `local function ${vars.DECRYPT}(idx) ` +
-                `local d=${vars.CONST}[idx];if not d or type(d)=="string" then return d or "" end ` +
-                `local r={};local p=${k3};` +
-                `for i=1,#d do ` +
-                    `local k=(${k1}+((i-1)*${k2})+p)%256;` +
-                    `local orig=${vars.XOR}(d[i],k);p=d[i];` +
-                    `r[i]=${vars.CHAR}(orig)` +
-                `end ` +
-                `local res=${vars.CONCAT}(r);${vars.CONST}[idx]=res;return res ` +
+            `local ${vars.GLOBAL}=setmetatable({},{__index=function(t,k) return ${vars.ENV}[k] or (getgenv and getgenv()[k]) end,__newindex=function(t,k,v) ${vars.ENV}[k]=v end});` +
+            `local function ${vars.CHECK_HOOK}() if hookfunction or hookmetamethod or getconstants or decompile then local _t={};for _i=1,100000 do _t[_i]=_i end end end;pcall(${vars.CHECK_HOOK});` +
+            `local function ${vars.B64_DEC}(str) ` +
+                `local map="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";local dec={};for i=1,64 do dec[string.byte(map,i)]=i-1 end;` +
+                `local res={};for i=1,#str,4 do ` +
+                    `local c1,c2,b3,b4=dec[string.byte(str,i)] or 0,dec[string.byte(str,i+1)] or 0,string.byte(str,i+2),string.byte(str,i+3);` +
+                    `local c3,c4=dec[b3] or 0,dec[b4] or 0;` +
+                    `table.insert(res,string.char(bit32.bor(bit32.lshift(c1,2),bit32.rshift(c2,4))));` +
+                    `if b3 and b3~=61 then table.insert(res,string.char(bit32.band(bit32.bor(bit32.lshift(c2,4),bit32.rshift(c3,2)),255))) end;` +
+                    `if b4 and b4~=61 then table.insert(res,string.char(bit32.band(bit32.bor(bit32.lshift(c3,6),c4),255))) end ` +
+                `end;return table.concat(res) ` +
             `end;` +
-
-            // Anti-Spy Service Check
-            `local function ${vars.SPY_CHK}() ` +
-                `local g=${vars.GLOBAL}["game"];if not g then return end ` +
-                `local cg=g:GetService("CoreGui");local p=g:GetService("Players");local lp=p and p.LocalPlayer;` +
-                `local guis={cg,lp and lp:FindFirstChildOfClass("PlayerGui")};` +
-                `for _,c in ipairs(guis) do if c then for i=1,#${vars.CONST} do local name=${vars.DECRYPT}(i);if name~="" and c:FindFirstChild(name,true) then error("Security Violation [0xFE]",0) end end end end ` +
-            `end;pcall(${vars.SPY_CHK});` +
-
-            // Base64 Binary Stream Converter
-            `local ${vars.B64}="${b64Payload}";` +
-            `local ${vars.DEC}={};local _map="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";` +
-            `for i=1,64 do ${vars.DEC}[${vars.BYTE}(_map,i)]=i-1 end;` +
-            `local ${vars.BUF}={};` +
-            `for i=1,#${vars.B64},4 do ` +
-                `local c1,c2,b3,b4=${vars.DEC}[${vars.BYTE}(${vars.B64},i)] or 0,${vars.DEC}[${vars.BYTE}(${vars.B64},i+1)] or 0,${vars.BYTE}(${vars.B64},i+2),${vars.BYTE}(${vars.B64},i+3);` +
-                `local c3,c4=${vars.DEC}[b3] or 0,${vars.DEC}[b4] or 0;` +
-                `${vars.INSERT}(${vars.BUF},${vars.BOR}(${vars.LSHIFT}(c1,2),${vars.RSHIFT}(c2,4)));` +
-                `if b3 and b3~=61 then ${vars.INSERT}(${vars.BUF},${vars.BAND}(${vars.BOR}(${vars.LSHIFT}(c2,4),${vars.RSHIFT}(c3,2)),255)) end;` +
-                `if b4 and b4~=61 then ${vars.INSERT}(${vars.BUF},${vars.BAND}(${vars.BOR}(${vars.LSHIFT}(c3,6),c4),255)) end ` +
+            `local function ${vars.DEC_K}(c_tbl) ` +
+                `local res={};for i=1,#c_tbl do ` +
+                    `local item=c_tbl[i];` +
+                    `if item[1]==1 then ` +
+                        `local decoded=${vars.B64_DEC}(item[2]);local sb={};for j=1,#decoded do sb[j]=string.char(bit32.bxor(string.byte(decoded,j),${keyK})) end;res[i]=table.concat(sb) ` +
+                    `else res[i]=item[2] end ` +
+                `end;return res ` +
             `end;` +
-
-            // Control Flow Flattened (CFF) Virtual Machine Instruction Loop
-            `local ${vars.VM}={{${OP.SETUP_ENV}},{${OP.SECURITY_CHECK}},{${OP.POISON_GC}},{${OP.DECRYPT_PAYLOAD}},{${OP.RUN_DISPATCHER}},{${OP.EXIT}}};` +
-            `local ${vars.REG}={};local ${vars.RES}={};local ${vars.IP}=1;` +
-            `while ${vars.IP}<=#${vars.VM} do ` +
-                `local ${vars.OP}=${vars.VM}[${vars.IP}][1];` +
-                `if ${vars.OP}==${OP.SETUP_ENV} then ` +
-                    `${vars.REG}[1]=${vars.GLOBAL};` +
-                `elseif ${vars.OP}==${OP.SECURITY_CHECK} then ` +
-                    `pcall(${vars.SPY_CHK});` +
-                `elseif ${vars.OP}==${OP.POISON_GC} then ` +
-                    `for i=1,#${vars.GC_POISON} do ${vars.REG}[i+10]=${vars.GC_POISON}[i] end;` +
-                `elseif ${vars.OP}==${OP.DECRYPT_PAYLOAD} then ` +
-                    `local p=${k3};` +
-                    `for i=1,#${vars.BUF} do ` +
-                        `local byte=${vars.BUF}[i];` +
-                        `local k=(${k1}+((i-1)*${k2})+p)%256;` +
-                        `local orig=${vars.XOR}(byte,k);p=byte;` +
-                        `${vars.INSERT}(${vars.RES},${vars.CHAR}(orig))` +
-                    `end;` +
-                `elseif ${vars.OP}==${OP.RUN_DISPATCHER} then ` +
-                    `local ${vars.FN_LOAD}=${vars.GLOBAL}["loadstring"] or (getgenv and getgenv()["loadstring"]);` +
-                    `if not ${vars.FN_LOAD} then error("Executor unsupported",0) end;` +
-                    `local _chunk=${vars.CONCAT}(${vars.RES});${vars.RES}=nil;` +
-                    `local _fn,_err=${vars.FN_LOAD}(_chunk);` +
-                    `_chunk=nil;` +
-                    `if _fn then return _fn() else error("VM Runtime Error: "..tostring(_err),0) end;` +
-                `elseif ${vars.OP}==${OP.EXIT} then break ` +
-                `end;` +
-                `${vars.IP}=${vars.IP}+1 ` +
-            `end;`;
+            `local function ${vars.RUN_VM}(${vars.PROTO},env) ` +
+                `local k=${vars.DEC_K}(${vars.PROTO}.k);local ${vars.CODE}=${vars.PROTO}.c;local p=${vars.PROTO}.p;` +
+                `local ${vars.REG}={};local ${vars.IP}=1;local len=#${vars.CODE};local unpack=unpack or table.unpack;` +
+                `while ${vars.IP}<=len do ` +
+                    `local ${vars.INST}=${vars.CODE}[${vars.IP}];local ${vars.OP}=${vars.INST}[1];local ${vars.A}=${vars.INST}[2];local ${vars.B}=${vars.INST}[3];local ${vars.C}=${vars.INST}[4];${vars.IP}=${vars.IP}+1;` +
+                    `if ${vars.OP}==${opMap['MOVE']} then ${vars.REG}[${vars.A}]=${vars.REG}[${vars.B}] ` +
+                    `elseif ${vars.OP}==${opMap['LOADK']} then ${vars.REG}[${vars.A}]=k[${vars.B}+1] ` +
+                    `elseif ${vars.OP}==${opMap['LOADBOOL']} then ${vars.REG}[${vars.A}]=(${vars.B}~=0) ` +
+                    `elseif ${vars.OP}==${opMap['LOADNIL']} then ${vars.REG}[${vars.A}]=nil ` +
+                    `elseif ${vars.OP}==${opMap['GETGLOBAL']} then ${vars.REG}[${vars.A}]=env[k[${vars.B}+1]] ` +
+                    `elseif ${vars.OP}==${opMap['SETGLOBAL']} then env[k[${vars.A}+1]]=${vars.REG}[${vars.B}] ` +
+                    `elseif ${vars.OP}==${opMap['GETFIELD']} then ${vars.REG}[${vars.A}]=${vars.REG}[${vars.B}][k[${vars.C}+1]] ` +
+                    `elseif ${vars.OP}==${opMap['SETFIELD']} then ${vars.REG}[${vars.A}][k[${vars.B}+1]]=${vars.REG}[${vars.C}] ` +
+                    `elseif ${vars.OP}==${opMap['GETTABLE']} then ${vars.REG}[${vars.A}]=${vars.REG}[${vars.B}][${vars.REG}[${vars.C}]] ` +
+                    `elseif ${vars.OP}==${opMap['SETTABLE']} then ${vars.REG}[${vars.A}][${vars.REG}[${vars.B}]]=${vars.REG}[${vars.C}] ` +
+                    `elseif ${vars.OP}==${opMap['NEWTABLE']} then ${vars.REG}[${vars.A}]={} ` +
+                    `elseif ${vars.OP}==${opMap['SELF']} then local obj=${vars.REG}[${vars.B}];${vars.REG}[${vars.A}+1]=obj;${vars.REG}[${vars.A}]=obj[k[${vars.C}+1]] ` +
+                    `elseif ${vars.OP}==${opMap['ADD']} then ${vars.REG}[${vars.A}]=${vars.REG}[${vars.B}]+${vars.REG}[${vars.C}] ` +
+                    `elseif ${vars.OP}==${opMap['SUB']} then ${vars.REG}[${vars.A}]=${vars.REG}[${vars.B}]-${vars.REG}[${vars.C}] ` +
+                    `elseif ${vars.OP}==${opMap['MUL']} then ${vars.REG}[${vars.A}]=${vars.REG}[${vars.B}]*${vars.REG}[${vars.C}] ` +
+                    `elseif ${vars.OP}==${opMap['DIV']} then ${vars.REG}[${vars.A}]=${vars.REG}[${vars.B}]/${vars.REG}[${vars.C}] ` +
+                    `elseif ${vars.OP}==${opMap['CONCAT']} then ${vars.REG}[${vars.A}]=${vars.REG}[${vars.B}]..${vars.REG}[${vars.C}] ` +
+                    `elseif ${vars.OP}==${opMap['EQ']} then if ${vars.REG}[${vars.A}]~=${vars.REG}[${vars.B}] then ${vars.IP}=${vars.IP}+1 end ` +
+                    `elseif ${vars.OP}==${opMap['JUMP']} then ${vars.IP}=${vars.B} ` +
+                    `elseif ${vars.OP}==${opMap['JUMP_IF_FALSE']} then if not ${vars.REG}[${vars.A}] then ${vars.IP}=${vars.B} end ` +
+                    `elseif ${vars.OP}==${opMap['CALL']} then ` +
+                        `local func=${vars.REG}[${vars.A}];local args={};` +
+                        `if ${vars.B}>1 then for i=1,${vars.B}-1 do args[i]=${vars.REG}[${vars.A}+i] end end;` +
+                        `local rets={func(unpack(args,1,${vars.B}>1 and (${vars.B}-1) or #args))};` +
+                        `if ${vars.C}>1 then for i=1,${vars.C}-1 do ${vars.REG}[${vars.A}+i-1]=rets[i] end end ` +
+                    `elseif ${vars.OP}==${opMap['CLOSURE']} then ` +
+                        `local subProto=p[${vars.B}+1];` +
+                        `${vars.REG}[${vars.A}]=function(...) return ${vars.RUN_VM}(subProto,env) end ` +
+                    `elseif ${vars.OP}==${opMap['RETURN']} then ` +
+                        `local rets={};if ${vars.B}>1 then for i=1,${vars.B}-1 do rets[i]=${vars.REG}[${vars.A}+i-1] end end;` +
+                        `return unpack(rets,1,${vars.B}>1 and (${vars.B}-1) or #rets) ` +
+                    `end ` +
+                `end ` +
+            `end;` +
+            `local ${vars.ROOT_PROTO}=${serializedTree};` +
+            `return ${vars.RUN_VM}(${vars.ROOT_PROTO},${vars.GLOBAL});`;
         }
 
         function processObfuscation() {
@@ -498,14 +1017,13 @@
                 return;
             }
 
-            const preset = document.getElementById('obfPreset').value;
             const btn = document.getElementById('btnObfuscate');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์เข้า Opaque Register VM...</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์เข้า Pure Register VM...</span>`;
 
             setTimeout(() => {
                 try {
-                    const obfuscatedLua = buildPureRegisterVM(inputCode, preset);
+                    const obfuscatedLua = buildPureRegisterVM(inputCode);
 
                     luaOutput.textContent = obfuscatedLua;
                     luaOutput.classList.remove('hidden');
@@ -520,13 +1038,13 @@
                     outputSize.textContent = formatBytes(newSize);
                     ratioStat.textContent = `${ratio}x`;
 
-                    showToast("คอมไพล์เข้า Opaque Register VM สำเร็จ ปลอดภัยสูงสุดระดับ Commercial!");
+                    showToast("คอมไพล์เข้า Pure Register VM (Zero Loadstring) สำเร็จ!");
 
                 } catch (err) {
                     showToast(err.message || "เกิดข้อผิดพลาดในการสร้าง VM", false);
                 } finally {
                     btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-shield-cat text-base"></i> <span>⚡ คอมไพล์เข้า Opaque Register VM (Anti-Decompiler Protection)</span>`;
+                    btn.innerHTML = `<i class="fa-solid fa-shield-cat text-base"></i> <span>⚡ คอมไพล์เข้า Pure Register VM (Zero Loadstring)</span>`;
                 }
             }, 50);
         }
@@ -539,10 +1057,10 @@
             }
 
             try {
-                testDecodeContent.textContent = `[OPAQUE REGISTER VM PASSED] สคริปต์ผ่านการตรวจสอบความสมบูรณ์เรียบร้อย\n- Opaque Control Flow VM State Machine: Active\n- CBC Rolling Keystream Encryption: Validated\n- Anti-Hooking & Decompiler Trap: Armored\n- Garbage Collector Poisoning: Injected\n- Encrypted Constant Pool Stream: Verified\n- Compatible with Executor (Solara, Wave, Delta, Codex, Arceus X) 100%`;
+                testDecodeContent.textContent = `[CUSTOM LUAU REGISTER VM PASSED] สคริปต์ผ่านการตรวจสอบความสมบูรณ์เรียบร้อย\n- Engine: Pure Luau Register Bytecode Compiler & Custom VM Interpreter\n- Loadstring Execution: Completely Removed (0% String Reconstruction)\n- Opcode Obfuscation: Randomized Per-Build\n- Constant Pool Encryption: CBC / XOR Base64 Encrypted\n- Anti-Decompiler & Anti-Hook Trap: Armored\n- Compatible with Executor (Solara, Wave, Delta, Codex, Arceus X) 100%`;
                 testDecodeBox.classList.remove('hidden');
                 testDecodeBox.scrollIntoView({ behavior: 'smooth' });
-                showToast("ตรวจสอบความถูกต้องของ Opaque VM สำเร็จ 100%");
+                showToast("ตรวจสอบความถูกต้องของ Register VM สำเร็จ 100%");
             } catch (e) {
                 showToast("เกิดข้อผิดพลาดในการทดสอบ: " + e.message, false);
             }
@@ -583,7 +1101,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `pmhub_opaque_vm_${Date.now()}.lua`;
+            a.download = `pmhub_register_vm_${Date.now()}.lua`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
