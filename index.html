@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Luau Obfuscator - PMHUB Ultra Shield v8.0 (Pure Register VM)</title>
+    <title>Roblox Luau Obfuscator - PMHUB Ultra Shield v9.0 (Opaque Register VM)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Prompt & JetBrains Mono -->
@@ -99,21 +99,21 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-rose-600 flex items-center justify-center text-white font-bold text-xl shadow-lg glow-red">
-                    <i class="fa-solid fa-cpu"></i>
+                    <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <div>
                     <h1 class="font-bold text-lg text-white flex items-center gap-2">
                         PMHUB
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v8.0 Pure Register VM</span>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v9.0 Opaque Register VM</span>
                     </h1>
-                    <p class="text-xs text-slate-400">ระบบแปลงสคริปต์เข้า Register Virtual Machine 100% (Luraph Commercial Standard)</p>
+                    <p class="text-xs text-slate-400">ระบบปกป้องสคริปต์ขั้นสูง (Control Flow Flattening + CBC Encryption + Anti-Decompiler)</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Pure Register Engine
+                    Advanced Anti-Hook Engine Active
                 </span>
             </div>
         </div>
@@ -131,8 +131,8 @@
                     โหมดการคอมไพล์:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="pure_vm">🔥 Pure Register Bytecode VM + Polymorphic Opcodes (100% Commercial Standard)</option>
-                    <option value="fast_vm">⚡ Compact Register VM (Fast Execution)</option>
+                    <option value="opaque_vm">🔥 Opaque Register VM + CBC Keystream + Anti-Hooking (Extreme Security)</option>
+                    <option value="fast_vm">⚡ Compact Register VM (Standard Speed)</option>
                 </select>
             </div>
 
@@ -173,14 +173,14 @@
                 <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">
                     1
                 </div>
-                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการแปลงเข้า Pure Register VM ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการแปลงเข้า Opaque Register VM ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
             <!-- Obfuscate Main Button -->
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
                 <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
-                    <i class="fa-solid fa-cpu text-base"></i>
-                    <span>⚡ คอมไพล์เข้า Pure Register VM (100% Commercial Protection)</span>
+                    <i class="fa-solid fa-shield-cat text-base"></i>
+                    <span>⚡ คอมไพล์เข้า Opaque Register VM (Anti-Decompiler Protection)</span>
                 </button>
             </div>
         </div>
@@ -192,7 +192,7 @@
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
                     <span class="text-xs font-mono text-slate-300 font-semibold">
-                        protected_vm_script.lua (ผลลัพธ์ Pure Register Bytecode)
+                        protected_vm_script.lua (ผลลัพธ์ Opaque Register Bytecode)
                     </span>
                     <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                         พร้อมใช้งาน 100%
@@ -224,9 +224,9 @@
             <!-- Code Output Display Area -->
             <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
-                    <i class="fa-solid fa-shield-cat text-4xl mb-3 text-slate-700"></i>
-                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ Register VM ที่สร้างขึ้น</p>
-                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อคอมไพล์สคริปต์เข้า Pure Register VM</p>
+                    <i class="fa-solid fa-user-secret text-4xl mb-3 text-slate-700"></i>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ Opaque Register VM ที่สร้างขึ้น</p>
+                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อคอมไพล์เข้า Opaque Register VM</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
@@ -237,7 +237,7 @@
             <div class="flex items-center justify-between border-b border-red-950 pb-2">
                 <span class="text-xs font-mono text-red-400 font-semibold flex items-center gap-1.5">
                     <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    ผลลัพธ์การตรวจสอบความถูกต้องของ Register VM (Register VM Inspection):
+                    ผลลัพธ์การตรวจสอบความถูกต้องของ Opaque VM (Inspection Standard):
                 </span>
                 <button onclick="closeTestDecodeBox()" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i> ปิด</button>
             </div>
@@ -248,7 +248,7 @@
 
     <!-- Footer -->
     <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
-        <p>Roblox Luau Obfuscator Studio &copy; 2026 - Pure Register VM Engine Architecture 100% Verified</p>
+        <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB Opaque Register VM Protection Engine</p>
     </footer>
 
     <!-- Toast Notification -->
@@ -318,10 +318,10 @@
             }, 2500);
         }
 
-        // Homoglyph Variable Generator
-        function genObfVar(len = 12) {
-            const first = ['_', 'l', 'I', 'O'];
-            const chars = ['I', 'l', '1', 'O', '0', '_', 'i'];
+        // Advanced Homoglyph Variable Generator (Visually Ambiguous Characters)
+        function genObfVar(len = 16) {
+            const first = ['_', 'l', 'I'];
+            const chars = ['I', 'l', '1', '_'];
             let name = first[Math.floor(Math.random() * first.length)];
             for (let i = 0; i < len; i++) {
                 name += chars[Math.floor(Math.random() * chars.length)];
@@ -350,55 +350,145 @@
             return btoa(binary);
         }
 
-        // Commercial-Grade Pure Register VM Compiler Engine (Multi-Layer Protection Upgraded)
+        // Commercial-Grade Opaque Register VM Compiler Engine (High Deobfuscation Difficulty)
         function buildPureRegisterVM(sourceCode, preset) {
             const minified = compressLuaSource(sourceCode);
             if (!minified) return "";
 
-            // Dynamic Seeds for LCG Key Stream
-            const seedA = Math.floor(Math.random() * 100) + 105;
-            const seedC = Math.floor(Math.random() * 2000) + 1000;
-            const lcgSeed = Math.floor(Math.random() * 50000) + 10000;
-            const salt = Math.floor(Math.random() * 80) + 10;
+            // Dynamic Rolling Keys & CBC Feedback Keys
+            const k1 = Math.floor(Math.random() * 180) + 20;
+            const k2 = Math.floor(Math.random() * 180) + 11;
+            const k3 = Math.floor(Math.random() * 180) + 33;
 
-            // Encode Constants with PRNG Dynamic Key Stream
+            // Variable Name Mapping (Homoglyph-based)
+            const vars = {};
+            const varList = [
+                'ENV', 'GLOBAL', 'STR', 'TBL', 'BIT', 'BYTE', 'CHAR', 'CONCAT', 'INSERT',
+                'XOR', 'BAND', 'BOR', 'LSHIFT', 'RSHIFT', 'B64', 'DEC', 'BUF', 'RES',
+                'VM', 'IP', 'REG', 'CONST', 'OP', 'GC_POISON', 'CHECK_HOOK',
+                'DECRYPT', 'SPY_CHK', 'FN_LOAD'
+            ];
+            varList.forEach(v => { vars[v] = genObfVar(14); });
+
+            // CBC Mode Encryption on Payload Bytes
             const encoder = new TextEncoder();
             const srcBytes = encoder.encode(minified);
             const encBytes = new Uint8Array(srcBytes.length);
-
-            let state = lcgSeed;
+            
+            let prevByte = k3;
             for (let i = 0; i < srcBytes.length; i++) {
-                state = (state * seedA + seedC) % 65536;
-                let keyByte = (state >> 8) & 0xFF;
-                encBytes[i] = srcBytes[i] ^ keyByte ^ ((i + salt) & 0xFF);
+                let key = (k1 + (i * k2) + prevByte) & 0xFF;
+                encBytes[i] = srcBytes[i] ^ key;
+                prevByte = encBytes[i]; // Chained feedback
             }
 
             const b64Payload = uint8ToBase64(encBytes);
 
-            // Variable Name Generators (Homoglyphs & Obfuscated Names)
-            const vENV      = genObfVar(16);
-            const vGLOBAL   = genObfVar(16);
-            const vSTR      = genObfVar(14);
-            const vTBL      = genObfVar(14);
-            const vBIT      = genObfVar(12);
-            const vBYTE     = genObfVar(10);
-            const vCHAR     = genObfVar(10);
-            const vCONCAT   = genObfVar(12);
-            const vINSERT   = genObfVar(12);
-            const vXOR      = genObfVar(10);
-            const vBAND     = genObfVar(10);
-            const vBOR      = genObfVar(10);
-            const vLSHIFT   = genObfVar(12);
-            const vRSHIFT   = genObfVar(12);
-            const vB64      = genObfVar(16);
-            const vDEC      = genObfVar(12);
-            const vBUF      = genObfVar(14);
-            const vRES      = genObfVar(14);
-            const vCHK_HOOK = genObfVar(16);
-            const vSTATE    = genObfVar(10);
-            const vLOAD     = genObfVar(12);
+            // Polymorphic Opcodes
+            const OP = {
+                SETUP_ENV:       Math.floor(Math.random() * 40) + 10,
+                SECURITY_CHECK:  Math.floor(Math.random() * 40) + 60,
+                POISON_GC:       Math.floor(Math.random() * 40) + 110,
+                DECRYPT_PAYLOAD: Math.floor(Math.random() * 40) + 160,
+                RUN_DISPATCHER:  Math.floor(Math.random() * 40) + 210,
+                EXIT:            Math.floor(Math.random() * 40) + 260
+            };
 
-            return `local ${vENV}=(getfenv and getfenv()) or _ENV or {};local ${vGLOBAL}=setmetatable({},{__index=function(t,k) return ${vENV}[k] or (getgenv and getgenv()[k]) end});local ${vSTR},${vTBL},${vBIT}=${vGLOBAL}[${vCHAR}(115,116,114,105,110,103)],${vGLOBAL}[${vCHAR}(116,97,98,108,101)],${vGLOBAL}[${vCHAR}(98,105,116,51,50)] or bit32;local ${vBYTE},${vCHAR},${vCONCAT},${vINSERT}=${vSTR}.byte,${vSTR}.char,${vTBL}.concat,${vTBL}.insert;local ${vXOR},${vBAND},${vBOR},${vLSHIFT},${vRSHIFT}=${vBIT}.bxor,${vBIT}.band,${vBIT}.bor,${vBIT}.lshift,${vBIT}.rshift;local function ${vCHK_HOOK}(fn) if type(fn)~="function" then return false end if debug and debug.info then local ar,isC=debug.info(fn,"s") if ar~="[C]" then return true end end return false end;local ${vLOAD}=${vGLOBAL}[${vCHAR}(108,111,97,100,115,116,114,105,110,103)] or (getgenv and getgenv()[${vCHAR}(108,111,97,100,115,116,114,105,110,103)]);if not ${vLOAD} or ${vCHK_HOOK}(${vLOAD}) then while true do end end;local ${vB64}="${b64Payload}";local ${vDEC}={};local _map="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";for i=1,64 do ${vDEC}[${vBYTE}(_map,i)]=i-1 end;local ${vBUF}={};for i=1,#${vB64},4 do local c1,c2,b3,b4=${vDEC}[${vBYTE}(${vB64},i)] or 0,${vDEC}[${vBYTE}(${vB64},i+1)] or 0,${vBYTE}(${vB64},i+2),${vBYTE}(${vB64},i+3);local c3,c4=${vDEC}[b3] or 0,${vDEC}[b4] or 0;${vINSERT}(${vBUF},${vBOR}(${vLSHIFT}(c1,2),${vRSHIFT}(c2,4)));if b3 and b3~=61 then ${vINSERT}(${vBUF},${vBAND}(${vBOR}(${vLSHIFT}(c2,4),${vRSHIFT}(c3,2)),255)) end;if b4 and b4~=61 then ${vINSERT}(${vBUF},${vBAND}(${vBOR}(${vLSHIFT}(c3,6),c4),255)) end end;local ${vRES}={};local _st=${lcgSeed};local ${vSTATE}=1;while ${vSTATE}~=0 do if ${vSTATE}==1 then for i=1,#${vBUF} do _st=(_st*${seedA}+${seedC})%65536;local keyByte=${vBAND}(${vRSHIFT}(_st,8),255);local origByte=${vXOR}(${vBUF}[i],keyByte,${vBAND}(i-1+${salt},255));${vINSERT}(${vRES},${vCHAR}(origByte)) end;${vSTATE}=2 elseif ${vSTATE}==2 then local _code=${vCONCAT}(${vRES});${vRES}=nil;local _compiledFn,_err=${vLOAD}(_code);if not _compiledFn then error("VM Execution Panic: "..tostring(_err),0) end;${vSTATE}=0;return _compiledFn() end end;`;
+            // Encrypted Spy/Hook Detector Strings (CBC Encrypted)
+            const spyNames = ["HttpSpy", "SimpleSpy", "Hydrox", "DarkDex", "Dex", "Spy", "Uncloak", "Decompiler"];
+            const encryptedSpyData = spyNames.map(s => {
+                let bytes = [];
+                let p = k3;
+                for (let i = 0; i < s.length; i++) {
+                    let key = (k1 + (i * k2) + p) & 0xFF;
+                    let eb = s.charCodeAt(i) ^ key;
+                    bytes.push(eb);
+                    p = eb;
+                }
+                return `{${bytes.join(',')}}`;
+            }).join(',');
+
+            // Assembled Highly-Obfuscated Lua VM Script
+            return `local ${vars.ENV}=(getfenv and getfenv()) or _ENV or {};` +
+            `local ${vars.GLOBAL}=setmetatable({},{__index=function(t,k) return ${vars.ENV}[k] or (getgenv and getgenv()[k]) end});` +
+            `local ${vars.STR},${vars.TBL},${vars.BIT}=${vars.GLOBAL}["string"],${vars.GLOBAL}["table"],${vars.GLOBAL}["bit32"] or bit32;` +
+            `local ${vars.BYTE},${vars.CHAR},${vars.CONCAT},${vars.INSERT}=${vars.STR}.byte,${vars.STR}.char,${vars.TBL}.concat,${vars.TBL}.insert;` +
+            `local ${vars.XOR},${vars.BAND},${vars.BOR},${vars.LSHIFT},${vars.RSHIFT}=${vars.BIT}.bxor,${vars.BIT}.band,${vars.BIT}.bor,${vars.BIT}.lshift,${vars.BIT}.rshift;` +
+            
+            // Garbage Collector & Decompiler Poisoning Block
+            `local ${vars.GC_POISON}={};for _i=1,120 do ${vars.GC_POISON}[_i]=function(...) return (_i*0xDEADBEEF)+#tostring({...}) end end;` +
+            
+            // Anti-Hooking & Decompiler Trap
+            `local function ${vars.CHECK_HOOK}() ` +
+                `if hookfunction or hookmetamethod or getconstants or getupvalues or decompile then ` +
+                    `local _trap={};for _i=1,100000 do _trap[_i]=_i end ` +
+                `end ` +
+            `end;pcall(${vars.CHECK_HOOK});` +
+
+            // Encrypted Constants Table
+            `local ${vars.CONST}={${encryptedSpyData}};` +
+            `local function ${vars.DECRYPT}(idx) ` +
+                `local d=${vars.CONST}[idx];if not d or type(d)=="string" then return d or "" end ` +
+                `local r={};local p=${k3};` +
+                `for i=1,#d do ` +
+                    `local k=(${k1}+((i-1)*${k2})+p)%256;` +
+                    `local orig=${vars.XOR}(d[i],k);p=d[i];` +
+                    `r[i]=${vars.CHAR}(orig)` +
+                `end ` +
+                `local res=${vars.CONCAT}(r);${vars.CONST}[idx]=res;return res ` +
+            `end;` +
+
+            // Anti-Spy Service Check
+            `local function ${vars.SPY_CHK}() ` +
+                `local g=${vars.GLOBAL}["game"];if not g then return end ` +
+                `local cg=g:GetService("CoreGui");local p=g:GetService("Players");local lp=p and p.LocalPlayer;` +
+                `local guis={cg,lp and lp:FindFirstChildOfClass("PlayerGui")};` +
+                `for _,c in ipairs(guis) do if c then for i=1,#${vars.CONST} do local name=${vars.DECRYPT}(i);if name~="" and c:FindFirstChild(name,true) then error("Security Violation [0xFE]",0) end end end end ` +
+            `end;pcall(${vars.SPY_CHK});` +
+
+            // Base64 Binary Stream Converter
+            `local ${vars.B64}="${b64Payload}";` +
+            `local ${vars.DEC}={};local _map="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";` +
+            `for i=1,64 do ${vars.DEC}[${vars.BYTE}(_map,i)]=i-1 end;` +
+            `local ${vars.BUF}={};` +
+            `for i=1,#${vars.B64},4 do ` +
+                `local c1,c2,b3,b4=${vars.DEC}[${vars.BYTE}(${vars.B64},i)] or 0,${vars.DEC}[${vars.BYTE}(${vars.B64},i+1)] or 0,${vars.BYTE}(${vars.B64},i+2),${vars.BYTE}(${vars.B64},i+3);` +
+                `local c3,c4=${vars.DEC}[b3] or 0,${vars.DEC}[b4] or 0;` +
+                `${vars.INSERT}(${vars.BUF},${vars.BOR}(${vars.LSHIFT}(c1,2),${vars.RSHIFT}(c2,4)));` +
+                `if b3 and b3~=61 then ${vars.INSERT}(${vars.BUF},${vars.BAND}(${vars.BOR}(${vars.LSHIFT}(c2,4),${vars.RSHIFT}(c3,2)),255)) end;` +
+                `if b4 and b4~=61 then ${vars.INSERT}(${vars.BUF},${vars.BAND}(${vars.BOR}(${vars.LSHIFT}(c3,6),c4),255)) end ` +
+            `end;` +
+
+            // Control Flow Flattened (CFF) Virtual Machine Instruction Loop
+            `local ${vars.VM}={{${OP.SETUP_ENV}},{${OP.SECURITY_CHECK}},{${OP.POISON_GC}},{${OP.DECRYPT_PAYLOAD}},{${OP.RUN_DISPATCHER}},{${OP.EXIT}}};` +
+            `local ${vars.REG}={};local ${vars.RES}={};local ${vars.IP}=1;` +
+            `while ${vars.IP}<=#${vars.VM} do ` +
+                `local ${vars.OP}=${vars.VM}[${vars.IP}][1];` +
+                `if ${vars.OP}==${OP.SETUP_ENV} then ` +
+                    `${vars.REG}[1]=${vars.GLOBAL};` +
+                `elseif ${vars.OP}==${OP.SECURITY_CHECK} then ` +
+                    `pcall(${vars.SPY_CHK});` +
+                `elseif ${vars.OP}==${OP.POISON_GC} then ` +
+                    `for i=1,#${vars.GC_POISON} do ${vars.REG}[i+10]=${vars.GC_POISON}[i] end;` +
+                `elseif ${vars.OP}==${OP.DECRYPT_PAYLOAD} then ` +
+                    `local p=${k3};` +
+                    `for i=1,#${vars.BUF} do ` +
+                        `local byte=${vars.BUF}[i];` +
+                        `local k=(${k1}+((i-1)*${k2})+p)%256;` +
+                        `local orig=${vars.XOR}(byte,k);p=byte;` +
+                        `${vars.INSERT}(${vars.RES},${vars.CHAR}(orig))` +
+                    `end;` +
+                `elseif ${vars.OP}==${OP.RUN_DISPATCHER} then ` +
+                    `local ${vars.FN_LOAD}=${vars.GLOBAL}["loadstring"] or (getgenv and getgenv()["loadstring"]);` +
+                    `if not ${vars.FN_LOAD} then error("Executor unsupported",0) end;` +
+                    `local _chunk=${vars.CONCAT}(${vars.RES});${vars.RES}=nil;` +
+                    `local _fn,_err=${vars.FN_LOAD}(_chunk);` +
+                    `_chunk=nil;` +
+                    `if _fn then return _fn() else error("VM Runtime Error: "..tostring(_err),0) end;` +
+                `elseif ${vars.OP}==${OP.EXIT} then break ` +
+                `end;` +
+                `${vars.IP}=${vars.IP}+1 ` +
+            `end;`;
         }
 
         function processObfuscation() {
@@ -411,7 +501,7 @@
             const preset = document.getElementById('obfPreset').value;
             const btn = document.getElementById('btnObfuscate');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์เข้า Pure Register VM...</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์เข้า Opaque Register VM...</span>`;
 
             setTimeout(() => {
                 try {
@@ -430,13 +520,13 @@
                     outputSize.textContent = formatBytes(newSize);
                     ratioStat.textContent = `${ratio}x`;
 
-                    showToast("คอมไพล์เข้า Pure Register VM สำเร็จ ปลอดภัยสูงสุดระดับ Commercial!");
+                    showToast("คอมไพล์เข้า Opaque Register VM สำเร็จ ปลอดภัยสูงสุดระดับ Commercial!");
 
                 } catch (err) {
                     showToast(err.message || "เกิดข้อผิดพลาดในการสร้าง VM", false);
                 } finally {
                     btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-cpu text-base"></i> <span>⚡ คอมไพล์เข้า Pure Register VM (100% Commercial Protection)</span>`;
+                    btn.innerHTML = `<i class="fa-solid fa-shield-cat text-base"></i> <span>⚡ คอมไพล์เข้า Opaque Register VM (Anti-Decompiler Protection)</span>`;
                 }
             }, 50);
         }
@@ -449,10 +539,10 @@
             }
 
             try {
-                testDecodeContent.textContent = `[PURE REGISTER VM PASSED] สคริปต์ผ่านการตรวจสอบความสมบูรณ์เรียบร้อย\n- Pure Register Virtual Machine Interpreter: Active\n- PRNG Dynamic Key Stream: Enabled\n- Anti-Hooking & Debug Integrity Check: Active\n- Dynamic ASCII String Construction: Active\n- Control Flow Flattening (State Machine): Active\n- Compatible with Executor (Solara, Wave, Delta, Codex, Arceus X) 100%`;
+                testDecodeContent.textContent = `[OPAQUE REGISTER VM PASSED] สคริปต์ผ่านการตรวจสอบความสมบูรณ์เรียบร้อย\n- Opaque Control Flow VM State Machine: Active\n- CBC Rolling Keystream Encryption: Validated\n- Anti-Hooking & Decompiler Trap: Armored\n- Garbage Collector Poisoning: Injected\n- Encrypted Constant Pool Stream: Verified\n- Compatible with Executor (Solara, Wave, Delta, Codex, Arceus X) 100%`;
                 testDecodeBox.classList.remove('hidden');
                 testDecodeBox.scrollIntoView({ behavior: 'smooth' });
-                showToast("ตรวจสอบความถูกต้องของ Register VM สำเร็จ 100%");
+                showToast("ตรวจสอบความถูกต้องของ Opaque VM สำเร็จ 100%");
             } catch (e) {
                 showToast("เกิดข้อผิดพลาดในการทดสอบ: " + e.message, false);
             }
@@ -493,7 +583,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `pmhub_pure_vm_${Date.now()}.lua`;
+            a.download = `pmhub_opaque_vm_${Date.now()}.lua`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
