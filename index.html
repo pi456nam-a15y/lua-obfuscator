@@ -692,7 +692,6 @@
                         this.consume();
                         let varName1 = this.expect('NAME').value;
                         if (this.match('SYMBOL', '=')) {
-                            // Numeric For: for i = init, limit, step do ... end
                             let initReg = this.parseExpression();
                             this.expect('SYMBOL', ',');
                             let limitReg = this.parseExpression();
@@ -721,7 +720,6 @@
                             this.code[loopIdx][2] = blockStart - loopIdx - 1;
                             this.code[prepIdx][2] = this.code.length - prepIdx - 1;
                         } else {
-                            // Generic For: for k, v in pairs(tbl) do ... end
                             let varNames = [varName1];
                             while (this.match('SYMBOL', ',')) {
                                 varNames.push(this.expect('NAME').value);
@@ -829,7 +827,7 @@
 
                     if (tok.value === 'break') {
                         this.consume();
-                        this.emit(OP_JUMP, 0, 0, 0); // Will be patched if break tracking extended
+                        this.emit(OP_JUMP, 0, 0, 0);
                         return;
                     }
                 }
@@ -1034,6 +1032,18 @@
                     this.consume();
                     let reg = this.allocReg();
                     this.emit(OP_LOADNIL, reg, 0, 0);
+                    return reg;
+                }
+
+                // ANONYMOUS FUNCTION EXPRESSION FIX
+                if (tok.type === 'KEYWORD' && tok.value === 'function') {
+                    this.consume();
+                    let protoCompiler = new LuaCompiler(this.lexer, this);
+                    protoCompiler.parseFuncBody();
+                    let protoIdx = this.protos.length + 1;
+                    this.protos.push(protoCompiler.getProto());
+                    let reg = this.allocReg();
+                    this.emit(OP_CLOSURE, reg, protoIdx, 0);
                     return reg;
                 }
 
@@ -1479,7 +1489,7 @@
         }
 
         function loadSampleScript() {
-            const sample = `-- [[ Roblox Complex Teleport & Loop Script ]]
+            const sample = `-- [[ Roblox Complex Teleport & Callback Script ]]
 local StarterGui = game:GetService("StarterGui")
 local Players = game:GetService("Players")
 
@@ -1487,6 +1497,9 @@ local function sendNotify()
     StarterGui:SetCore("SendNotification", {
         Title = "ระบบต้อนรับ PMHUB",
         Text = "ยินดีต้อนรับผู้ใช้: " .. Players.LocalPlayer.Name,
+        Callback = function(v)
+            print("ผู้ใช้กดปุ่มแล้ว:", v)
+        end,
         Duration = 5
     })
 end
