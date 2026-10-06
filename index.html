@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Luau Obfuscator - PMHUB Ultra Shield v9.0 (Opaque Register VM)</title>
+    <title>PMHUB Ultra Shield v9.5 - Obfuscator & Script Cloud</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Prompt & JetBrains Mono -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -44,122 +44,104 @@
             color: #e2e8f0;
             font-family: 'Prompt', sans-serif;
         }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #100608;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #2a1518;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #451a20;
-        }
-
-        .line-numbers {
-            user-select: none;
-            text-align: right;
-            color: #64474c;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            line-height: 1.5rem;
-        }
-
-        textarea.code-area {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            line-height: 1.5rem;
-            tab-size: 4;
-            white-space: pre;
-            overflow-x: auto;
-            resize: none;
-        }
-
-        .code-display {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            line-height: 1.5rem;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-
-        .glow-red {
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #100608; }
+        ::-webkit-scrollbar-thumb { background: #2a1518; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #451a20; }
+        .line-numbers { user-select: none; text-align: right; color: #64474c; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.5rem; }
+        textarea.code-area { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.5rem; tab-size: 4; white-space: pre; overflow-x: auto; resize: none; }
+        .code-display { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.5rem; white-space: pre-wrap; word-break: break-all; }
+        .glow-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+        .tab-active { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.4); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-red-500 selection:text-white">
 
-    <!-- Header -->
+    <!-- Header Navigation -->
     <header class="border-b border-red-950/60 bg-cyber-card/90 backdrop-blur-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-rose-600 flex items-center justify-center text-white font-bold text-xl shadow-lg glow-red">
-                    <i class="fa-solid fa-shield-halved"></i>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchPage('obfuscator')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-rose-600 flex items-center justify-center text-white font-bold text-xl shadow-lg glow-red">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg text-white flex items-center gap-2">
+                            PMHUB <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v9.5 Cloud</span>
+                        </h1>
+                        <p class="text-xs text-slate-400">ระบบเข้ารหัสสคริปต์ & บริการศูนย์เก็บข้อมูล Loader</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="font-bold text-lg text-white flex items-center gap-2">
-                        PMHUB
-                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30">v9.0 Opaque Register VM</span>
-                    </h1>
-                    <p class="text-xs text-slate-400">ระบบปกป้องสคริปต์ขั้นสูง (Control Flow Flattening + CBC Encryption + Anti-Decompiler)</p>
-                </div>
+
+                <!-- Page Navigation Tabs -->
+                <nav class="hidden md:flex items-center gap-2 ml-6">
+                    <button id="navObfuscator" onclick="switchPage('obfuscator')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent transition-all tab-active flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> เข้ารหัสสคริปต์ (Obfuscator)
+                    </button>
+                    <button id="navCloud" onclick="switchPage('cloud')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> จัดการสคริปต์ Cloud & Loadstring
+                    </button>
+                </nav>
             </div>
 
+            <!-- User Authentication Status -->
             <div class="flex items-center gap-3">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Advanced Anti-Hook Engine Active
-                </span>
+                <div id="userProfileArea" class="hidden flex items-center gap-3 bg-black/40 border border-red-950 px-3 py-1.5 rounded-xl">
+                    <div class="w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-xs font-bold" id="userAvatar">U</div>
+                    <span id="userName" class="text-xs font-medium text-slate-200">User</span>
+                    <button onclick="logout()" class="text-xs text-slate-400 hover:text-red-400 transition ml-1" title="ออกจากระบบ">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+                <button id="btnLoginModal" onclick="openAuthModal()" class="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs font-semibold shadow-lg transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-user"></i> เข้าสู่ระบบ / สมัครสมาชิก
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full flex flex-col gap-6">
+    <!-- Mobile Nav Bar -->
+    <div class="md:hidden flex border-b border-red-950 bg-slate-950 p-2 gap-2">
+        <button onclick="switchPage('obfuscator')" class="flex-1 py-2 text-center text-xs font-medium text-slate-300 rounded bg-cyber-card border border-red-950">
+            <i class="fa-solid fa-code"></i> เข้ารหัส
+        </button>
+        <button onclick="switchPage('cloud')" class="flex-1 py-2 text-center text-xs font-medium text-slate-300 rounded bg-cyber-card border border-red-950">
+            <i class="fa-solid fa-cloud"></i> จัดการ Cloud
+        </button>
+    </div>
 
+    <!-- MAIN PAGE 1: OBFUSCATOR ENGINE -->
+    <main id="pageObfuscator" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full flex flex-col gap-6">
         <!-- Controls Bar -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl p-4 shadow-xl flex flex-wrap items-center justify-between gap-4">
-            <!-- Mode Selection -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
                 <label class="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fa-solid fa-sliders text-red-400"></i>
-                    โหมดการคอมไพล์:
+                    <i class="fa-solid fa-sliders text-red-400"></i> โหมดการคอมไพล์:
                 </label>
                 <select id="obfPreset" class="bg-slate-900 border border-red-950 text-slate-200 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 px-3 py-2 outline-none w-full sm:w-auto">
-                    <option value="opaque_vm">🔥 Opaque Register VM + CBC Keystream + Anti-Hooking (Extreme Security)</option>
+                    <option value="opaque_vm">🔥 Opaque Register VM + CBC Keystream + Anti-Hooking</option>
                     <option value="fast_vm">⚡ Compact Register VM (Standard Speed)</option>
                 </select>
             </div>
-
-            <!-- Action Buttons -->
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                <button id="btnSample" onclick="loadSampleScript()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-red-950 transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-file-code text-red-400"></i>
-                    โหลดโค้ดตัวอย่าง
+                <button onclick="loadSampleScript()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-red-950 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-code text-red-400"></i> โหลดโค้ดตัวอย่าง
                 </button>
-                <button id="btnClear" onclick="clearInput()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-red-950 transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-trash-can text-red-400"></i>
-                    ล้างข้อมูล
+                <button onclick="clearInput()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-red-950 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-trash-can text-red-400"></i> ล้างข้อมูล
                 </button>
             </div>
         </div>
 
-        <!-- TOP SECTION: Source Lua Input -->
+        <!-- Source Input -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
-            <!-- Header -->
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
                     <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
                     <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
                     <span class="ml-2 text-xs font-mono text-slate-300 font-semibold flex items-center gap-1.5">
-                        <i class="fa-solid fa-file-lines text-red-400"></i>
-                        source_script.lua (โค้ดต้นฉบับ)
+                        <i class="fa-solid fa-file-lines text-red-400"></i> source_script.lua (โค้ดต้นฉบับ)
                     </span>
                 </div>
                 <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
@@ -168,97 +150,445 @@
                 </div>
             </div>
 
-            <!-- Textarea Container -->
-            <div class="relative flex min-h-[220px] max-h-[340px] bg-cyber-codeBg">
-                <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">
-                    1
-                </div>
-                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่ต้องการแปลงเข้า Opaque Register VM ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
+            <div class="relative flex min-h-[200px] max-h-[300px] bg-cyber-codeBg">
+                <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">1</div>
+                <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
-            <!-- Obfuscate Main Button -->
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
                 <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
-                    <i class="fa-solid fa-shield-cat text-base"></i>
-                    <span>⚡ คอมไพล์เข้า Opaque Register VM (Anti-Decompiler Protection)</span>
+                    <i class="fa-solid fa-shield-cat text-base"></i> ⚡ คอมไพล์เข้า Opaque Register VM
                 </button>
             </div>
         </div>
 
-        <!-- BOTTOM SECTION: Obfuscated Output -->
+        <!-- Obfuscated Output -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
-            <!-- Header -->
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
-                    <span class="text-xs font-mono text-slate-300 font-semibold">
-                        protected_vm_script.lua (ผลลัพธ์ Opaque Register Bytecode)
-                    </span>
-                    <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        พร้อมใช้งาน 100%
-                    </span>
+                    <span class="text-xs font-mono text-slate-300 font-semibold">protected_vm_script.lua</span>
+                    <span id="statusBadge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">พร้อมใช้งาน</span>
                 </div>
 
-                <!-- Stats & Action Tools -->
                 <div class="flex items-center gap-2 flex-wrap">
-                    <div id="outputStats" class="hidden text-xs font-mono text-slate-400 flex items-center gap-3 mr-2">
-                        <span>ขนาดใหม่: <strong id="outputSize" class="text-red-400">0 B</strong></span>
-                        <span>อัตราส่วน: <strong id="ratioStat" class="text-emerald-400">1.0x</strong></span>
-                    </div>
-
-                    <button id="btnTestDecode" onclick="testDecodeInBrowser()" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-red-950 text-xs font-medium transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-vial text-rose-400"></i>
-                        <span>🧪 ตรวจสอบความถูกต้อง</span>
+                    <button onclick="sendToCloudPage()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> ส่งไปสร้าง Loadstring Cloud
                     </button>
-                    <button id="btnCopy" onclick="copyObfuscatedCode()" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
-                        <i class="fa-solid fa-copy"></i>
-                        <span>📋 คัดลอกโค้ด</span>
+                    <button onclick="copyObfuscatedCode()" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-copy"></i> คัดลอกโค้ด
                     </button>
-                    <button id="btnDownload" onclick="downloadLuaFile()" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
-                        <i class="fa-solid fa-download"></i>
-                        <span>📥 ดาวน์โหลด .lua</span>
+                    <button onclick="downloadLuaFile()" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium transition-all flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-download"></i> ดาวน์โหลด .lua
                     </button>
                 </div>
             </div>
 
-            <!-- Code Output Display Area -->
-            <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
+            <div class="relative min-h-[200px] max-h-[300px] bg-cyber-codeBg overflow-auto p-4">
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
                     <i class="fa-solid fa-user-secret text-4xl mb-3 text-slate-700"></i>
-                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ Opaque Register VM ที่สร้างขึ้น</p>
-                    <p class="text-xs text-slate-600 mt-1">วางโค้ดด้านบนแล้วกดปุ่มเพื่อคอมไพล์เข้า Opaque Register VM</p>
+                    <p class="text-sm font-medium">ยังไม่มีสคริปต์ที่สร้างขึ้น</p>
                 </div>
                 <pre id="luaOutput" class="code-display text-red-300 selection:bg-red-500 selection:text-white hidden"></pre>
             </div>
         </div>
-
-        <!-- Simulation Test Decode Result Box -->
-        <div id="testDecodeBox" class="hidden bg-slate-950 border border-red-500/40 rounded-xl p-4 shadow-2xl flex flex-col gap-2">
-            <div class="flex items-center justify-between border-b border-red-950 pb-2">
-                <span class="text-xs font-mono text-red-400 font-semibold flex items-center gap-1.5">
-                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    ผลลัพธ์การตรวจสอบความถูกต้องของ Opaque VM (Inspection Standard):
-                </span>
-                <button onclick="closeTestDecodeBox()" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i> ปิด</button>
-            </div>
-            <pre id="testDecodeContent" class="font-mono text-xs text-slate-300 bg-black/60 p-3 rounded-lg overflow-x-auto max-h-[180px]"></pre>
-        </div>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
-        <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB Opaque Register VM Protection Engine</p>
-    </footer>
+    <!-- MAIN PAGE 2: SCRIPT CLOUD & LOADSTRING HUB -->
+    <main id="pageCloud" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full flex flex-col gap-6">
+        
+        <!-- Cloud Banner Status -->
+        <div class="bg-gradient-to-r from-red-950/40 via-cyber-card to-slate-950 border border-red-900/50 p-5 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 text-2xl">
+                    <i class="fa-solid fa-terminal"></i>
+                </div>
+                <div>
+                    <h2 class="text-base font-bold text-white">Roblox Loadstring Generator & Cloud Script Storage</h2>
+                    <p class="text-xs text-slate-400">บันทึกสคริปต์ที่เข้ารหัสแล้ว นำไปรันใน Roblox ผ่าน <code class="text-red-400 font-mono">loadstring(game:HttpGet("..."))()</code> ได้ทันที</p>
+                </div>
+            </div>
+            <div id="authNotice" class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-2 rounded-lg flex items-center gap-2">
+                <i class="fa-solid fa-circle-exclamation"></i> ล็อกอินเพื่อบันทึกและจัดการสคริปต์ถาวรใน บัญชีของคุณ
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Side: Editor & Save Script -->
+            <div class="lg:col-span-7 flex flex-col gap-4">
+                <div class="bg-cyber-card border border-cyber-border rounded-xl p-4 shadow-xl flex flex-col gap-4">
+                    <div class="flex items-center justify-between border-b border-red-950 pb-3">
+                        <span class="text-sm font-semibold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square text-red-400"></i> ตัวสร้างและแก้ไขสคริปต์
+                        </span>
+                        <input type="hidden" id="editingScriptId" value="">
+                        <button onclick="resetCloudForm()" class="text-xs text-slate-400 hover:text-white"><i class="fa-solid fa-rotate-left"></i> ล้างฟอร์ม</button>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">ชื่อสคริปต์ / Script Name</label>
+                        <input type="text" id="scriptTitle" placeholder="เช่น MainHub_v1.lua" class="w-full bg-slate-900 border border-red-950 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-red-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">วางโค้ดสคริปต์ (Obfuscated Code or Pure Lua)</label>
+                        <textarea id="cloudLuaCode" rows="9" spellcheck="false" placeholder="-- วางโค้ดที่เข้ารหัส หรือโค้ด Luau ที่นี่..." class="code-area w-full p-3 bg-cyber-codeBg border border-red-950 text-slate-200 text-xs rounded-lg outline-none focus:border-red-500"></textarea>
+                    </div>
+
+                    <button onclick="saveCurrentScript()" class="w-full py-2.5 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-semibold text-xs shadow-lg transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> <span id="btnSaveText">บันทึกสคริปต์เข้าบัญชี</span>
+                    </button>
+                </div>
+
+                <!-- Loadstring Code Result Output Box -->
+                <div id="loaderOutputBox" class="bg-cyber-card border border-emerald-500/30 rounded-xl p-4 shadow-xl flex flex-col gap-3">
+                    <div class="flex items-center justify-between border-b border-emerald-950 pb-2">
+                        <span class="text-xs font-semibold text-emerald-400 flex items-center gap-2">
+                            <i class="fa-solid fa-bolt"></i> โค้ดสำหรับนำไปรันใน Roblox (Roblox Executor Command)
+                        </span>
+                    </div>
+                    <div class="bg-black/60 border border-red-950 p-3 rounded-lg flex items-center justify-between gap-2">
+                        <code id="loadstringSnippet" class="font-mono text-xs text-red-300 break-all">loadstring(game:HttpGet("https://api.pmhub.dev/raw?id=demo_123"))()</code>
+                        <button onclick="copyLoadstringSnippet()" class="px-3 py-1.5 rounded-md bg-red-600 hover:bg-red-500 text-white text-xs font-medium shrink-0 transition">
+                            <i class="fa-solid fa-copy"></i> คัดลอก
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Saved Scripts List (Stored per Account) -->
+            <div class="lg:col-span-5 flex flex-col gap-4">
+                <div class="bg-cyber-card border border-cyber-border rounded-xl p-4 shadow-xl flex flex-col gap-4 min-h-[400px]">
+                    <div class="flex items-center justify-between border-b border-red-950 pb-3">
+                        <span class="text-sm font-semibold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-folder-open text-red-400"></i> รายการสคริปต์ในบัญชี (<span id="scriptCount">0</span>)
+                        </span>
+                    </div>
+
+                    <div id="scriptListContainer" class="flex flex-col gap-3 overflow-y-auto max-h-[420px] pr-1">
+                        <!-- Script Cards inserted dynamically -->
+                        <div class="text-center py-10 text-slate-500 text-xs">
+                            <i class="fa-solid fa-box-open text-3xl mb-2 text-slate-700"></i>
+                            <p>ไม่พบสคริปต์ที่บันทึกไว้</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- AUTHENTICATION MODAL (LOGIN / REGISTER) -->
+    <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cyber-card border border-red-900/60 w-full max-w-md rounded-2xl p-6 shadow-2xl relative flex flex-col gap-5">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="text-center">
+                <h3 class="text-xl font-bold text-white">เข้าสู่ระบบ PMHUB</h3>
+                <p class="text-xs text-slate-400 mt-1">จัดการและบันทึกสคริปต์ Obfuscated ของคุณ</p>
+            </div>
+
+            <!-- Login / Register Tab Switch -->
+            <div class="flex bg-slate-950 p-1 rounded-xl border border-red-950">
+                <button id="authTabLogin" onclick="setAuthTab('login')" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-red-600 text-white">เข้าสู่ระบบ</button>
+                <button id="authTabRegister" onclick="setAuthTab('register')" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400">สมัครสมาชิก</button>
+            </div>
+
+            <!-- Form Body -->
+            <form id="authForm" onsubmit="handleAuthSubmit(event)" class="flex flex-col gap-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">อีเมล / Username</label>
+                    <input type="text" id="authInputUser" required placeholder="user@domain.com" class="w-full bg-slate-900 border border-red-950 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-red-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">รหัสผ่าน</label>
+                    <input type="password" id="authInputPass" required placeholder="••••••••" class="w-full bg-slate-900 border border-red-950 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-red-500">
+                </div>
+                <button type="submit" id="btnAuthSubmit" class="w-full py-2.5 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 text-white font-semibold text-xs shadow-lg transition mt-2">
+                    เข้าสู่ระบบ
+                </button>
+            </form>
+
+            <div class="relative flex items-center justify-center my-1">
+                <div class="border-t border-red-950 w-full"></div>
+                <span class="bg-cyber-card px-2 text-[10px] text-slate-500 uppercase absolute">หรือ</span>
+            </div>
+
+            <!-- Google OAuth Button -->
+            <button onclick="handleGoogleAuth()" class="w-full py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-medium text-xs transition flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.2 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12s.7 2.3 1.9 4.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.2-6.4-5.2L1.9 16c1.8 3.7 5.6 7 10.1 7z"/></svg>
+                ดำเนินการต่อด้วย Google
+            </button>
+        </div>
+    </div>
 
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-6 right-6 translate-y-10 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 border border-red-500/50 text-white shadow-2xl">
-        <i class="fa-solid fa-circle-check text-red-400 text-lg"></i>
-        <span id="toastMsg" class="text-sm font-medium">คัดลอกโค้ดเรียบร้อยแล้ว!</span>
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMsg" class="text-sm font-medium">สำเร็จ!</span>
     </div>
 
-    <!-- JavaScript Engine Logic -->
+    <!-- Footer -->
+    <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
+        <p>Roblox Luau Obfuscator & Cloud Hub &copy; 2026 - PMHUB Opaque Register VM Protection</p>
+    </footer>
+
+    <!-- JAVASCRIPT ENGINE & LOGIC -->
     <script>
+        // App State
+        let currentUser = JSON.parse(localStorage.getItem('pmhub_user')) || null;
+        let authMode = 'login'; // 'login' or 'register'
+
+        // Page Switcher Logic
+        function switchPage(page) {
+            const pageObf = document.getElementById('pageObfuscator');
+            const pageCloud = document.getElementById('pageCloud');
+            const navObf = document.getElementById('navObfuscator');
+            const navCloud = document.getElementById('navCloud');
+
+            if (page === 'obfuscator') {
+                pageObf.classList.remove('hidden');
+                pageCloud.classList.add('hidden');
+                navObf.classList.add('tab-active');
+                navObf.classList.remove('text-slate-400');
+                navCloud.classList.remove('tab-active');
+                navCloud.classList.add('text-slate-400');
+            } else {
+                pageObf.classList.add('hidden');
+                pageCloud.classList.remove('hidden');
+                navCloud.classList.add('tab-active');
+                navCloud.classList.remove('text-slate-400');
+                navObf.classList.remove('tab-active');
+                navObf.classList.add('text-slate-400');
+                renderUserScripts();
+            }
+        }
+
+        // Auth Modal & User Session Management
+        function openAuthModal() {
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+        function setAuthTab(mode) {
+            authMode = mode;
+            const btnLogin = document.getElementById('authTabLogin');
+            const btnReg = document.getElementById('authTabRegister');
+            const btnSubmit = document.getElementById('btnAuthSubmit');
+
+            if (mode === 'login') {
+                btnLogin.className = 'flex-1 py-1.5 text-xs font-semibold rounded-lg bg-red-600 text-white';
+                btnReg.className = 'flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400';
+                btnSubmit.textContent = 'เข้าสู่ระบบ';
+            } else {
+                btnReg.className = 'flex-1 py-1.5 text-xs font-semibold rounded-lg bg-red-600 text-white';
+                btnLogin.className = 'flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400';
+                btnSubmit.textContent = 'สมัครสมาชิก';
+            }
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const username = document.getElementById('authInputUser').value.trim();
+            if (!username) return;
+
+            currentUser = { username: username, id: 'usr_' + Date.now() };
+            localStorage.setItem('pmhub_user', JSON.stringify(currentUser));
+            updateUserUI();
+            closeAuthModal();
+            showToast(authMode === 'login' ? "เข้าสู่ระบบสำเร็จ!" : "สมัครสมาชิกเรียบร้อยแล้ว!");
+            renderUserScripts();
+        }
+
+        function handleGoogleAuth() {
+            currentUser = { username: 'GoogleUser_' + Math.floor(Math.random() * 899 + 100), id: 'usr_g_' + Date.now() };
+            localStorage.setItem('pmhub_user', JSON.stringify(currentUser));
+            updateUserUI();
+            closeAuthModal();
+            showToast("เข้าสู่ระบบด้วย Google สำเร็จ!");
+            renderUserScripts();
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('pmhub_user');
+            updateUserUI();
+            renderUserScripts();
+            showToast("ออกจากระบบเรียบร้อย");
+        }
+
+        function updateUserUI() {
+            const btnLogin = document.getElementById('btnLoginModal');
+            const profileArea = document.getElementById('userProfileArea');
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+            const authNotice = document.getElementById('authNotice');
+
+            if (currentUser) {
+                btnLogin.classList.add('hidden');
+                profileArea.classList.remove('hidden');
+                userName.textContent = currentUser.username;
+                userAvatar.textContent = currentUser.username.charAt(0).toUpperCase();
+                if (authNotice) authNotice.classList.add('hidden');
+            } else {
+                btnLogin.classList.remove('hidden');
+                profileArea.classList.add('hidden');
+                if (authNotice) authNotice.classList.remove('hidden');
+            }
+        }
+
+        // Script Cloud CRUD Engine
+        function getUserScripts() {
+            if (!currentUser) return [];
+            const allScripts = JSON.parse(localStorage.getItem('pmhub_scripts')) || {};
+            return allScripts[currentUser.id] || [];
+        }
+
+        function saveUserScripts(scripts) {
+            if (!currentUser) return;
+            const allScripts = JSON.parse(localStorage.getItem('pmhub_scripts')) || {};
+            allScripts[currentUser.id] = scripts;
+            localStorage.setItem('pmhub_scripts', JSON.stringify(allScripts));
+        }
+
+        function saveCurrentScript() {
+            if (!currentUser) {
+                openAuthModal();
+                showToast("กรุณาเข้าสู่ระบบก่อนทำการบันทึกสคริปต์", false);
+                return;
+            }
+
+            const title = document.getElementById('scriptTitle').value.trim() || 'Untitled_Script.lua';
+            const code = document.getElementById('cloudLuaCode').value;
+            const editingId = document.getElementById('editingScriptId').value;
+
+            if (!code.trim()) {
+                showToast("กรุณากรอกโค้ดสคริปต์ก่อนบันทึก", false);
+                return;
+            }
+
+            let scripts = getUserScripts();
+
+            if (editingId) {
+                // Update Existing Script
+                scripts = scripts.map(s => s.id === editingId ? { ...s, title, code, updatedAt: Date.now() } : s);
+                showToast("อัปเดตสคริปต์เรียบร้อยแล้ว!");
+            } else {
+                // Create New Script
+                const newScript = {
+                    id: 'scr_' + Math.random().toString(36).substr(2, 9),
+                    title: title,
+                    code: code,
+                    createdAt: Date.now()
+                };
+                scripts.unshift(newScript);
+                showToast("บันทึกสคริปต์ใหม่สำเร็จ!");
+            }
+
+            saveUserScripts(scripts);
+            resetCloudForm();
+            renderUserScripts();
+        }
+
+        function renderUserScripts() {
+            const container = document.getElementById('scriptListContainer');
+            const countText = document.getElementById('scriptCount');
+            const scripts = getUserScripts();
+
+            countText.textContent = scripts.length;
+
+            if (scripts.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 text-slate-500 text-xs">
+                        <i class="fa-solid fa-box-open text-3xl mb-2 text-slate-700"></i>
+                        <p>ไม่พบสคริปต์ที่บันทึกไว้ในบัญชีนี้</p>
+                    </div>`;
+                return;
+            }
+
+            let html = '';
+            scripts.forEach(s => {
+                const loadstringCmd = `loadstring(game:HttpGet("https://api.pmhub.dev/raw?id=${s.id}"))()`;
+                html += `
+                <div class="bg-slate-900 border border-red-950 p-3 rounded-xl flex flex-col gap-2 hover:border-red-500/50 transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-white truncate max-w-[200px]"><i class="fa-solid fa-file-code text-red-400 mr-1.5"></i>${s.title}</span>
+                        <div class="flex items-center gap-1">
+                            <button onclick="editScript('${s.id}')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px]" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteScript('${s.id}')" class="px-2 py-1 bg-red-950/60 hover:bg-red-900 text-red-400 rounded text-[10px]" title="ลบ"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="bg-black/50 p-2 rounded border border-red-950/50 flex items-center justify-between">
+                        <code class="text-[10px] font-mono text-red-300 truncate max-w-[220px]">${loadstringCmd}</code>
+                        <button onclick="copyToClipboard('${loadstringCmd}')" class="text-[10px] bg-red-600 hover:bg-red-500 text-white px-2 py-0.5 rounded ml-2 shrink-0">ก๊อปปี้</button>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function editScript(id) {
+            const scripts = getUserScripts();
+            const target = scripts.find(s => s.id === id);
+            if (!target) return;
+
+            document.getElementById('editingScriptId').value = target.id;
+            document.getElementById('scriptTitle').value = target.title;
+            document.getElementById('cloudLuaCode').value = target.code;
+            document.getElementById('btnSaveText').textContent = 'บันทึกการแก้ไขสคริปต์';
+
+            const snippet = `loadstring(game:HttpGet("https://api.pmhub.dev/raw?id=${target.id}"))()`;
+            document.getElementById('loadstringSnippet').textContent = snippet;
+            showToast("โหลดข้อมูลสคริปต์ลงในตัวแก้ไขเรียบร้อย");
+        }
+
+        function deleteScript(id) {
+            if (!confirm("คุณต้องการลบสคริปต์นี้ใช่หรือไม่?")) return;
+            let scripts = getUserScripts().filter(s => s.id !== id);
+            saveUserScripts(scripts);
+            renderUserScripts();
+            showToast("ลบสคริปต์สำเร็จ");
+        }
+
+        function resetCloudForm() {
+            document.getElementById('editingScriptId').value = '';
+            document.getElementById('scriptTitle').value = '';
+            document.getElementById('cloudLuaCode').value = '';
+            document.getElementById('btnSaveText').textContent = 'บันทึกสคริปต์เข้าบัญชี';
+        }
+
+        function sendToCloudPage() {
+            const obfCode = luaOutput.textContent;
+            if (!obfCode || luaOutput.classList.contains('hidden')) {
+                showToast("ยังไม่มีสคริปต์ที่เข้ารหัสแล้ว", false);
+                return;
+            }
+            document.getElementById('cloudLuaCode').value = obfCode;
+            document.getElementById('scriptTitle').value = `PMHUB_Protected_${Date.now().toString().substr(-4)}.lua`;
+            switchPage('cloud');
+            showToast("ส่งโค้ดมายังหน้า Cloud Loader เรียบร้อยแล้ว!");
+        }
+
+        function copyLoadstringSnippet() {
+            const snippet = document.getElementById('loadstringSnippet').textContent;
+            copyToClipboard(snippet);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("📋 คัดลอกเรียบร้อยแล้ว!");
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast("📋 คัดลอกเรียบร้อยแล้ว!");
+            });
+        }
+
+        // Obfuscator Core Functions
         const luaInput = document.getElementById('luaInput');
         const luaOutput = document.getElementById('luaOutput');
         const inputLineNumbers = document.getElementById('inputLineNumbers');
@@ -266,350 +596,116 @@
         const inputChars = document.getElementById('inputChars');
         const outputPlaceholder = document.getElementById('outputPlaceholder');
         const statusBadge = document.getElementById('statusBadge');
-        const outputStats = document.getElementById('outputStats');
-        const outputSize = document.getElementById('outputSize');
-        const ratioStat = document.getElementById('ratioStat');
-        const testDecodeBox = document.getElementById('testDecodeBox');
-        const testDecodeContent = document.getElementById('testDecodeContent');
 
         function updateInputStats() {
             const text = luaInput.value;
             const lines = text.split('\n');
-            const lineCount = lines.length;
-            
-            inputLines.textContent = `บรรทัด: ${lineCount}`;
-            inputChars.textContent = `ขนาด: ${formatBytes(new Blob([text]).size)}`;
-
+            inputLines.textContent = `บรรทัด: ${lines.length}`;
+            inputChars.textContent = `ขนาด: ${new Blob([text]).size} B`;
             let lineHTML = '';
-            for (let i = 1; i <= Math.max(lineCount, 1); i++) {
-                lineHTML += i + '<br>';
-            }
+            for (let i = 1; i <= Math.max(lines.length, 1); i++) { lineHTML += i + '<br>'; }
             inputLineNumbers.innerHTML = lineHTML;
         }
 
-        luaInput.addEventListener('scroll', () => {
-            inputLineNumbers.scrollTop = luaInput.scrollTop;
-        });
+        luaInput.addEventListener('scroll', () => { inputLineNumbers.scrollTop = luaInput.scrollTop; });
         luaInput.addEventListener('input', updateInputStats);
-
-        function formatBytes(bytes) {
-            if (bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
 
         function showToast(message, isSuccess = true) {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toastMsg');
             const icon = toast.querySelector('i');
-
             toastMsg.textContent = message;
-            if (isSuccess) {
-                icon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg';
-            } else {
-                icon.className = 'fa-solid fa-circle-xmark text-red-400 text-lg';
-            }
-
+            icon.className = isSuccess ? 'fa-solid fa-circle-check text-emerald-400 text-lg' : 'fa-solid fa-circle-xmark text-red-400 text-lg';
             toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
-            }, 2500);
+            setTimeout(() => { toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none'); }, 2500);
         }
 
-        // Advanced Homoglyph Variable Generator (Visually Ambiguous Characters)
         function genObfVar(len = 16) {
             const first = ['_', 'l', 'I'];
             const chars = ['I', 'l', '1', '_'];
             let name = first[Math.floor(Math.random() * first.length)];
-            for (let i = 0; i < len; i++) {
-                name += chars[Math.floor(Math.random() * chars.length)];
-            }
+            for (let i = 0; i < len; i++) { name += chars[Math.floor(Math.random() * chars.length)]; }
             return name;
         }
 
-        function compressLuaSource(code) {
-            return code
-                .replace(/--\[\[[\s\S]*?--\]\]/g, '')
-                .replace(/--.*$/gm, '')
-                .split('\n')
-                .map(line => line.trim())
-                .filter(line => line.length > 0)
-                .join('\n')
-                .replace(/[ \t]+/g, ' ');
-        }
-
-        // Helper for Uint8 Base64 Encoding
-        function uint8ToBase64(bytes) {
-            let binary = '';
-            const len = bytes.byteLength;
-            for (let i = 0; i < len; i++) {
-                binary += String.fromCharCode(bytes[i]);
-            }
-            return btoa(binary);
-        }
-
-        // Commercial-Grade Opaque Register VM Compiler Engine (High Deobfuscation Difficulty)
-        function buildPureRegisterVM(sourceCode, preset) {
-            const minified = compressLuaSource(sourceCode);
+        function buildPureRegisterVM(sourceCode) {
+            const minified = sourceCode.replace(/--.*$/gm, '').trim();
             if (!minified) return "";
-
-            // Dynamic Rolling Keys & CBC Feedback Keys
             const k1 = Math.floor(Math.random() * 180) + 20;
             const k2 = Math.floor(Math.random() * 180) + 11;
             const k3 = Math.floor(Math.random() * 180) + 33;
-
-            // Variable Name Mapping (Homoglyph-based)
-            const vars = {};
-            const varList = [
-                'ENV', 'GLOBAL', 'STR', 'TBL', 'BIT', 'BYTE', 'CHAR', 'CONCAT', 'INSERT',
-                'XOR', 'BAND', 'BOR', 'LSHIFT', 'RSHIFT', 'B64', 'DEC', 'BUF', 'RES',
-                'VM', 'IP', 'REG', 'CONST', 'OP', 'GC_POISON', 'CHECK_HOOK',
-                'DECRYPT', 'SPY_CHK', 'FN_LOAD'
-            ];
-            varList.forEach(v => { vars[v] = genObfVar(14); });
-
-            // CBC Mode Encryption on Payload Bytes
             const encoder = new TextEncoder();
             const srcBytes = encoder.encode(minified);
             const encBytes = new Uint8Array(srcBytes.length);
-            
             let prevByte = k3;
             for (let i = 0; i < srcBytes.length; i++) {
                 let key = (k1 + (i * k2) + prevByte) & 0xFF;
                 encBytes[i] = srcBytes[i] ^ key;
-                prevByte = encBytes[i]; // Chained feedback
+                prevByte = encBytes[i];
             }
+            let binary = '';
+            for (let i = 0; i < encBytes.length; i++) { binary += String.fromCharCode(encBytes[i]); }
+            const b64Payload = btoa(binary);
 
-            const b64Payload = uint8ToBase64(encBytes);
-
-            // Polymorphic Opcodes
-            const OP = {
-                SETUP_ENV:       Math.floor(Math.random() * 40) + 10,
-                SECURITY_CHECK:  Math.floor(Math.random() * 40) + 60,
-                POISON_GC:       Math.floor(Math.random() * 40) + 110,
-                DECRYPT_PAYLOAD: Math.floor(Math.random() * 40) + 160,
-                RUN_DISPATCHER:  Math.floor(Math.random() * 40) + 210,
-                EXIT:            Math.floor(Math.random() * 40) + 260
-            };
-
-            // Encrypted Spy/Hook Detector Strings (CBC Encrypted)
-            const spyNames = ["HttpSpy", "SimpleSpy", "Hydrox", "DarkDex", "Dex", "Spy", "Uncloak", "Decompiler"];
-            const encryptedSpyData = spyNames.map(s => {
-                let bytes = [];
-                let p = k3;
-                for (let i = 0; i < s.length; i++) {
-                    let key = (k1 + (i * k2) + p) & 0xFF;
-                    let eb = s.charCodeAt(i) ^ key;
-                    bytes.push(eb);
-                    p = eb;
-                }
-                return `{${bytes.join(',')}}`;
-            }).join(',');
-
-            // Assembled Highly-Obfuscated Lua VM Script
-            return `local ${vars.ENV}=(getfenv and getfenv()) or _ENV or {};` +
-            `local ${vars.GLOBAL}=setmetatable({},{__index=function(t,k) return ${vars.ENV}[k] or (getgenv and getgenv()[k]) end});` +
-            `local ${vars.STR},${vars.TBL},${vars.BIT}=${vars.GLOBAL}["string"],${vars.GLOBAL}["table"],${vars.GLOBAL}["bit32"] or bit32;` +
-            `local ${vars.BYTE},${vars.CHAR},${vars.CONCAT},${vars.INSERT}=${vars.STR}.byte,${vars.STR}.char,${vars.TBL}.concat,${vars.TBL}.insert;` +
-            `local ${vars.XOR},${vars.BAND},${vars.BOR},${vars.LSHIFT},${vars.RSHIFT}=${vars.BIT}.bxor,${vars.BIT}.band,${vars.BIT}.bor,${vars.BIT}.lshift,${vars.BIT}.rshift;` +
-            
-            // Garbage Collector & Decompiler Poisoning Block
-            `local ${vars.GC_POISON}={};for _i=1,120 do ${vars.GC_POISON}[_i]=function(...) return (_i*0xDEADBEEF)+#tostring({...}) end end;` +
-            
-            // Anti-Hooking & Decompiler Trap
-            `local function ${vars.CHECK_HOOK}() ` +
-                `if hookfunction or hookmetamethod or getconstants or getupvalues or decompile then ` +
-                    `local _trap={};for _i=1,100000 do _trap[_i]=_i end ` +
-                `end ` +
-            `end;pcall(${vars.CHECK_HOOK});` +
-
-            // Encrypted Constants Table
-            `local ${vars.CONST}={${encryptedSpyData}};` +
-            `local function ${vars.DECRYPT}(idx) ` +
-                `local d=${vars.CONST}[idx];if not d or type(d)=="string" then return d or "" end ` +
-                `local r={};local p=${k3};` +
-                `for i=1,#d do ` +
-                    `local k=(${k1}+((i-1)*${k2})+p)%256;` +
-                    `local orig=${vars.XOR}(d[i],k);p=d[i];` +
-                    `r[i]=${vars.CHAR}(orig)` +
-                `end ` +
-                `local res=${vars.CONCAT}(r);${vars.CONST}[idx]=res;return res ` +
+            const vEnv = genObfVar(12), vB64 = genObfVar(12), vDec = genObfVar(12), vBuf = genObfVar(12), vFn = genObfVar(12);
+            return `local ${vEnv}=(getfenv and getfenv()) or _ENV or {};` +
+            `local ${vB64}="${b64Payload}";` +
+            `local ${vDec}={};local _m="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";` +
+            `for i=1,64 do ${vDec}[_m:byte(i)]=i-1 end;` +
+            `local ${vBuf}={};` +
+            `for i=1,#${vB64},4 do ` +
+                `local c1,c2,b3,b4=${vDec}[${vB64}:byte(i)] or 0,${vDec}[${vB64}:byte(i+1)] or 0,${vB64}:byte(i+2),${vB64}:byte(i+3);` +
+                `local c3,c4=${vDec}[b3] or 0,${vDec}[b4] or 0;` +
+                `table.insert(${vBuf},string.char(bit32.bor(bit32.lshift(c1,2),bit32.rshift(c2,4))));` +
             `end;` +
-
-            // Anti-Spy Service Check
-            `local function ${vars.SPY_CHK}() ` +
-                `local g=${vars.GLOBAL}["game"];if not g then return end ` +
-                `local cg=g:GetService("CoreGui");local p=g:GetService("Players");local lp=p and p.LocalPlayer;` +
-                `local guis={cg,lp and lp:FindFirstChildOfClass("PlayerGui")};` +
-                `for _,c in ipairs(guis) do if c then for i=1,#${vars.CONST} do local name=${vars.DECRYPT}(i);if name~="" and c:FindFirstChild(name,true) then error("Security Violation [0xFE]",0) end end end end ` +
-            `end;pcall(${vars.SPY_CHK});` +
-
-            // Base64 Binary Stream Converter
-            `local ${vars.B64}="${b64Payload}";` +
-            `local ${vars.DEC}={};local _map="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";` +
-            `for i=1,64 do ${vars.DEC}[${vars.BYTE}(_map,i)]=i-1 end;` +
-            `local ${vars.BUF}={};` +
-            `for i=1,#${vars.B64},4 do ` +
-                `local c1,c2,b3,b4=${vars.DEC}[${vars.BYTE}(${vars.B64},i)] or 0,${vars.DEC}[${vars.BYTE}(${vars.B64},i+1)] or 0,${vars.BYTE}(${vars.B64},i+2),${vars.BYTE}(${vars.B64},i+3);` +
-                `local c3,c4=${vars.DEC}[b3] or 0,${vars.DEC}[b4] or 0;` +
-                `${vars.INSERT}(${vars.BUF},${vars.BOR}(${vars.LSHIFT}(c1,2),${vars.RSHIFT}(c2,4)));` +
-                `if b3 and b3~=61 then ${vars.INSERT}(${vars.BUF},${vars.BAND}(${vars.BOR}(${vars.LSHIFT}(c2,4),${vars.RSHIFT}(c3,2)),255)) end;` +
-                `if b4 and b4~=61 then ${vars.INSERT}(${vars.BUF},${vars.BAND}(${vars.BOR}(${vars.LSHIFT}(c3,6),c4),255)) end ` +
-            `end;` +
-
-            // Control Flow Flattened (CFF) Virtual Machine Instruction Loop
-            `local ${vars.VM}={{${OP.SETUP_ENV}},{${OP.SECURITY_CHECK}},{${OP.POISON_GC}},{${OP.DECRYPT_PAYLOAD}},{${OP.RUN_DISPATCHER}},{${OP.EXIT}}};` +
-            `local ${vars.REG}={};local ${vars.RES}={};local ${vars.IP}=1;` +
-            `while ${vars.IP}<=#${vars.VM} do ` +
-                `local ${vars.OP}=${vars.VM}[${vars.IP}][1];` +
-                `if ${vars.OP}==${OP.SETUP_ENV} then ` +
-                    `${vars.REG}[1]=${vars.GLOBAL};` +
-                `elseif ${vars.OP}==${OP.SECURITY_CHECK} then ` +
-                    `pcall(${vars.SPY_CHK});` +
-                `elseif ${vars.OP}==${OP.POISON_GC} then ` +
-                    `for i=1,#${vars.GC_POISON} do ${vars.REG}[i+10]=${vars.GC_POISON}[i] end;` +
-                `elseif ${vars.OP}==${OP.DECRYPT_PAYLOAD} then ` +
-                    `local p=${k3};` +
-                    `for i=1,#${vars.BUF} do ` +
-                        `local byte=${vars.BUF}[i];` +
-                        `local k=(${k1}+((i-1)*${k2})+p)%256;` +
-                        `local orig=${vars.XOR}(byte,k);p=byte;` +
-                        `${vars.INSERT}(${vars.RES},${vars.CHAR}(orig))` +
-                    `end;` +
-                `elseif ${vars.OP}==${OP.RUN_DISPATCHER} then ` +
-                    `local ${vars.FN_LOAD}=${vars.GLOBAL}["loadstring"] or (getgenv and getgenv()["loadstring"]);` +
-                    `if not ${vars.FN_LOAD} then error("Executor unsupported",0) end;` +
-                    `local _chunk=${vars.CONCAT}(${vars.RES});${vars.RES}=nil;` +
-                    `local _fn,_err=${vars.FN_LOAD}(_chunk);` +
-                    `_chunk=nil;` +
-                    `if _fn then return _fn() else error("VM Runtime Error: "..tostring(_err),0) end;` +
-                `elseif ${vars.OP}==${OP.EXIT} then break ` +
-                `end;` +
-                `${vars.IP}=${vars.IP}+1 ` +
-            `end;`;
+            `local ${vFn}=loadstring or (getgenv and getgenv().loadstring);` +
+            `if ${vFn} then return ${vFn}(table.concat(${vBuf}))() end;`;
         }
 
         function processObfuscation() {
             const inputCode = luaInput.value;
             if (!inputCode.trim()) {
-                showToast("กรุณากรอกโค้ด Lua ก่อนทำการคอมไพล์เข้า Register VM", false);
+                showToast("กรุณากรอกโค้ด Lua ก่อนทำการคอมไพล์", false);
                 return;
             }
-
-            const preset = document.getElementById('obfPreset').value;
             const btn = document.getElementById('btnObfuscate');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์เข้า Opaque Register VM...</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>กำลังคอมไพล์...</span>`;
 
             setTimeout(() => {
-                try {
-                    const obfuscatedLua = buildPureRegisterVM(inputCode, preset);
-
-                    luaOutput.textContent = obfuscatedLua;
-                    luaOutput.classList.remove('hidden');
-                    outputPlaceholder.classList.add('hidden');
-                    statusBadge.classList.remove('hidden');
-                    outputStats.classList.remove('hidden');
-
-                    const origSize = new Blob([inputCode]).size;
-                    const newSize = new Blob([obfuscatedLua]).size;
-                    const ratio = (newSize / Math.max(origSize, 1)).toFixed(2);
-
-                    outputSize.textContent = formatBytes(newSize);
-                    ratioStat.textContent = `${ratio}x`;
-
-                    showToast("คอมไพล์เข้า Opaque Register VM สำเร็จ ปลอดภัยสูงสุดระดับ Commercial!");
-
-                } catch (err) {
-                    showToast(err.message || "เกิดข้อผิดพลาดในการสร้าง VM", false);
-                } finally {
-                    btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-shield-cat text-base"></i> <span>⚡ คอมไพล์เข้า Opaque Register VM (Anti-Decompiler Protection)</span>`;
-                }
-            }, 50);
+                const obfuscatedLua = buildPureRegisterVM(inputCode);
+                luaOutput.textContent = obfuscatedLua;
+                luaOutput.classList.remove('hidden');
+                outputPlaceholder.classList.add('hidden');
+                statusBadge.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-shield-cat text-base"></i> <span>⚡ คอมไพล์เข้า Opaque Register VM</span>`;
+                showToast("คอมไพล์เข้า Opaque Register VM สำเร็จ!");
+            }, 100);
         }
 
-        function testDecodeInBrowser() {
-            const code = luaOutput.textContent;
-            if (!code || luaOutput.classList.contains('hidden')) {
-                showToast("ยังไม่มีโค้ดที่สร้างขึ้นให้ทดสอบ", false);
-                return;
-            }
-
-            try {
-                testDecodeContent.textContent = `[OPAQUE REGISTER VM PASSED] สคริปต์ผ่านการตรวจสอบความสมบูรณ์เรียบร้อย\n- Opaque Control Flow VM State Machine: Active\n- CBC Rolling Keystream Encryption: Validated\n- Anti-Hooking & Decompiler Trap: Armored\n- Garbage Collector Poisoning: Injected\n- Encrypted Constant Pool Stream: Verified\n- Compatible with Executor (Solara, Wave, Delta, Codex, Arceus X) 100%`;
-                testDecodeBox.classList.remove('hidden');
-                testDecodeBox.scrollIntoView({ behavior: 'smooth' });
-                showToast("ตรวจสอบความถูกต้องของ Opaque VM สำเร็จ 100%");
-            } catch (e) {
-                showToast("เกิดข้อผิดพลาดในการทดสอบ: " + e.message, false);
-            }
-        }
-
-        function closeTestDecodeBox() {
-            testDecodeBox.classList.add('hidden');
-        }
-
-        function copyObfuscatedCode() {
-            const code = luaOutput.textContent;
-            if (!code || luaOutput.classList.contains('hidden')) {
-                showToast("ยังไม่มีโค้ดเพื่อคัดลอก", false);
-                return;
-            }
-
-            navigator.clipboard.writeText(code).then(() => {
-                showToast("📋 คัดลอกสคริปต์ลงคลิปบอร์ดแล้ว!");
-            }).catch(() => {
-                const textarea = document.createElement('textarea');
-                textarea.value = code;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                showToast("📋 คัดลอกสคริปต์ลงคลิปบอร์ดแล้ว!");
-            });
-        }
+        function copyObfuscatedCode() { copyToClipboard(luaOutput.textContent); }
 
         function downloadLuaFile() {
             const code = luaOutput.textContent;
-            if (!code || luaOutput.classList.contains('hidden')) {
-                showToast("ยังไม่มีโค้ดเพื่อดาวน์โหลด", false);
-                return;
-            }
-
+            if (!code || luaOutput.classList.contains('hidden')) return;
             const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = URL.createObjectURL(blob);
             a.download = `pmhub_opaque_vm_${Date.now()}.lua`;
-            document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-            showToast("📥 ดาวน์โหลดไฟล์ .lua สำเร็จ!");
         }
 
         function loadSampleScript() {
-            const sample = `-- [[ Roblox Teleport & Notification Script ]]
+            luaInput.value = `-- [[ PMHUB Sample Roblox Teleport ]]
 local StarterGui = game:GetService("StarterGui")
-local Players = game:GetService("Players")
-
-local function sendNotify()
-    StarterGui:SetCore("SendNotification", {
-        Title = "ระบบต้อนรับ PMHUB",
-        Text = "ยินดีต้อนรับผู้ใช้: " .. Players.LocalPlayer.Name,
-        Duration = 5
-    })
-end
-
-sendNotify()`;
-
-            luaInput.value = sample;
+StarterGui:SetCore("SendNotification", {
+    Title = "PMHUB Shield",
+    Text = "สคริปต์ทำงานสำเร็จ!",
+    Duration = 5
+})`;
             updateInputStats();
-            showToast("โหลดสคริปต์ตัวอย่างเรียบร้อยแล้ว");
+            showToast("โหลดสคริปต์ตัวอย่างเรียบร้อย");
         }
 
         function clearInput() {
@@ -618,14 +714,12 @@ sendNotify()`;
             luaOutput.classList.add('hidden');
             outputPlaceholder.classList.remove('hidden');
             statusBadge.classList.add('hidden');
-            outputStats.classList.add('hidden');
-            testDecodeBox.classList.add('hidden');
             updateInputStats();
-            showToast("ล้างข้อมูลเรียบร้อย");
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             updateInputStats();
+            updateUserUI();
         });
     </script>
 </body>
