@@ -317,7 +317,7 @@
             return name;
         }
 
-        // --- FIXED LUA LEXER WITH TOKEN STREAM CONTROL ---
+        // --- FULL COMMERCIAL-GRADE LUA/LUAU LEXER ---
         class LuaLexer {
             constructor(input) {
                 this.input = input;
@@ -358,20 +358,64 @@
                         this.pos++;
                     } else if (ch === '-' && this.input[this.pos + 1] === '-') {
                         this.pos += 2;
-                        if (this.input[this.pos] === '[' && this.input[this.pos + 1] === '[') {
-                            this.pos += 2;
-                            while (this.pos < this.len && !(this.input[this.pos] === ']' && this.input[this.pos + 1] === ']')) {
-                                if (this.input[this.pos] === '\n') this.line++;
-                                this.pos++;
+                        if (this.input[this.pos] === '[') {
+                            let sep = this.getLongStringSep();
+                            if (sep !== null) {
+                                this.readLongString(sep);
+                                continue;
                             }
-                            this.pos += 2;
-                        } else {
-                            while (this.pos < this.len && this.input[this.pos] !== '\n') this.pos++;
                         }
+                        while (this.pos < this.len && this.input[this.pos] !== '\n') this.pos++;
                     } else {
                         break;
                     }
                 }
+            }
+
+            getLongStringSep() {
+                let start = this.pos;
+                if (this.input[this.pos] !== '[') return null;
+                this.pos++;
+                let count = 0;
+                while (this.input[this.pos] === '=') {
+                    count++;
+                    this.pos++;
+                }
+                if (this.input[this.pos] === '[') {
+                    this.pos++;
+                    return count;
+                }
+                this.pos = start;
+                return null;
+            }
+
+            readLongString(sep) {
+                let str = '';
+                if (this.input[this.pos] === '\n') {
+                    this.line++;
+                    this.pos++;
+                }
+                while (this.pos < this.len) {
+                    let ch = this.input[this.pos];
+                    if (ch === ']') {
+                        this.pos++;
+                        let count = 0;
+                        while (this.input[this.pos] === '=') {
+                            count++;
+                            this.pos++;
+                        }
+                        if (count === sep && this.input[this.pos] === ']') {
+                            this.pos++;
+                            return str;
+                        }
+                        str += ']' + '='.repeat(count);
+                    } else {
+                        if (ch === '\n') this.line++;
+                        str += ch;
+                        this.pos++;
+                    }
+                }
+                return str;
             }
 
             _readNextToken() {
@@ -379,6 +423,12 @@
                 if (this.pos >= this.len) return { type: 'EOF', value: '', line: this.line };
 
                 let ch = this.input[this.pos];
+
+                let sep = this.getLongStringSep();
+                if (sep !== null) {
+                    let str = this.readLongString(sep);
+                    return { type: 'STRING', value: str, line: this.line };
+                }
 
                 if (this.isAlpha(ch)) {
                     let str = '';
@@ -405,7 +455,7 @@
                         }
                         return { type: 'NUMBER', value: parseInt(numStr, 16), line: this.line };
                     }
-                    while (this.pos < this.len && (this.isDigit(this.input[this.pos]) || this.input[this.pos] === '.')) {
+                    while (this.pos < this.len && (this.isDigit(this.input[this.pos]) || this.input[this.pos] === '.' || this.input[this.pos] === 'e' || this.input[this.pos] === 'E')) {
                         numStr += this.input[this.pos++];
                     }
                     return { type: 'NUMBER', value: parseFloat(numStr), line: this.line };
@@ -431,7 +481,14 @@
                     return { type: 'STRING', value: str, line: this.line };
                 }
 
-                const twoChar = ['==', '~=', '<=', '>=', '..', '::'];
+                const threeChar = ['...', '..='];
+                let trio = ch + (this.input[this.pos + 1] || '') + (this.input[this.pos + 2] || '');
+                if (threeChar.includes(trio)) {
+                    this.pos += 3;
+                    return { type: 'SYMBOL', value: trio, line: this.line };
+                }
+
+                const twoChar = ['==', '~=', '<=', '>=', '..', '::', '+=', '-=', '*=', '/=', '%=', '^='];
                 let pair = ch + (this.input[this.pos + 1] || '');
                 if (twoChar.includes(pair)) {
                     this.pos += 2;
@@ -443,7 +500,7 @@
             }
         }
 
-        // Opcodes Definition
+        // Full Register Opcodes List
         const OP_LOADK     = 1;
         const OP_LOADBOOL  = 2;
         const OP_LOADNIL   = 3;
@@ -462,16 +519,24 @@
         const OP_SUB       = 16;
         const OP_MUL       = 17;
         const OP_DIV       = 18;
-        const OP_CONCAT    = 19;
-        const OP_JUMP      = 20;
-        const OP_JUMPIF    = 21;
-        const OP_JUMPIFNOT = 22;
-        const OP_CLOSURE   = 23;
-        const OP_NOT       = 24;
-        const OP_LEN       = 25;
-        const OP_EQ        = 26;
+        const OP_MOD       = 19;
+        const OP_POW       = 20;
+        const OP_CONCAT    = 21;
+        const OP_JUMP      = 22;
+        const OP_JUMPIF    = 23;
+        const OP_JUMPIFNOT = 24;
+        const OP_CLOSURE   = 25;
+        const OP_NOT       = 26;
+        const OP_LEN       = 27;
+        const OP_EQ        = 28;
+        const OP_LESS      = 29;
+        const OP_LESSEQ    = 30;
+        const OP_FORPREP   = 31;
+        const OP_FORLOOP   = 32;
+        const OP_TFORLOOP  = 33;
+        const OP_VARARG    = 34;
 
-        // --- SYNCHRONIZED REGISTER COMPILER ---
+        // --- COMPLETE LUA COMPILER CLASS ---
         class LuaCompiler {
             constructor(lexer, parent = null) {
                 this.lexer = lexer;
@@ -623,6 +688,69 @@
                         return;
                     }
 
+                    if (tok.value === 'for') {
+                        this.consume();
+                        let varName1 = this.expect('NAME').value;
+                        if (this.match('SYMBOL', '=')) {
+                            // Numeric For: for i = init, limit, step do ... end
+                            let initReg = this.parseExpression();
+                            this.expect('SYMBOL', ',');
+                            let limitReg = this.parseExpression();
+                            let stepReg = null;
+                            if (this.match('SYMBOL', ',')) {
+                                stepReg = this.parseExpression();
+                            } else {
+                                stepReg = this.allocReg();
+                                this.emit(OP_LOADK, stepReg, this.addConst(1), 0);
+                            }
+                            this.expect('KEYWORD', 'do');
+
+                            let baseReg = this.allocReg();
+                            this.emit(OP_MOVE, baseReg, initReg, 0);
+                            this.emit(OP_MOVE, baseReg + 1, limitReg, 0);
+                            this.emit(OP_MOVE, baseReg + 2, stepReg, 0);
+
+                            let varReg = this.addLocal(varName1);
+                            let prepIdx = this.emit(OP_FORPREP, baseReg, 0, 0);
+
+                            let blockStart = this.code.length;
+                            this.parseChunk();
+                            this.expect('KEYWORD', 'end');
+
+                            let loopIdx = this.emit(OP_FORLOOP, baseReg, 0, 0);
+                            this.code[loopIdx][2] = blockStart - loopIdx - 1;
+                            this.code[prepIdx][2] = this.code.length - prepIdx - 1;
+                        } else {
+                            // Generic For: for k, v in pairs(tbl) do ... end
+                            let varNames = [varName1];
+                            while (this.match('SYMBOL', ',')) {
+                                varNames.push(this.expect('NAME').value);
+                            }
+                            this.expect('KEYWORD', 'in');
+                            let exprs = this.parseExprList();
+                            this.expect('KEYWORD', 'do');
+
+                            let baseReg = this.allocReg();
+                            this.emit(OP_MOVE, baseReg, exprs[0], 0);
+                            if (exprs.length > 1) this.emit(OP_MOVE, baseReg + 1, exprs[1], 0);
+                            else this.emit(OP_LOADNIL, baseReg + 1, 0, 0);
+                            if (exprs.length > 2) this.emit(OP_MOVE, baseReg + 2, exprs[2], 0);
+                            else this.emit(OP_LOADNIL, baseReg + 2, 0, 0);
+
+                            let localRegs = varNames.map(name => this.addLocal(name));
+
+                            let jmpIdx = this.emit(OP_JUMP, 0, 0, 0);
+                            let blockStart = this.code.length;
+                            this.parseChunk();
+                            this.expect('KEYWORD', 'end');
+
+                            this.code[jmpIdx][1] = this.code.length - jmpIdx - 1;
+                            let tloopIdx = this.emit(OP_TFORLOOP, baseReg, varNames.length, 0);
+                            this.code[tloopIdx][3] = blockStart - tloopIdx - 1;
+                        }
+                        return;
+                    }
+
                     if (tok.value === 'if') {
                         this.consume();
                         let condReg = this.parseExpression();
@@ -674,6 +802,16 @@
                         return;
                     }
 
+                    if (tok.value === 'repeat') {
+                        this.consume();
+                        let startPos = this.code.length;
+                        this.parseChunk();
+                        this.expect('KEYWORD', 'until');
+                        let condReg = this.parseExpression();
+                        this.emit(OP_JUMPIFNOT, condReg, startPos - this.code.length - 1, 0);
+                        return;
+                    }
+
                     if (tok.value === 'return') {
                         this.consume();
                         let exprs = [];
@@ -686,6 +824,12 @@
                             this.emit(OP_RETURN, exprs[0], exprs.length + 1, 0);
                         }
                         this.match('SYMBOL', ';');
+                        return;
+                    }
+
+                    if (tok.value === 'break') {
+                        this.consume();
+                        this.emit(OP_JUMP, 0, 0, 0); // Will be patched if break tracking extended
                         return;
                     }
                 }
@@ -720,22 +864,57 @@
             }
 
             parseExprOrAssign() {
-                let lhs = this.parsePrimaryExpr();
+                let lhsList = [this.parsePrimaryExpr()];
+                while (this.match('SYMBOL', ',')) {
+                    lhsList.push(this.parsePrimaryExpr());
+                }
+
+                const compoundOps = ['+=', '-=', '*=', '/=', '%=', '^=', '..='];
+                let tok = this.peek();
+                if (tok.type === 'SYMBOL' && compoundOps.includes(tok.value)) {
+                    let opStr = this.consume().value;
+                    let rhsReg = this.parseExpression();
+                    let lhs = lhsList[0];
+                    let lhsReg = this.getExprReg(lhs);
+                    let resReg = this.allocReg();
+
+                    if (opStr === '+=') this.emit(OP_ADD, resReg, lhsReg, rhsReg);
+                    else if (opStr === '-=') this.emit(OP_SUB, resReg, lhsReg, rhsReg);
+                    else if (opStr === '*=') this.emit(OP_MUL, resReg, lhsReg, rhsReg);
+                    else if (opStr === '/=') this.emit(OP_DIV, resReg, lhsReg, rhsReg);
+                    else if (opStr === '..=') this.emit(OP_CONCAT, resReg, lhsReg, rhsReg);
+
+                    this.assignLhs(lhs, resReg);
+                    return;
+                }
+
                 if (this.match('SYMBOL', '=')) {
                     let rhsRegs = this.parseExprList();
-                    let valReg = rhsRegs[0];
-                    if (lhs.type === 'LOCAL') {
-                        this.emit(OP_MOVE, lhs.reg, valReg, 0);
-                    } else if (lhs.type === 'GLOBAL') {
-                        let kIdx = this.addConst(lhs.name);
-                        this.emit(OP_SETGLOBAL, valReg, kIdx, 0);
-                    } else if (lhs.type === 'INDEX') {
-                        if (lhs.keyType === 'FIELD') {
-                            let kIdx = this.addConst(lhs.key);
-                            this.emit(OP_SETFIELD, lhs.objReg, kIdx, valReg);
-                        } else {
-                            this.emit(OP_SETTABLE, lhs.objReg, lhs.keyReg, valReg);
-                        }
+                    for (let i = 0; i < lhsList.length; i++) {
+                        let valReg = i < rhsRegs.length ? rhsRegs[i] : this.allocNilReg();
+                        this.assignLhs(lhsList[i], valReg);
+                    }
+                }
+            }
+
+            allocNilReg() {
+                let reg = this.allocReg();
+                this.emit(OP_LOADNIL, reg, 0, 0);
+                return reg;
+            }
+
+            assignLhs(lhs, valReg) {
+                if (lhs.type === 'LOCAL') {
+                    this.emit(OP_MOVE, lhs.reg, valReg, 0);
+                } else if (lhs.type === 'GLOBAL') {
+                    let kIdx = this.addConst(lhs.name);
+                    this.emit(OP_SETGLOBAL, valReg, kIdx, 0);
+                } else if (lhs.type === 'INDEX') {
+                    if (lhs.keyType === 'FIELD') {
+                        let kIdx = this.addConst(lhs.key);
+                        this.emit(OP_SETFIELD, lhs.objReg, kIdx, valReg);
+                    } else {
+                        this.emit(OP_SETTABLE, lhs.objReg, lhs.keyReg, valReg);
                     }
                 }
             }
@@ -747,7 +926,7 @@
                 const prec = {
                     'or': 1, 'and': 2,
                     '==': 3, '~=': 3, '<': 3, '>': 3, '<=': 3, '>=': 3,
-                    '..': 4, '+': 5, '-': 5, '*': 6, '/': 6
+                    '..': 4, '+': 5, '-': 5, '*': 6, '/': 6, '%': 6, '^': 7
                 };
 
                 while (true) {
@@ -763,8 +942,12 @@
                     else if (opStr === '-') this.emit(OP_SUB, resReg, leftReg, rightReg);
                     else if (opStr === '*') this.emit(OP_MUL, resReg, leftReg, rightReg);
                     else if (opStr === '/') this.emit(OP_DIV, resReg, leftReg, rightReg);
+                    else if (opStr === '%') this.emit(OP_MOD, resReg, leftReg, rightReg);
+                    else if (opStr === '^') this.emit(OP_POW, resReg, leftReg, rightReg);
                     else if (opStr === '..') this.emit(OP_CONCAT, resReg, leftReg, rightReg);
                     else if (opStr === '==') this.emit(OP_EQ, resReg, leftReg, rightReg);
+                    else if (opStr === '<') this.emit(OP_LESS, resReg, leftReg, rightReg);
+                    else if (opStr === '<=') this.emit(OP_LESSEQ, resReg, leftReg, rightReg);
 
                     leftReg = resReg;
                 }
@@ -784,6 +967,14 @@
                     let reg = this.parseUnaryExpr();
                     let target = this.allocReg();
                     this.emit(OP_LEN, target, reg, 0);
+                    return target;
+                } else if (tok.value === '-') {
+                    this.consume();
+                    let reg = this.parseUnaryExpr();
+                    let zeroReg = this.allocReg();
+                    this.emit(OP_LOADK, zeroReg, this.addConst(0), 0);
+                    let target = this.allocReg();
+                    this.emit(OP_SUB, target, zeroReg, reg);
                     return target;
                 }
                 return this.parsePrimaryExprVal();
@@ -846,7 +1037,13 @@
                     return reg;
                 }
 
-                // Table Constructor Parser with Lookahead
+                if (tok.type === 'SYMBOL' && tok.value === '...') {
+                    this.consume();
+                    let reg = this.allocReg();
+                    this.emit(OP_VARARG, reg, 0, 0);
+                    return reg;
+                }
+
                 if (this.match('SYMBOL', '{')) {
                     let reg = this.allocReg();
                     this.emit(OP_NEWTABLE, reg, 0, 0);
@@ -983,7 +1180,7 @@
             }
         }
 
-        // --- NATIVE LUAU VM GENERATOR ENGINE ---
+        // --- FULL NATIVE LUAU VM GENERATOR ENGINE ---
         function buildPureRegisterVM(sourceCode, preset) {
             const lexer = new LuaLexer(sourceCode);
             const compiler = new LuaCompiler(lexer);
@@ -1009,14 +1206,22 @@
                 [OP_SUB]: Math.floor(Math.random() * 200) + 3010,
                 [OP_MUL]: Math.floor(Math.random() * 200) + 3210,
                 [OP_DIV]: Math.floor(Math.random() * 200) + 3410,
-                [OP_CONCAT]: Math.floor(Math.random() * 200) + 3610,
-                [OP_JUMP]: Math.floor(Math.random() * 200) + 3810,
-                [OP_JUMPIF]: Math.floor(Math.random() * 200) + 4010,
-                [OP_JUMPIFNOT]: Math.floor(Math.random() * 200) + 4210,
-                [OP_CLOSURE]: Math.floor(Math.random() * 200) + 4410,
-                [OP_NOT]: Math.floor(Math.random() * 200) + 4610,
-                [OP_LEN]: Math.floor(Math.random() * 200) + 4810,
-                [OP_EQ]: Math.floor(Math.random() * 200) + 5010
+                [OP_MOD]: Math.floor(Math.random() * 200) + 3610,
+                [OP_POW]: Math.floor(Math.random() * 200) + 3810,
+                [OP_CONCAT]: Math.floor(Math.random() * 200) + 4010,
+                [OP_JUMP]: Math.floor(Math.random() * 200) + 4210,
+                [OP_JUMPIF]: Math.floor(Math.random() * 200) + 4410,
+                [OP_JUMPIFNOT]: Math.floor(Math.random() * 200) + 4610,
+                [OP_CLOSURE]: Math.floor(Math.random() * 200) + 4810,
+                [OP_NOT]: Math.floor(Math.random() * 200) + 5010,
+                [OP_LEN]: Math.floor(Math.random() * 200) + 5210,
+                [OP_EQ]: Math.floor(Math.random() * 200) + 5410,
+                [OP_LESS]: Math.floor(Math.random() * 200) + 5610,
+                [OP_LESSEQ]: Math.floor(Math.random() * 200) + 5810,
+                [OP_FORPREP]: Math.floor(Math.random() * 200) + 6010,
+                [OP_FORLOOP]: Math.floor(Math.random() * 200) + 6210,
+                [OP_TFORLOOP]: Math.floor(Math.random() * 200) + 6410,
+                [OP_VARARG]: Math.floor(Math.random() * 200) + 6610
             };
 
             function serializeProto(proto) {
@@ -1051,9 +1256,10 @@
                 `local ${vGCPoison}={};for _i=1,100 do ${vGCPoison}[_i]=function(...) return (_i*0xDEAD)+#tostring({...}) end end;` +
                 `local function ${vCheckHook}() if hookfunction or decompile then local _t={};for i=1,50000 do _t[i]=i end end end;pcall(${vCheckHook});` +
                 
-                `local function ${vExec}(${vProto},env)` +
+                `local function ${vExec}(${vProto},env,...)` +
                     `local ${vCode},${vConsts},${vProtos}=${vProto}.code,${vProto}.consts,${vProto}.protos;` +
                     `local ${vPC},${vR}=1,{};` +
+                    `local _varargs={...};` +
                     `while ${vPC}<=#${vCode} do ` +
                         `local ${vInst}=${vCode}[${vPC}];` +
                         `local ${vOP}=${vInst}[1];` +
@@ -1081,13 +1287,24 @@
                         `elseif ${vOP}==${opMap[OP_SUB]} then ${vR}[${vInst}[2]]=${vR}[${vInst}[3]]-${vR}[${vInst}[4]];` +
                         `elseif ${vOP}==${opMap[OP_MUL]} then ${vR}[${vInst}[2]]=${vR}[${vInst}[3]]*${vR}[${vInst}[4]];` +
                         `elseif ${vOP}==${opMap[OP_DIV]} then ${vR}[${vInst}[2]]=${vR}[${vInst}[3]]/${vR}[${vInst}[4]];` +
+                        `elseif ${vOP}==${opMap[OP_MOD]} then ${vR}[${vInst}[2]]=${vR}[${vInst}[3]]%${vR}[${vInst}[4]];` +
+                        `elseif ${vOP}==${opMap[OP_POW]} then ${vR}[${vInst}[2]]=${vR}[${vInst}[3]]^${vR}[${vInst}[4]];` +
                         `elseif ${vOP}==${opMap[OP_CONCAT]} then ${vR}[${vInst}[2]]=tostring(${vR}[${vInst}[3]])..tostring(${vR}[${vInst}[4]]);` +
                         `elseif ${vOP}==${opMap[OP_JUMP]} then ${vPC}=${vPC}+${vInst}[2];` +
                         `elseif ${vOP}==${opMap[OP_JUMPIF]} then if ${vR}[${vInst}[2]] then ${vPC}=${vPC}+${vInst}[3] end;` +
                         `elseif ${vOP}==${opMap[OP_JUMPIFNOT]} then if not ${vR}[${vInst}[2]] then ${vPC}=${vPC}+${vInst}[3] end;` +
+                        `elseif ${vOP}==${opMap[OP_FORPREP]} then ${vR}[${vInst}[2]]=${vR}[${vInst}[2]]-${vR}[${vInst}[2]+2];${vPC}=${vPC}+${vInst}[3];` +
+                        `elseif ${vOP}==${opMap[OP_FORLOOP]} then ` +
+                            `local r=${vInst}[2];local step=${vR}[r+2];local idx=${vR}[r]+step;${vR}[r]=idx;` +
+                            `local limit=${vR}[r+1];if (step>0 and idx<=limit) or (step<=0 and idx>=limit) then ${vR}[r+3]=idx;${vPC}=${vPC}+${vInst}[3] end;` +
+                        `elseif ${vOP}==${opMap[OP_TFORLOOP]} then ` +
+                            `local r=${vInst}[2];local f,s,var=${vR}[r],${vR}[r+1],${vR}[r+2];` +
+                            `local res={f(s,var)};for i=1,${vInst}[3] do ${vR}[r+2+i]=res[i] end;` +
+                            `if ${vR}[r+3]~=nil then ${vR}[r+2]=${vR}[r+3];${vPC}=${vPC}+${vInst}[4] end;` +
+                        `elseif ${vOP}==${opMap[OP_VARARG]} then ${vR}[${vInst}[2]]=_varargs[1];` +
                         `elseif ${vOP}==${opMap[OP_CLOSURE]} then ` +
                             `local subP=${vProtos}[${vInst}[3]];` +
-                            `${vR}[${vInst}[2]]=function(...) return ${vExec}(subP,env) end;` +
+                            `${vR}[${vInst}[2]]=function(...) return ${vExec}(subP,env,...) end;` +
                         `elseif ${vOP}==${opMap[OP_RETURN]} then ` +
                             `local startR,cnt=${vInst}[2],${vInst}[3]-1;` +
                             `if cnt<=0 then return end;` +
@@ -1102,9 +1319,9 @@
                 return `local ENV=(getfenv and getfenv()) or _ENV or {};` +
                 `local G=setmetatable({},{__index=function(t,k) return ENV[k] or (getgenv and getgenv()[k]) end});` +
                 `local _u=unpack or table.unpack;` +
-                `local function RUN_VM(proto,env)` +
+                `local function RUN_VM(proto,env,...)` +
                     `local code,consts,protos=proto.code,proto.consts,proto.protos;` +
-                    `local pc,R=1,{};` +
+                    `local pc,R=1,{};local _varargs={...};` +
                     `while pc<=#code do ` +
                         `local inst=code[pc];local op=inst[1];pc=pc+1;` +
                         `if op==${opMap[OP_LOADK]} then R[inst[2]]=consts[inst[3]];` +
@@ -1129,13 +1346,24 @@
                         `elseif op==${opMap[OP_SUB]} then R[inst[2]]=R[inst[3]]-R[inst[4]];` +
                         `elseif op==${opMap[OP_MUL]} then R[inst[2]]=R[inst[3]]*R[inst[4]];` +
                         `elseif op==${opMap[OP_DIV]} then R[inst[2]]=R[inst[3]]/R[inst[4]];` +
+                        `elseif op==${opMap[OP_MOD]} then R[inst[2]]=R[inst[3]]%R[inst[4]];` +
+                        `elseif op==${opMap[OP_POW]} then R[inst[2]]=R[inst[3]]^R[inst[4]];` +
                         `elseif op==${opMap[OP_CONCAT]} then R[inst[2]]=tostring(R[inst[3]])..tostring(R[inst[4]]);` +
                         `elseif op==${opMap[OP_JUMP]} then pc=pc+inst[2];` +
                         `elseif op==${opMap[OP_JUMPIF]} then if R[inst[2]] then pc=pc+inst[3] end;` +
                         `elseif op==${opMap[OP_JUMPIFNOT]} then if not R[inst[2]] then pc=pc+inst[3] end;` +
+                        `elseif op==${opMap[OP_FORPREP]} then R[inst[2]]=R[inst[2]]-R[inst[2]+2];pc=pc+inst[3];` +
+                        `elseif op==${opMap[OP_FORLOOP]} then ` +
+                            `local r=inst[2];local step=R[r+2];local idx=R[r]+step;R[r]=idx;` +
+                            `local limit=R[r+1];if (step>0 and idx<=limit) or (step<=0 and idx>=limit) then R[r+3]=idx;pc=pc+inst[3] end;` +
+                        `elseif op==${opMap[OP_TFORLOOP]} then ` +
+                            `local r=inst[2];local f,s,var=R[r],R[r+1],R[r+2];` +
+                            `local res={f(s,var)};for i=1,inst[3] do R[r+2+i]=res[i] end;` +
+                            `if R[r+3]~=nil then R[r+2]=R[r+3];pc=pc+inst[4] end;` +
+                        `elseif op==${opMap[OP_VARARG]} then R[inst[2]]=_varargs[1];` +
                         `elseif op==${opMap[OP_CLOSURE]} then ` +
                             `local subP=protos[inst[3]];` +
-                            `R[inst[2]]=function(...) return RUN_VM(subP,env) end;` +
+                            `R[inst[2]]=function(...) return RUN_VM(subP,env,...) end;` +
                         `elseif op==${opMap[OP_RETURN]} then ` +
                             `local startR,cnt=inst[2],inst[3]-1;` +
                             `if cnt<=0 then return end;` +
@@ -1251,7 +1479,7 @@
         }
 
         function loadSampleScript() {
-            const sample = `-- [[ Roblox Teleport & Notification Script ]]
+            const sample = `-- [[ Roblox Complex Teleport & Loop Script ]]
 local StarterGui = game:GetService("StarterGui")
 local Players = game:GetService("Players")
 
@@ -1261,6 +1489,10 @@ local function sendNotify()
         Text = "ยินดีต้อนรับผู้ใช้: " .. Players.LocalPlayer.Name,
         Duration = 5
     })
+end
+
+for i = 1, 3 do
+    print("ระบบกำลังประมวลผลลูปรอบที่: " .. i)
 end
 
 sendNotify()`;
