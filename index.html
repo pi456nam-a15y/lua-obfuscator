@@ -124,7 +124,6 @@
 
         <!-- Controls Bar -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl p-4 shadow-xl flex flex-wrap items-center justify-between gap-4">
-            <!-- Mode Selection -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
                 <label class="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-sliders text-red-400"></i>
@@ -136,7 +135,6 @@
                 </select>
             </div>
 
-            <!-- Action Buttons -->
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button id="btnSample" onclick="loadSampleScript()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-red-950 transition-all flex items-center gap-1.5">
                     <i class="fa-solid fa-file-code text-red-400"></i>
@@ -151,7 +149,6 @@
 
         <!-- TOP SECTION: Source Lua Input -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
-            <!-- Header -->
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
@@ -168,7 +165,6 @@
                 </div>
             </div>
 
-            <!-- Textarea Container -->
             <div class="relative flex min-h-[220px] max-h-[340px] bg-cyber-codeBg">
                 <div id="inputLineNumbers" class="line-numbers py-3 px-3 bg-black/40 border-r border-red-950/40 select-none min-w-[45px]">
                     1
@@ -176,7 +172,6 @@
                 <textarea id="luaInput" spellcheck="false" placeholder="-- วางโค้ด Roblox Lua / Luau ที่นี่..." class="code-area w-full p-3 bg-transparent text-slate-200 outline-none border-none placeholder-slate-600 focus:ring-0 resize-none"></textarea>
             </div>
 
-            <!-- Obfuscate Main Button -->
             <div class="p-3 bg-slate-950/60 border-t border-cyber-border flex justify-end">
                 <button id="btnObfuscate" onclick="processObfuscation()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-semibold text-sm shadow-lg glow-red transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
                     <i class="fa-solid fa-microchip text-base"></i>
@@ -187,7 +182,6 @@
 
         <!-- BOTTOM SECTION: Obfuscated Output -->
         <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden shadow-xl flex flex-col">
-            <!-- Header -->
             <div class="bg-slate-950/80 px-4 py-3 border-b border-cyber-border flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-lock text-red-400"></i>
@@ -199,7 +193,6 @@
                     </span>
                 </div>
 
-                <!-- Stats & Action Tools -->
                 <div class="flex items-center gap-2 flex-wrap">
                     <div id="outputStats" class="hidden text-xs font-mono text-slate-400 flex items-center gap-3 mr-2">
                         <span>ขนาดใหม่: <strong id="outputSize" class="text-red-400">0 B</strong></span>
@@ -221,7 +214,6 @@
                 </div>
             </div>
 
-            <!-- Code Output Display Area -->
             <div class="relative min-h-[220px] max-h-[360px] bg-cyber-codeBg overflow-auto p-4">
                 <div id="outputPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600 pointer-events-none p-6 text-center">
                     <i class="fa-solid fa-user-secret text-4xl mb-3 text-slate-700"></i>
@@ -246,18 +238,15 @@
 
     </main>
 
-    <!-- Footer -->
     <footer class="border-t border-red-950/60 py-4 mt-6 text-center text-xs text-slate-500">
         <p>Roblox Luau Obfuscator Studio &copy; 2026 - PMHUB Native Register VM Protection Engine</p>
     </footer>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-6 right-6 translate-y-10 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 border border-red-500/50 text-white shadow-2xl">
         <i class="fa-solid fa-circle-check text-red-400 text-lg"></i>
         <span id="toastMsg" class="text-sm font-medium">คัดลอกโค้ดเรียบร้อยแล้ว!</span>
     </div>
 
-    <!-- JavaScript Bytecode Compiler & Native Luau VM Generator -->
     <script>
         const luaInput = document.getElementById('luaInput');
         const luaOutput = document.getElementById('luaOutput');
@@ -328,17 +317,32 @@
             return name;
         }
 
-        // --- LUA LEXER ---
+        // --- FIXED LUA LEXER WITH TOKEN STREAM CONTROL ---
         class LuaLexer {
             constructor(input) {
                 this.input = input;
                 this.pos = 0;
                 this.line = 1;
                 this.len = input.length;
+                this.curToken = null;
+                this.nextToken();
             }
 
-            peek() { return this.input[this.pos] || ''; }
-            next() { return this.input[this.pos++] || ''; }
+            peek() { return this.curToken; }
+
+            nextToken() {
+                this.curToken = this._readNextToken();
+                return this.curToken;
+            }
+
+            peekNextToken() {
+                const savedPos = this.pos;
+                const savedLine = this.line;
+                const tok = this._readNextToken();
+                this.pos = savedPos;
+                this.line = savedLine;
+                return tok;
+            }
 
             isAlpha(ch) { return /[a-zA-Z_]/.test(ch); }
             isDigit(ch) { return /[0-9]/.test(ch); }
@@ -346,23 +350,23 @@
 
             skipWhitespace() {
                 while (this.pos < this.len) {
-                    let ch = this.peek();
+                    let ch = this.input[this.pos];
                     if (ch === ' ' || ch === '\t' || ch === '\r') {
-                        this.next();
+                        this.pos++;
                     } else if (ch === '\n') {
                         this.line++;
-                        this.next();
+                        this.pos++;
                     } else if (ch === '-' && this.input[this.pos + 1] === '-') {
                         this.pos += 2;
-                        if (this.peek() === '[' && this.input[this.pos + 1] === '[') {
+                        if (this.input[this.pos] === '[' && this.input[this.pos + 1] === '[') {
                             this.pos += 2;
-                            while (this.pos < this.len && !(this.peek() === ']' && this.input[this.pos + 1] === ']')) {
-                                if (this.peek() === '\n') this.line++;
-                                this.next();
+                            while (this.pos < this.len && !(this.input[this.pos] === ']' && this.input[this.pos + 1] === ']')) {
+                                if (this.input[this.pos] === '\n') this.line++;
+                                this.pos++;
                             }
                             this.pos += 2;
                         } else {
-                            while (this.pos < this.len && this.peek() !== '\n') this.next();
+                            while (this.pos < this.len && this.input[this.pos] !== '\n') this.pos++;
                         }
                     } else {
                         break;
@@ -370,16 +374,16 @@
                 }
             }
 
-            getToken() {
+            _readNextToken() {
                 this.skipWhitespace();
                 if (this.pos >= this.len) return { type: 'EOF', value: '', line: this.line };
 
-                let ch = this.peek();
+                let ch = this.input[this.pos];
 
                 if (this.isAlpha(ch)) {
                     let str = '';
-                    while (this.pos < this.len && this.isAlnum(this.peek())) {
-                        str += this.next();
+                    while (this.pos < this.len && this.isAlnum(this.input[this.pos])) {
+                        str += this.input[this.pos++];
                     }
                     const keywords = [
                         'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function',
@@ -395,34 +399,35 @@
                 if (this.isDigit(ch) || (ch === '.' && this.isDigit(this.input[this.pos + 1]))) {
                     let numStr = '';
                     if (ch === '0' && (this.input[this.pos + 1] === 'x' || this.input[this.pos + 1] === 'X')) {
-                        numStr += this.next(); numStr += this.next();
-                        while (this.pos < this.len && /[0-9a-fA-F]/.test(this.peek())) {
-                            numStr += this.next();
+                        numStr += this.input[this.pos++]; numStr += this.input[this.pos++];
+                        while (this.pos < this.len && /[0-9a-fA-F]/.test(this.input[this.pos])) {
+                            numStr += this.input[this.pos++];
                         }
                         return { type: 'NUMBER', value: parseInt(numStr, 16), line: this.line };
                     }
-                    while (this.pos < this.len && (this.isDigit(this.peek()) || this.peek() === '.')) {
-                        numStr += this.next();
+                    while (this.pos < this.len && (this.isDigit(this.input[this.pos]) || this.input[this.pos] === '.')) {
+                        numStr += this.input[this.pos++];
                     }
                     return { type: 'NUMBER', value: parseFloat(numStr), line: this.line };
                 }
 
                 if (ch === '"' || ch === "'") {
-                    let quote = this.next();
+                    let quote = this.input[this.pos++];
                     let str = '';
-                    while (this.pos < this.len && this.peek() !== quote) {
-                        if (this.peek() === '\\') {
-                            this.next();
-                            let escaped = this.next();
+                    while (this.pos < this.len && this.input[this.pos] !== quote) {
+                        if (this.input[this.pos] === '\\') {
+                            this.pos++;
+                            let escaped = this.input[this.pos++];
                             if (escaped === 'n') str += '\n';
                             else if (escaped === 't') str += '\t';
                             else if (escaped === 'r') str += '\r';
                             else str += escaped;
                         } else {
-                            str += this.next();
+                            if (this.input[this.pos] === '\n') this.line++;
+                            str += this.input[this.pos++];
                         }
                     }
-                    this.next();
+                    this.pos++;
                     return { type: 'STRING', value: str, line: this.line };
                 }
 
@@ -433,12 +438,12 @@
                     return { type: 'SYMBOL', value: pair, line: this.line };
                 }
 
-                this.next();
+                this.pos++;
                 return { type: 'SYMBOL', value: ch, line: this.line };
             }
         }
 
-        // Opcodes Internal Specification
+        // Opcodes Definition
         const OP_LOADK     = 1;
         const OP_LOADBOOL  = 2;
         const OP_LOADNIL   = 3;
@@ -466,7 +471,7 @@
         const OP_LEN       = 25;
         const OP_EQ        = 26;
 
-        // --- LUA REGISTER COMPILER ---
+        // --- SYNCHRONIZED REGISTER COMPILER ---
         class LuaCompiler {
             constructor(lexer, parent = null) {
                 this.lexer = lexer;
@@ -476,17 +481,16 @@
                 this.locals = [];
                 this.protos = [];
                 this.freeReg = 0;
-                this.curToken = this.lexer.getToken();
             }
 
-            peek() { return this.curToken; }
+            peek() { return this.lexer.peek(); }
             consume() {
-                let tok = this.curToken;
-                this.curToken = this.lexer.getToken();
+                let tok = this.lexer.peek();
+                this.lexer.nextToken();
                 return tok;
             }
             match(type, value) {
-                if (this.curToken.type === type && (value === undefined || this.curToken.value === value)) {
+                if (this.peek().type === type && (value === undefined || this.peek().value === value)) {
                     return this.consume();
                 }
                 return null;
@@ -494,7 +498,8 @@
             expect(type, value) {
                 let tok = this.match(type, value);
                 if (!tok) {
-                    throw new Error(`Syntax Error [Line ${this.curToken.line}]: Expected ${value || type}, got '${this.curToken.value}'`);
+                    let cur = this.peek();
+                    throw new Error(`Syntax Error [Line ${cur.line}]: Expected ${value || type}, got '${cur.value}'`);
                 }
                 return tok;
             }
@@ -508,7 +513,6 @@
             }
 
             allocReg() { return this.freeReg++; }
-            freeRegs(from) { if (from < this.freeReg) this.freeReg = from; }
 
             addLocal(name) {
                 let reg = this.allocReg();
@@ -842,19 +846,24 @@
                     return reg;
                 }
 
+                // Table Constructor Parser with Lookahead
                 if (this.match('SYMBOL', '{')) {
                     let reg = this.allocReg();
                     this.emit(OP_NEWTABLE, reg, 0, 0);
                     if (!this.match('SYMBOL', '}')) {
                         let arrIdx = 1;
                         do {
-                            if (this.peek().type === 'NAME' && this.lexer.input[this.lexer.pos] === '=') {
+                            let t1 = this.peek();
+                            let t2 = this.lexer.peekNextToken();
+
+                            if (t1.type === 'NAME' && t2.type === 'SYMBOL' && t2.value === '=') {
                                 let keyName = this.consume().value;
                                 this.expect('SYMBOL', '=');
                                 let valReg = this.parseExpression();
                                 let kIdx = this.addConst(keyName);
                                 this.emit(OP_SETFIELD, reg, kIdx, valReg);
-                            } else if (this.match('SYMBOL', '[')) {
+                            } else if (t1.type === 'SYMBOL' && t1.value === '[') {
+                                this.consume();
                                 let keyReg = this.parseExpression();
                                 this.expect('SYMBOL', ']');
                                 this.expect('SYMBOL', '=');
@@ -884,7 +893,7 @@
                     this.expect('SYMBOL', ')');
                     base = { type: 'CALL_RESULT', reg };
                 } else {
-                    throw new Error(`Unexpected token '${tok.value}' at line ${tok.line}`);
+                    throw new Error(`Syntax Error [Line ${tok.line}]: Unexpected token '${tok.value}'`);
                 }
 
                 while (true) {
@@ -904,11 +913,16 @@
                         let kIdx = this.addConst(methodName);
                         this.emit(OP_SELF, funcReg, objReg, kIdx);
                         
-                        this.expect('SYMBOL', '(');
                         let argRegs = [];
-                        if (!this.match('SYMBOL', ')')) {
-                            argRegs = this.parseExprList();
-                            this.expect('SYMBOL', ')');
+                        if (this.match('SYMBOL', '(')) {
+                            if (!this.match('SYMBOL', ')')) {
+                                argRegs = this.parseExprList();
+                                this.expect('SYMBOL', ')');
+                            }
+                        } else if (this.peek().type === 'STRING' || this.peek().value === '{') {
+                            argRegs = [this.parseExpression()];
+                        } else {
+                            throw new Error(`Syntax Error [Line ${this.peek().line}]: Expected arguments for method '${methodName}'`);
                         }
                         
                         for (let i = 0; i < argRegs.length; i++) {
@@ -946,6 +960,7 @@
 
             getExprReg(expr) {
                 if (typeof expr === 'number') return expr;
+                if (expr.type === 'CALL_RESULT') return expr.reg;
                 let reg = this.allocReg();
                 if (expr.type === 'LOCAL') {
                     this.emit(OP_MOVE, reg, expr.reg, 0);
@@ -959,8 +974,6 @@
                     } else {
                         this.emit(OP_GETTABLE, reg, expr.objReg, expr.keyReg);
                     }
-                } else if (expr.type === 'CALL_RESULT') {
-                    return expr.reg;
                 }
                 return reg;
             }
@@ -977,7 +990,6 @@
             compiler.parseChunk();
             const mainProto = compiler.getProto();
 
-            // Dynamic Opcode IDs Mapping
             const opMap = {
                 [OP_LOADK]: Math.floor(Math.random() * 200) + 10,
                 [OP_LOADBOOL]: Math.floor(Math.random() * 200) + 210,
@@ -1016,7 +1028,6 @@
 
             const serializedProto = serializeProto(mainProto);
 
-            // Variable Name Generator
             const vEnv = genObfVar();
             const vGlobal = genObfVar();
             const vExec = genObfVar();
@@ -1088,7 +1099,6 @@
 
                 `return ${vExec}(${serializedProto},${vEnv});`;
             } else {
-                // Compact Fast Register VM Mode
                 return `local ENV=(getfenv and getfenv()) or _ENV or {};` +
                 `local G=setmetatable({},{__index=function(t,k) return ENV[k] or (getgenv and getgenv()[k]) end});` +
                 `local _u=unpack or table.unpack;` +
