@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lua & Luau Deobfuscator Tool</title>
+    <title>Lua & Luau Advanced Deobfuscator Tool</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -33,9 +33,6 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #4a5568;
         }
-        .accent-border {
-            border-color: #ef4444;
-        }
         .glow-red {
             box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
         }
@@ -47,17 +44,14 @@
     <header class="border-b border-gray-800 bg-[#12151a] px-6 py-4 flex items-center justify-between shadow-md">
         <div class="flex items-center space-x-3">
             <div class="w-9 h-9 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-red-600/30">
-                <i class="fa-solid fa-[#12151a]"></i>🔓
+                🔓
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide text-white">Lua Script Deobfuscator</h1>
-                <p class="text-xs text-gray-400">เครื่องมือถอดรหัสและจัดระเบียบโครงสร้างโค้ด Luau / Lua</p>
+                <h1 class="text-xl font-bold tracking-wide text-white">Lua Script Deobfuscator Pro</h1>
+                <p class="text-xs text-gray-400">เครื่องมือถอดรหัสสคริปต์ขั้นสูง (BolongBot, Hex, String.char, String Tables)</p>
             </div>
         </div>
         <div class="flex items-center space-x-3">
-            <button onclick="loadSample()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium px-3 py-1.5 rounded-md border border-gray-700 transition">
-                <i class="fa-solid fa-flask mr-1.5 text-red-400"></i> โหลดโค้ดทดสอบ
-            </button>
             <button onclick="clearAll()" class="text-xs bg-gray-800 hover:bg-red-950 hover:text-red-300 text-gray-300 font-medium px-3 py-1.5 rounded-md border border-gray-700 transition">
                 <i class="fa-solid fa-trash-can mr-1.5"></i> ล้างข้อมูล
             </button>
@@ -67,7 +61,7 @@
     <!-- Main Content Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col space-y-5">
 
-        <!-- 1. ช่องข้างบน: ใส่โค้ดที่เข้ารหัสแล้ว -->
+        <!-- 1. ช่องวางโค้ดที่เข้ารหัส -->
         <section class="flex flex-col flex-1 bg-[#12151a] border border-gray-800 rounded-xl p-4 shadow-lg">
             <div class="flex justify-between items-center mb-2">
                 <label for="input-code" class="text-sm font-semibold text-gray-300 flex items-center">
@@ -76,42 +70,39 @@
                 <span id="input-stats" class="text-xs text-gray-500">0 ตัวอักษร</span>
             </div>
             <textarea id="input-code" placeholder="-- วางโค้ด Lua / Luau ที่เข้ารหัสแล้วตรงนี้..." 
-                class="w-full h-56 bg-[#090b0e] border border-gray-800 rounded-lg p-3 text-sm text-green-400 focus:outline-none focus:border-red-500 custom-scrollbar resize-y transition"></textarea>
+                class="w-full h-64 bg-[#090b0e] border border-gray-800 rounded-lg p-3 text-sm text-green-400 focus:outline-none focus:border-red-500 custom-scrollbar resize-y transition"></textarea>
         </section>
 
-        <!-- 2. ตรงกลาง: ปุ่มถอดรหัสและตัวเลือกการทำงาน -->
+        <!-- 2. ปุ่มควบคุมและตัวเลือก -->
         <section class="bg-[#12151a] border border-gray-800 rounded-xl p-4 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
-            
-            <!-- Options Checklist -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs text-gray-300 w-full md:w-auto">
                 <label class="flex items-center space-x-2 cursor-pointer hover:text-white">
+                    <input type="checkbox" id="opt-bolong" checked class="rounded border-gray-700 bg-gray-900 text-red-600 focus:ring-red-500">
+                    <span class="font-bold text-red-400">BolongBot / Table XOR Engine</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer hover:text-white">
                     <input type="checkbox" id="opt-escapes" checked class="rounded border-gray-700 bg-gray-900 text-red-600 focus:ring-red-500">
-                    <span>Decode Hex/Byte</span>
+                    <span>Decode Hex/Byte Escapes</span>
                 </label>
                 <label class="flex items-center space-x-2 cursor-pointer hover:text-white">
-                    <input type="checkbox" id="opt-stringchar" checked class="rounded border-gray-700 bg-gray-900 text-red-600 focus:ring-red-500">
-                    <span>Decode string.char</span>
-                </label>
-                <label class="flex items-center space-x-2 cursor-pointer hover:text-white">
-                    <input type="checkbox" id="opt-properties" checked class="rounded border-gray-700 bg-gray-900 text-red-600 focus:ring-red-500">
-                    <span>Clean ["Prop"]</span>
+                    <input type="checkbox" id="opt-methods" checked class="rounded border-gray-700 bg-gray-900 text-red-600 focus:ring-red-500">
+                    <span>Clean Clean Methods & Props</span>
                 </label>
                 <label class="flex items-center space-x-2 cursor-pointer hover:text-white">
                     <input type="checkbox" id="opt-beautify" checked class="rounded border-gray-700 bg-gray-900 text-red-600 focus:ring-red-500">
-                    <span>Auto Indent / Formatter</span>
+                    <span>Auto Formatter</span>
                 </label>
             </div>
 
-            <!-- Action Button -->
             <div class="w-full md:w-auto flex items-center justify-end space-x-3">
                 <button onclick="runDeobfuscator()" 
                     class="w-full md:w-auto px-8 py-3 bg-red-600 hover:bg-red-500 text-white font-bold text-base rounded-lg shadow-lg glow-red transition transform active:scale-95 flex items-center justify-center">
-                    <i class="fa-solid fa-bolt mr-2"></i> ถอดรหัสโค้ด
+                    <i class="fa-solid fa-bolt mr-2"></i> ถอดรหัสโค้ดขั้นสูง
                 </button>
             </div>
         </section>
 
-        <!-- 3. ด้านล่าง: แสดงโค้ดที่ถอดรหัสแล้ว -->
+        <!-- 3. ช่องแสดงผลลัพธ์ -->
         <section class="flex flex-col flex-1 bg-[#12151a] border border-gray-800 rounded-xl p-4 shadow-lg">
             <div class="flex justify-between items-center mb-2">
                 <label for="output-code" class="text-sm font-semibold text-gray-300 flex items-center">
@@ -127,15 +118,10 @@
                 </div>
             </div>
             <textarea id="output-code" readonly placeholder="-- ผลลัพธ์จะแสดงขึ้นที่นี่หลังกดถอดรหัส..." 
-                class="w-full h-64 bg-[#090b0e] border border-gray-800 rounded-lg p-3 text-sm text-blue-300 focus:outline-none custom-scrollbar resize-y"></textarea>
+                class="w-full h-80 bg-[#090b0e] border border-gray-800 rounded-lg p-3 text-sm text-blue-300 focus:outline-none custom-scrollbar resize-y"></textarea>
         </section>
 
     </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-gray-800 bg-[#12151a] py-3 text-center text-xs text-gray-500">
-        Lua Deobfuscator Engine &bull; Developed for Lua/Luau Code Analysis
-    </footer>
 
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 bg-gray-800 border border-gray-700 text-white px-4 py-2.5 rounded-lg shadow-2xl text-xs flex items-center space-x-2 transition opacity-0 pointer-events-none">
@@ -143,133 +129,171 @@
         <span id="toast-message">แจ้งเตือน</span>
     </div>
 
-    <!-- JavaScript Engine Code -->
     <script>
-        // นับจำนวนตัวอักษรเรียลไทม์
         document.getElementById('input-code').addEventListener('input', function() {
             document.getElementById('input-stats').innerText = `${this.value.length.toLocaleString()} ตัวอักษร`;
         });
 
-        // ฟังก์ชันหลักในการถอดรหัส
+        function parseLuaBytes(str) {
+            let bytes = [];
+            let i = 0;
+            while (i < str.length) {
+                if (str[i] === '\\') {
+                    i++;
+                    if (str[i] === 'x') {
+                        bytes.push(parseInt(str.substr(i + 1, 2), 16));
+                        i += 3;
+                    } else if (/\d/.test(str[i])) {
+                        let numMatch = str.substr(i).match(/^\d{1,3}/);
+                        if (numMatch) {
+                            bytes.push(parseInt(numMatch[0], 10));
+                            i += numMatch[0].length;
+                        }
+                    } else {
+                        bytes.push(str.charCodeAt(i));
+                        i++;
+                    }
+                } else {
+                    bytes.push(str.charCodeAt(i));
+                    i++;
+                }
+            }
+            return bytes;
+        }
+
+        function deobfuscateBolongBotEngine(code) {
+            // ค้นหาตารางสตริงหลากรูปแบบ เช่น local _pIzl = { "...", "..." }
+            const tableMatch = code.match(/local\s+([a-zA-Z0-9_]+)\s*=\s*\{\s*("(?:[^"\\]|\\.)*"(?:\s*,\s*"(?:[^"\\]|\\.)*")*)\s*\}/s);
+            const varMapMatch = code.match(/local\s+([a-zA-Z0-9_]+)\s*=\s*\{\s*\}/);
+
+            if (!tableMatch) return code;
+
+            const arrayVarName = tableMatch[1];
+            const rawElements = tableMatch[2];
+            
+            // ค้นหาชื่อตารางผลลัพธ์ที่ใช้งานหลัก (เช่น vQ_1NqMvoz_)
+            const resultTableMatch = code.match(/([a-zA-Z0-9_]+)\s*\[\s*lUbqI_Q1\s*\]\s*=\s*table\.concat/);
+            const targetTableName = resultTableMatch ? resultTableMatch[1] : null;
+
+            // พาร์สค่าคีย์ XOR ชนิดไดนามิก
+            let initKey = 97, stepKey = 8;
+            const initMatch = code.match(/local\s+[a-zA-Z0-9_]+\s*=\s*(\d+)/);
+            if (initMatch) initKey = parseInt(initMatch[1], 10);
+
+            // แยกเอลิเมนต์ของสตริง
+            const stringRegex = /"((?:[^"\\]|\\.)*)"/g;
+            let match;
+            let strings = [];
+            while ((match = stringRegex.exec(rawElements)) !== null) {
+                strings.push(match[1]);
+            }
+
+            // ถอดรหัสแต่ละสตริงผ่าน XOR Loop
+            let decodedStrings = {};
+            for (let idx = 0; idx < strings.length; idx++) {
+                let luaIdx = idx + 1;
+                let xorKey = (initKey + luaIdx * stepKey) % 256;
+                let rawBytes = parseLuaBytes(strings[idx]);
+                let decrypted = rawBytes.map(b => String.fromCharCode(b ^ xorKey)).join('');
+                decodedStrings[luaIdx] = decrypted;
+            }
+
+            // แทนที่การอ้างอิงตารางผลลัพธ์ เช่น vQ_1NqMvoz_[284] -> "pcall"
+            if (targetTableName) {
+                const replaceRegex = new RegExp(targetTableName + '\\s*\\[\\s*(\\d+)\\s*\\]', 'g');
+                code = code.replace(replaceRegex, (m, indexStr) => {
+                    let index = parseInt(indexStr, 10);
+                    if (decodedStrings[index] !== undefined) {
+                        return JSON.stringify(decodedStrings[index]);
+                    }
+                    return m;
+                });
+            }
+
+            return code;
+        }
+
         function runDeobfuscator() {
             const input = document.getElementById('input-code').value;
             if (!input.trim()) {
-                showToast('กรุณากรอกหรือวางโค้ดที่ต้องการถอดรหัสก่อน', 'error');
+                showToast('กรุณากรอกหรือวางโค้ดก่อนทำการถอดรหัส', 'error');
                 return;
             }
 
             const options = {
+                bolong: document.getElementById('opt-bolong').checked,
                 escapes: document.getElementById('opt-escapes').checked,
-                stringChar: document.getElementById('opt-stringchar').checked,
-                properties: document.getElementById('opt-properties').checked,
+                methods: document.getElementById('opt-methods').checked,
                 beautify: document.getElementById('opt-beautify').checked
             };
 
             let code = input;
 
             try {
-                // Step 1: Decode Hex (\x48) & Decimal Byte Escapes (\104\101)
+                // Step 1: ถอดรหัสสคริปต์รูปแบบ BolongBot / String Table
+                if (options.bolong) {
+                    code = deobfuscateBolongBotEngine(code);
+                }
+
+                // Step 2: Decode Byte & Hex Escapes (\104\101 หรือ \x48)
                 if (options.escapes) {
                     code = code.replace(/\\x([0-9a-fA-F]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
-                    code = code.replace(/\\([0-9]{1,3})/g, (match, dec) => {
+                    code = code.replace(/\\([0-9]{1,3})/g, (m, dec) => {
                         const num = parseInt(dec, 10);
                         if (num >= 32 && num <= 126) {
                             const char = String.fromCharCode(num);
                             return (char === '"' || char === '\\') ? `\\${char}` : char;
                         }
-                        return match;
+                        return m;
                     });
-                }
-
-                // Step 2: Decode string.char(...)
-                if (options.stringChar) {
-                    code = code.replace(/string\.char\s*\(\s*([\d\s,]+)\s*\)/gi, (match, byteGroup) => {
+                    code = code.replace(/string\.char\s*\(\s*([\d\s,]+)\s*\)/gi, (m, bytes) => {
                         try {
-                            const bytes = byteGroup.split(',').map(b => parseInt(b.trim(), 10)).filter(n => !isNaN(n));
-                            const str = String.fromCharCode(...bytes);
-                            return JSON.stringify(str);
-                        } catch (e) {
-                            return match;
-                        }
+                            const arr = bytes.split(',').map(b => parseInt(b.trim(), 10));
+                            return JSON.stringify(String.fromCharCode(...arr));
+                        } catch(e) { return m; }
                     });
                 }
 
-                // Step 3: Clean Property Bracket Notation (e.g., window["Game"] -> window.Game)
-                if (options.properties) {
+                // Step 3: ปรับแต่งรูปแบบการเรียกใช้ เมธอด และ พร็อพเพอร์ตี้
+                if (options.methods) {
+                    // แปลง obj["Method"](obj, arg) เป็น obj:Method(arg)
+                    code = code.replace(/([a-zA-Z0-9_]+)\["([a-zA-Z0-9_]+)"\]\s*\(\s*\1\s*,?/g, '$1:$2(');
+                    // แปลง obj["Property"] เป็น obj.Property
                     code = code.replace(/\["([a-zA-Z_][a-zA-Z0-9_]*)"\]/g, '.$1');
                     code = code.replace(/\['([a-zA-Z_][a-zA-Z0-9_]*)'\]/g, '.$1');
                 }
 
-                // Step 4: Simple Constant Folding for math operations
-                code = code.replace(/\b(\d+)\s*([\+\-\*])\s*(\d+)\b/g, (match, n1, op, n2) => {
-                    const num1 = parseInt(n1, 10), num2 = parseInt(n2, 10);
-                    if (op === '+') return num1 + num2;
-                    if (op === '-') return num1 - num2;
-                    if (op === '*') return num1 * num2;
-                    return match;
-                });
-
-                // Step 5: Format & Indent Lua Code
+                // Step 4: Formatting
                 if (options.beautify) {
                     code = beautifyLua(code);
                 }
 
                 document.getElementById('output-code').value = code;
-                showToast('ถอดรหัสและจัดรูปแบบโค้ดสำเร็จ!', 'success');
+                showToast('ถอดรหัสและเรียบเรียงโครงสร้างสคริปต์สำเร็จ!', 'success');
 
             } catch (err) {
                 console.error(err);
-                showToast('เกิดข้อผิดพลาดระหว่างกระบวนการถอดรหัส', 'error');
+                showToast('เกิดข้อผิดพลาดในการถอดรหัส', 'error');
             }
         }
 
-        // ระบบจัดระเบียบย่อหน้าโค้ด Lua (Lua Beautifier Engine)
         function beautifyLua(code) {
             const lines = code.split('\n');
-            let indentLevel = 0;
-            const indentStr = "    ";
+            let indent = 0;
             const formatted = [];
-
-            const increaseIndentPattern = /^\s*(function|if|for|while|repeat|do|local\s+function)\b/;
-            const decreaseIndentPattern = /^\s*(end|until|else|elseif)\b/;
-            const middleIndentPattern = /^\s*(else|elseif)\b/;
+            const inc = /^\s*(function|if|for|while|repeat|do|local\s+function)\b/;
+            const dec = /^\s*(end|until|else|elseif)\b/;
 
             for (let line of lines) {
                 let trimmed = line.trim();
                 if (!trimmed) continue;
-
-                if (decreaseIndentPattern.test(trimmed)) {
-                    indentLevel = Math.max(0, indentLevel - 1);
-                }
-
-                let currentIndent = indentStr.repeat(indentLevel);
-                formatted.push(currentIndent + trimmed);
-
-                if (increaseIndentPattern.test(trimmed) && !trimmed.endsWith('end')) {
-                    indentLevel++;
-                } else if (middleIndentPattern.test(trimmed)) {
-                    indentLevel++;
-                }
+                if (dec.test(trimmed)) indent = Math.max(0, indent - 1);
+                formatted.push("    ".repeat(indent) + trimmed);
+                if (inc.test(trimmed) && !trimmed.endsWith('end')) indent++;
             }
-
             return formatted.join('\n');
         }
 
-        // โหลดโค้ดตัวอย่างทดสอบ
-        function loadSample() {
-            const sampleCode = `-- ตัวอย่างสคริปต์ที่ถูกเข้ารหัสแบบ Hex, Byte และ Property Notation
-local \\x50\\x6c\\x111\\x79\\x65\\x72 = game["Players"]["LocalPlayer"]
-local \\x4d\\x65\\x73\\x73\\x61\\x67\\x65 = string.char(72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33)
-
-if 10 + 5 == 15 then
-print(\\x50\\x6c\\x111\\x79\\x65\\x72["Name"] .. "\\x20\\x73\\x61\\x79\\x73\\x3a\\x20" .. \\x4d\\x65\\x73\\x73\\x61\\x67\\x65)
-end`;
-            document.getElementById('input-code').value = sampleCode;
-            document.getElementById('input-stats').innerText = `${sampleCode.length.toLocaleString()} ตัวอักษร`;
-            showToast('โหลดโค้ดตัวอย่างเรียบร้อย', 'success');
-        }
-
-        // ล้างข้อมูลทั้งหมด
         function clearAll() {
             document.getElementById('input-code').value = '';
             document.getElementById('output-code').value = '';
@@ -277,55 +301,32 @@ end`;
             showToast('ล้างข้อมูลเรียบร้อยแล้ว', 'success');
         }
 
-        // คัดลอกโค้ดผลลัพธ์
         function copyOutput() {
             const output = document.getElementById('output-code').value;
-            if (!output.trim()) {
-                showToast('ไม่มีโค้ดให้คัดลอก', 'error');
-                return;
-            }
-            navigator.clipboard.writeText(output).then(() => {
-                showToast('คัดลอกโค้ดไปยังคลิปบอร์ดแล้ว', 'success');
-            });
+            if (!output.trim()) return showToast('ไม่มีโค้ดให้คัดลอก', 'error');
+            navigator.clipboard.writeText(output).then(() => showToast('คัดลอกโค้ดสำเร็จ', 'success'));
         }
 
-        // ดาวน์โหลดไฟล์ .lua
         function downloadOutput() {
             const output = document.getElementById('output-code').value;
-            if (!output.trim()) {
-                showToast('ไม่มีโค้ดให้ดาวน์โหลด', 'error');
-                return;
-            }
+            if (!output.trim()) return showToast('ไม่มีโค้ดให้ดาวน์โหลด', 'error');
             const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = URL.createObjectURL(blob);
             a.download = 'deobfuscated_script.lua';
             a.click();
-            URL.revokeObjectURL(url);
             showToast('เริ่มการดาวน์โหลดไฟล์ .lua', 'success');
         }
 
-        // ระบบแสดงการแจ้งเตือน Toast
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toast-icon');
             const msg = document.getElementById('toast-message');
-
             msg.innerText = message;
-            if (type === 'success') {
-                icon.className = 'fa-solid fa-circle-check text-green-400';
-            } else {
-                icon.className = 'fa-solid fa-circle-exclamation text-red-400';
-            }
-
+            icon.className = type === 'success' ? 'fa-solid fa-circle-check text-green-400' : 'fa-solid fa-circle-exclamation text-red-400';
             toast.classList.remove('opacity-0', 'pointer-events-none');
             toast.classList.add('opacity-100');
-
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0', 'pointer-events-none');
-            }, 2500);
+            setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 2500);
         }
     </script>
 </body>
