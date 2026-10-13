@@ -3,541 +3,391 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lua & Luau Advanced Deobfuscator Pro</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Lua Roblox Deobfuscator & Code Analyzer</title>
     <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --accent-color: #58a6ff;
+            --accent-hover: #1f6feb;
+            --text-color: #c9d1d9;
+            --text-dim: #8b949e;
+            --success-color: #238636;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: 'Kanit', sans-serif;
-            background-color: #0b0d10;
-            color: #e2e8f0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
-        code, textarea, pre, #log-output {
-            font-family: 'Fira Code', monospace;
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
-        .custom-scrollbar::-webkit-scrollbar {
+
+        header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 220px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #7ee787;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 12px;
+            font-size: 0.88rem;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-color);
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 5px 0;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: var(--border-color);
+            color: var(--text-color);
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: #484f58;
+        }
+
+        .analysis-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+        }
+
+        .analysis-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        .log-list {
+            list-style-type: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            color: var(--text-dim);
+        }
+
+        .log-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
             width: 8px;
             height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #12151a;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #272d37;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #3f4756;
-        }
-        .glow-red {
-            box-shadow: 0 0 18px rgba(220, 38, 38, 0.3);
+
+        .controls-inline {
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col custom-scrollbar">
+<body>
 
-    <!-- Header Navigation -->
-    <header class="border-b border-gray-800 bg-[#111419] px-6 py-4 flex items-center justify-between shadow-md">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-red-600/30">
-                🔓
-            </div>
-            <div>
-                <h1 class="text-xl font-bold tracking-wide text-white flex items-center gap-2">
-                    Lua Deobfuscator Pro <span class="text-xs bg-red-950 text-red-400 border border-red-800 px-2 py-0.5 rounded-full">v2.5 Engine</span>
-                </h1>
-                <p class="text-xs text-gray-400">เครื่องมือถอดรหัส Lua/Luau ขั้นสูง (Multi-Pass Engine, String Table, Escapes, Clean Syntax)</p>
-            </div>
-        </div>
-        <div class="flex items-center space-x-3">
-            <button onclick="clearAll()" class="text-xs bg-gray-800 hover:bg-red-950 hover:text-red-300 text-gray-300 font-medium px-3 py-2 rounded-lg border border-gray-700 transition">
-                <i class="fa-solid fa-trash-can mr-1.5"></i> ล้างข้อมูล
-            </button>
-        </div>
+<div class="container">
+    <header>
+        <h1>Lua Roblox Deobfuscator & Analyzer</h1>
+        <p>เครื่องมือวิเคราะห์ ถอดรหัส String และจัดโครงสร้างโค้ด Lua/Luau หลายชั้น</p>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col space-y-5">
-
-        <!-- 1. Input Section -->
-        <section class="flex flex-col flex-1 bg-[#111419] border border-gray-800/80 rounded-xl p-4 shadow-xl">
-            <div class="flex justify-between items-center mb-2">
-                <label for="input-code" class="text-sm font-semibold text-gray-300 flex items-center">
-                    <i class="fa-solid fa-file-code text-red-500 mr-2"></i> โค้ดที่เข้ารหัสไว้ (Obfuscated Code)
-                </label>
-                <span id="input-stats" class="text-xs text-gray-500">0 ตัวอักษร</span>
-            </div>
-            <textarea id="input-code" placeholder="-- วางโค้ด Lua / Luau ที่เข้ารหัสแล้วตรงนี้..." 
-                class="w-full h-64 bg-[#08090c] border border-gray-800 rounded-lg p-3.5 text-sm text-green-400 focus:outline-none focus:border-red-500 custom-scrollbar resize-y transition"></textarea>
-        </section>
-
-        <!-- 2. Controls & Options -->
-        <section class="bg-[#111419] border border-gray-800/80 rounded-xl p-4 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs text-gray-300 w-full lg:w-auto">
-                <label class="flex items-center space-x-2 cursor-pointer hover:text-white bg-[#181c23] p-2 rounded-lg border border-gray-800">
-                    <input type="checkbox" id="opt-recursive" checked class="rounded border-gray-700 bg-gray-900 text-red-600 focus:ring-red-500">
-                    <span class="font-semibold text-red-400">Multi-Pass Unpack</span>
-                </label>
-                <label class="flex items-center space-x-2 cursor-pointer hover:text-white bg-[#181c23] p-2 rounded-lg border border-gray-800">
-                    <input type="checkbox" id="opt-tables" checked class="rounded border-gray-700 bg-gray-900 text-red-600 focus:ring-red-500">
-                    <span>String Table Resolver</span>
-                </label>
-                <label class="flex items-center space-x-2 cursor-pointer hover:text-white bg-[#181c23] p-2 rounded-lg border border-gray-800">
-                    <input type="checkbox" id="opt-escapes" checked class="rounded border-gray-700 bg-gray-900 text-red-600 focus:ring-red-500">
-                    <span>Decode Escapes / Hex</span>
-                </label>
-                <label class="flex items-center space-x-2 cursor-pointer hover:text-white bg-[#181c23] p-2 rounded-lg border border-gray-800">
-                    <input type="checkbox" id="opt-clean" checked class="rounded border-gray-700 bg-gray-900 text-red-600 focus:ring-red-500">
-                    <span>Clean Syntax & Method</span>
-                </label>
-            </div>
-
-            <div class="w-full lg:w-auto flex items-center justify-end space-x-3">
-                <button onclick="runDeobfuscator()" 
-                    class="w-full lg:w-auto px-8 py-3 bg-red-600 hover:bg-red-500 text-white font-bold text-base rounded-xl shadow-lg glow-red transition transform active:scale-95 flex items-center justify-center">
-                    <i class="fa-solid fa-bolt mr-2"></i> เริ่มการถอดรหัสขั้นสูง
-                </button>
-            </div>
-        </section>
-
-        <!-- 3. Deobfuscation Log Console -->
-        <section class="bg-[#111419] border border-gray-800/80 rounded-xl p-3 shadow-xl">
-            <div class="flex justify-between items-center mb-1">
-                <span class="text-xs font-semibold text-gray-400 flex items-center">
-                    <i class="fa-solid fa-terminal text-yellow-500 mr-2"></i> Deobfuscator Execution Logs
-                </span>
-                <span id="log-count" class="text-[10px] text-gray-500">0 รายการ</span>
-            </div>
-            <div id="log-output" class="w-full h-24 bg-[#08090c] border border-gray-800/60 rounded-lg p-2.5 text-xs text-gray-400 overflow-y-auto custom-scrollbar leading-relaxed">
-                <span class="text-gray-600">-- รอดำเนินการถอดรหัส...</span>
-            </div>
-        </section>
-
-        <!-- 4. Output Section -->
-        <section class="flex flex-col flex-1 bg-[#111419] border border-gray-800/80 rounded-xl p-4 shadow-xl">
-            <div class="flex justify-between items-center mb-2">
-                <label for="output-code" class="text-sm font-semibold text-gray-300 flex items-center">
-                    <i class="fa-solid fa-code text-green-500 mr-2"></i> ผลลัพธ์โค้ดที่ถอดรหัสแล้ว (Deobfuscated Output)
-                </label>
-                <div class="flex items-center space-x-2">
-                    <button onclick="copyOutput()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-lg border border-gray-700 transition">
-                        <i class="fa-regular fa-copy mr-1"></i> คัดลอก
-                    </button>
-                    <button onclick="downloadOutput()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-lg border border-gray-700 transition">
-                        <i class="fa-solid fa-download mr-1"></i> ดาวน์โหลด .lua
-                    </button>
-                </div>
-            </div>
-            <textarea id="output-code" readonly placeholder="-- ผลลัพธ์จะแสดงขึ้นที่นี่..." 
-                class="w-full h-80 bg-[#08090c] border border-gray-800 rounded-lg p-3.5 text-sm text-blue-300 focus:outline-none custom-scrollbar resize-y"></textarea>
-        </section>
-
-    </main>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-gray-800 border border-gray-700 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs flex items-center space-x-2 transition opacity-0 pointer-events-none z-50">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-green-400"></i>
-        <span id="toast-message">แจ้งเตือน</span>
+    <!-- ส่วนที่ 1: แถบสำหรับวางโค้ดที่เข้ารหัส -->
+    <div class="editor-section">
+        <div class="section-label">
+            <span>ส่วนที่ 1: โค้ดที่เข้ารหัส (Obfuscated Lua Code)</span>
+            <button class="btn btn-secondary" onclick="clearInput()">ล้างข้อมูล</button>
+        </div>
+        <textarea id="inputCode" placeholder="วางโค้ด Lua ที่เข้ารหัส (Obfuscated) หรือถูกบีบอัดที่นี่..."></textarea>
     </div>
 
-    <script>
-        document.getElementById('input-code').addEventListener('input', function() {
-            document.getElementById('input-stats').innerText = `${this.value.length.toLocaleString()} ตัวอักษร`;
+    <!-- ปุ่มตรงกลางสำหรับถอดรหัส -->
+    <div class="action-bar">
+        <button class="btn" onclick="processDeobfuscation()">
+            ⚡ วิเคราะห์และถอดรหัสโค้ด
+        </button>
+    </div>
+
+    <!-- รายงานผลการวิเคราะห์ AI / Engine -->
+    <div class="analysis-card" id="analysisCard" style="display: none;">
+        <h3>🔍 รายงานการตรวจจับและวิเคราะห์โครงสร้าง (Analysis Report)</h3>
+        <ul class="log-list" id="analysisLogs"></ul>
+    </div>
+
+    <!-- ส่วนที่ 2: ช่องแสดงโค้ดที่ถอดรหัสแล้ว -->
+    <div class="editor-section">
+        <div class="section-label">
+            <span>ส่วนที่ 2: โค้ดต้นฉบับที่ถอดรหัสแล้ว (Deobfuscated Result)</span>
+            <div class="controls-inline">
+                <button class="btn btn-secondary" onclick="copyOutput()">📋 คัดลอกโค้ด</button>
+                <button class="btn btn-secondary" onclick="downloadOutput()">💾 ดาวน์โหลดไฟล์ (.lua)</button>
+            </div>
+        </div>
+        <textarea id="outputCode" readonly placeholder="ผลลัพธ์โค้ดที่ถอดรหัสแล้วจะแสดงที่นี่..."></textarea>
+    </div>
+</div>
+
+<script>
+    // --- Engine หลักในการถอดรหัสและทำความสะอาดโค้ด Lua ---
+    function processDeobfuscation() {
+        const input = document.getElementById("inputCode").value;
+        const outputElement = document.getElementById("outputCode");
+        const logsElement = document.getElementById("analysisLogs");
+        const cardElement = document.getElementById("analysisCard");
+
+        if (!input.trim()) {
+            alert("กรุณาวางโค้ดที่ต้องการถอดรหัสในช่องด้านบน");
+            return;
+        }
+
+        logsElement.innerHTML = "";
+        cardElement.style.display = "block";
+
+        let logs = [];
+        let code = input;
+
+        // 1. ตรวจสอบร่องรอยของการเข้ารหัสหลายชั้น (Multi-layer / VM Pattern Detection)
+        logs.push(detectObfuscatorSignatures(code));
+
+        // 2. ถอดรหัส Hex Escape Characters (\xXX)
+        const hexResult = decodeHexEscapes(code);
+        if (hexResult.count > 0) {
+            code = hexResult.code;
+            logs.push(`[Layer 1] แปลงโค้ด Hex Escape Sequences (\xXX) จำนวน ${hexResult.count} จุด`);
+        }
+
+        // 3. ถอดรหัส Decimal/Numeric Escapes (\115\116\114...)
+        const decResult = decodeDecimalEscapes(code);
+        if (decResult.count > 0) {
+            code = decResult.code;
+            logs.push(`[Layer 2] แปลงรหัสตัวเลข ASCII Escapes (\\ddd) จำนวน ${decResult.count} จุด`);
+        }
+
+        // 4. ถอดรหัส string.char(...) ที่ถููกบีบอัดเป็น Array
+        const charResult = decodeStringChar(code);
+        if (charResult.count > 0) {
+            code = charResult.code;
+            logs.push(`[Layer 3] รวมตาราง string.char(...) เป็นข้อความปกติ จำนวน ${charResult.count} ชุด`);
+        }
+
+        // 5. คำนวณและลดทอนนิพจน์คณิตศาสตร์แบบย่อ (Constant Folding)
+        const mathResult = simplifyMathExpressions(code);
+        if (mathResult.count > 0) {
+            code = mathResult.code;
+            logs.push(`[Layer 4] คำนวณสมการตัวเลขที่ถูกซ่อน (Constant Folding) จำนวน ${mathResult.count} จุด`);
+        }
+
+        // 6. ถอดซองล้อมแบบ loadstring() หรือ unpack wrappers
+        const wrapperResult = unwrapLoadstring(code);
+        if (wrapperResult.unwrapped) {
+            code = wrapperResult.code;
+            logs.push(`[Layer 5] ตรวจพบและแกะชั้นล้อม loadstring / execution wrapper ออกแล้ว`);
+        }
+
+        // 7. จัดรูปแบบโค้ดให้ อ่านง่าย (Beautifier / Indenter)
+        code = beautifyLua(code);
+        logs.push(`[Final Stage] จัดระเบียบการย่อหน้าและโครงสร้างโค้ดเรียบร้อยแล้ว`);
+
+        // แสดงผลลัพธ์
+        outputElement.value = code;
+
+        // แสดงบันทึกการวิเคราะห์
+        logs.forEach(log => {
+            const li = document.createElement("li");
+            li.className = "log-item";
+            li.innerHTML = `<span class="status-dot"></span> ${log}`;
+            logsElement.appendChild(li);
         });
+    }
 
-        // =========================================================================
-        // ADVANCED LUA DEOBFUSCATOR ENGINE
-        // =========================================================================
-        class LuaDeobfuscatorEngine {
-            constructor(options) {
-                this.options = options;
-                this.logs = [];
+    // --- ฟังก์ชันย่อยสำหรับประมวลผล ---
+
+    function detectObfuscatorSignatures(code) {
+        let signatures = [];
+        if (code.includes("Luraph") || code.includes("LPH_")) signatures.push("Luraph Obfuscator");
+        if (code.includes("IronBrew") || code.includes("IB_")) signatures.push("IronBrew VM");
+        if (code.includes("PSU") || code.includes("PSUObfuscator")) signatures.push("PSU Obfuscator");
+        if (code.includes("MoonSec")) signatures.push("MoonSec VM");
+        if (code.includes("getfenv") && code.includes("string.byte")) signatures.push("Custom Virtual Machine (VM Wrap)");
+
+        if (signatures.length > 0) {
+            return `[AI Inspector] ตรวจพบเอกลักษณ์การเข้ารหัสประเภท: <strong>${signatures.join(", ")}</strong>`;
+        }
+        return `[AI Inspector] ไม่พบเอกลักษณ์ VM สำเร็จรูปที่รู้จัก - ทำงานในโหมด Generic Static Analysis`;
+    }
+
+    function decodeHexEscapes(code) {
+        let count = 0;
+        const decoded = code.replace(/\\x([0-9a-fA-F]{2})/g, (match, hex) => {
+            count++;
+            return String.fromCharCode(parseInt(hex, 16));
+        });
+        return { code: decoded, count };
+    }
+
+    function decodeDecimalEscapes(code) {
+        let count = 0;
+        const decoded = code.replace(/\\([0-9]{1,3})/g, (match, dec) => { const charCode = parseInt(dec, 10); if (charCode >= 32 && charCode <= 126) { count++; return String.fromCharCode(charCode); } return match; }); return { code: decoded, count }; }      function decodeStringChar(code) { let count = 0; const decoded = code.replace(/string\.char\(([\d\s,]+)\)/g, (match, args) => { try { const nums = args.split(',').map(n => parseInt(n.trim(), 10)); if (nums.every(n => !isNaN(n))) { count++; return '"' + String.fromCharCode(...nums) + '"'; } } catch (e) {} return match; }); return { code: decoded, count }; }      function simplifyMathExpressions(code) { let count = 0; // ปรับการคำนวณบวก/ลบ/คูณ ของตัวเลขโดดเบื้องต้น const decoded = code.replace(/\b(\d+)\s*([\+\-\*])\s*(\d+)\b/g, (match, n1, op, n2) => { const a = parseInt(n1, 10); const b = parseInt(n2, 10); count++; if (op === '+') return (a + b).toString(); if (op === '-') return (a - b).toString(); if (op === '*') return (a * b).toString(); return match; }); return { code: decoded, count }; }      function unwrapLoadstring(code) { let unwrapped = false; let cleaned = code; const loadstringRegex = /loadstring\s*\(\s*["'](.*)["']\s*\)\s*\(\)/s;
+        const match = cleaned.match(loadstringRegex);
+        if (match && match[1]) {
+            cleaned = match[1];
+            unwrapped = true;
+        }
+        return { code: cleaned, unwrapped };
+    }
+
+    function beautifyLua(code) {
+        let indent = 0;
+        const lines = code.split('\n');
+        const formatted = [];
+
+        for (let line of lines) {
+            let trimmed = line.trim();
+            if (!trimmed) continue;
+
+            if (trimmed.startsWith('end') || trimmed.startsWith('until') || trimmed.startsWith('else') || trimmed.startsWith('elseif')) {
+                indent = Math.max(0, indent - 1);
             }
 
-            log(msg, type = 'info') {
-                const timestamp = new Date().toLocaleTimeString();
-                this.logs.push(`[${timestamp}] [${type.toUpperCase()}] ${msg}`);
-            }
+            formatted.push('    '.repeat(indent) + trimmed);
 
-            // Main Pipeline
-            process(inputCode) {
-                let code = inputCode;
-                let previousCode = "";
-                let passCount = 0;
-                const maxPasses = this.options.recursive ? 5 : 1;
-
-                this.log("เริ่มต้นกระบวนการถอดรหัส...");
-
-                while (passCount < maxPasses && code !== previousCode) {
-                    previousCode = code;
-                    passCount++;
-                    this.log(`--- กำลังประมวลผล Pass #${passCount} ---`);
-
-                    // 1. Unpack loadstring & string.char payloads
-                    if (this.options.recursive) {
-                        code = this.unpackLoadstringPayloads(code);
-                    }
-
-                    // 2. Decode String.char & Byte/Hex Escapes
-                    if (this.options.escapes) {
-                        code = this.decodeStringChar(code);
-                        code = this.decodeEscapes(code);
-                    }
-
-                    // 3. String Table & Array Resolver
-                    if (this.options.tables) {
-                        code = this.resolveStringTables(code);
-                        code = this.resolveStringConcatenation(code);
-                    }
-
-                    // 4. BolongBot & Generic XOR Engine
-                    code = this.deobfuscateXorEngine(code);
-
-                    // 5. Clean Properties & Environment Syntax
-                    if (this.options.clean) {
-                        code = this.cleanSyntaxAndMethods(code);
-                    }
-                }
-
-                // Final Formatting
-                this.log("จัดรูปแบบโค้ด (Auto Formatting)...");
-                code = this.beautifyLua(code);
-
-                this.log("ถอดรหัสเสร็จสมบูรณ์!", "success");
-                return { code, logs: this.logs };
-            }
-
-            // Unpack loadstring(string.char(...))() or loadstring("...")
-            unpackLoadstringPayloads(code) {
-                let matches = 0;
-                // Pattern 1: loadstring(string.char(...))()
-                code = code.replace(/loadstring\s*\(\s*string\.char\s*\(([^)]+)\)\s*\)\s*\(\s*\)/gi, (m, bytesStr) => {
-                    try {
-                        const bytes = bytesStr.split(',').map(b => parseInt(b.trim(), 10));
-                        const decoded = String.fromCharCode(...bytes);
-                        matches++;
-                        return decoded;
-                    } catch(e) { return m; }
-                });
-
-                // Pattern 2: loadstring("decoded_string")()
-                code = code.replace(/loadstring\s*\(\s*"((?:[^"\\]\vert{}\\.)*)"\s*\)\s*\(\s*\)/gi, (m, strContent) => {
-                    matches++;
-                    return this.unescapeLuaString(strContent);
-                });
-
-                if (matches > 0) this.log(`Unpacked ${matches} payload(s) จาก loadstring(...)`);
-                return code;
-            }
-
-            // Resolve string.char(...) calls
-            decodeStringChar(code) {
-                let count = 0;
-                const result = code.replace(/string\.char\s*\(\s*([\d\s,]+)\s*\)/gi, (match, byteGroup) => {
-                    try {
-                        const bytes = byteGroup.split(',').map(b => parseInt(b.trim(), 10));
-                        if (bytes.some(b => isNaN(b))) return match;
-                        count++;
-                        const str = String.fromCharCode(...bytes);
-                        return JSON.stringify(str);
-                    } catch (e) {
-                        return match;
-                    }
-                });
-                if (count > 0) this.log(`ถอดรหัส string.char() ทั้งหมด ${count} จุด`);
-                return result;
-            }
-
-            // Decode \xXX, \ddd, and Unicode Escapes
-            decodeEscapes(code) {
-                let count = 0;
-                // Hex Escapes (\x41)
-                code = code.replace(/\\x([0-9a-fA-F]{2})/g, (_, hex) => {
-                    count++;
-                    return String.fromCharCode(parseInt(hex, 16));
-                });
-
-                // Decimal Escapes (\104)
-                code = code.replace(/\\([0-9]{1,3})/g, (match, dec) => {
-                    const num = parseInt(dec, 10);
-                    if (num >= 32 && num <= 126) {
-                        count++;
-                        const char = String.fromCharCode(num);
-                        return (char === '"' || char === '\\') ? `\\${char}` : char;
-                    }
-                    return match;
-                });
-
-                if (count > 0) this.log(`แปลง Escaped Characters (\xXX / \ddd) จำนวน ${count} ตัว`);
-                return code;
-            }
-
-            // Unpack String Tables: local T = { "str1", "str2" } -> replace T[1] with "str1"
-            resolveStringTables(code) {
-                let replaced = 0;
-                // Find table definitions: local Var = { "a", "b", "c" }
-                const tableRegex = /local\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*\{\s*("(?:[^"\\]|\\.)*"(?:\s*,\s*"(?:[^"\\]|\\.)*")*)\s*\}/g;
-                let match;
-
-                while ((match = tableRegex.exec(code)) !== null) {
-                    const tableName = match[1];
-                    const rawItems = match[2];
-
-                    // Extract items
-                    const itemRegex = /"((?:[^"\\]|\\.)*)"/g;
-                    let itemMatch;
-                    let index = 1;
-                    const map = {};
-
-                    while ((itemMatch = itemRegex.exec(rawItems)) !== null) {
-                        map[index] = itemMatch[1];
-                        index++;
-                    }
-
-                    // Replace T[1] or T[0x1]
-                    const usageRegex = new RegExp(`\\b${tableName}\\s*\\[\\s*(0x[0-9a-fA-F]+|\\d+)\\s*\\]`, 'g');
-                    code = code.replace(usageRegex, (m, idxStr) => {
-                        const idx = idxStr.startsWith('0x') ? parseInt(idxStr, 16) : parseInt(idxStr, 10);
-                        if (map[idx] !== undefined) {
-                            replaced++;
-                            return JSON.stringify(map[idx]);
-                        }
-                        return m;
-                    });
-                }
-
-                if (replaced > 0) this.log(`แกะค่าจาก String Table อ้างอิงสำเร็จ ${replaced} จุด`);
-                return code;
-            }
-
-            // Concatenate Strings: "Hello " .. "World" -> "Hello World"
-            resolveStringConcatenation(code) {
-                let count = 0;
-                const concatRegex = /"((?:[^"\\]|\\.)*)"\s*\.\.\s*"((?:[^"\\]|\\.)*)"/g;
-                while (concatRegex.test(code)) {
-                    code = code.replace(concatRegex, (_, s1, s2) => {
-                        count++;
-                        return JSON.stringify(s1 + s2);
-                    });
-                }
-                if (count > 0) this.log(`เชื่อมต่อสตริง (Concatenation) จำนวน ${count} จุด`);
-                return code;
-            }
-
-            // Deobfuscate BolongBot & Dynamic XOR Tables
-            deobfuscateXorEngine(code) {
-                const tableMatch = code.match(/local\s+([a-zA-Z0-9_]+)\s*=\s*\{\s*("(?:[^"\\]|\\.)*"(?:\s*,\s*"(?:[^"\\]|\\.)*")*)\s*\}/s);
-                if (!tableMatch) return code;
-
-                const arrayVarName = tableMatch[1];
-                const rawElements = tableMatch[2];
-
-                const resultTableMatch = code.match(/([a-zA-Z0-9_]+)\s*\[\s*[a-zA-Z0-9_]+\s*\]\s*=\s*table\.concat/);
-                const targetTableName = resultTableMatch ? resultTableMatch[1] : null;
-
-                let initKey = 97, stepKey = 8;
-                const initMatch = code.match(/local\s+[a-zA-Z0-9_]+\s*=\s*(\d+)/);
-                if (initMatch) initKey = parseInt(initMatch[1], 10);
-
-                const stringRegex = /"((?:[^"\\]|\\.)*)"/g;
-                let match;
-                let strings = [];
-                while ((match = stringRegex.exec(rawElements)) !== null) {
-                    strings.push(match[1]);
-                }
-
-                let decodedStrings = {};
-                for (let idx = 0; idx < strings.length; idx++) {
-                    let luaIdx = idx + 1;
-                    let xorKey = (initKey + luaIdx * stepKey) % 256;
-                    let rawBytes = this.parseLuaBytes(strings[idx]);
-                    let decrypted = rawBytes.map(b => String.fromCharCode(b ^ xorKey)).join('');
-                    decodedStrings[luaIdx] = decrypted;
-                }
-
-                if (targetTableName) {
-                    let count = 0;
-                    const replaceRegex = new RegExp(targetTableName + '\\s*\\[\\s*(\\d+)\\s*\\]', 'g');
-                    code = code.replace(replaceRegex, (m, indexStr) => {
-                        let index = parseInt(indexStr, 10);
-                        if (decodedStrings[index] !== undefined) {
-                            count++;
-                            return JSON.stringify(decodedStrings[index]);
-                        }
-                        return m;
-                    });
-                    if (count > 0) this.log(`ถอดรหัสตาราง XOR Engine (BolongBot) สำเร็จ ${count} รายการ`);
-                }
-
-                return code;
-            }
-
-            // Clean Environment & Object Access: getfenv()["game"] -> game, obj["Method"](obj) -> obj:Method()
-            cleanSyntaxAndMethods(code) {
-                let count = 0;
-
-                // getfenv()["game"] -> game
-                code = code.replace(/getfenv\s*\(\s*\)\s*\[\s*"([a-zA-Z_][a-zA-Z0-9_]*)"\s*\]/g, (_, g) => {
-                    count++; return g;
-                });
-
-                // obj["Method"](obj, ...) -> obj:Method(...)
-                code = code.replace(/([a-zA-Z0-9_]+)\["([a-zA-Z_][a-zA-Z0-9_]*)"\]\s*\(\s*\1\s*,?/g, (m, obj, method) => {
-                    count++; return `${obj}:${method}(`;
-                });
-
-                // obj["Property"] -> obj.Property
-                code = code.replace(/\["([a-zA-Z_][a-zA-Z0-9_]*)"\]/g, (m, prop) => {
-                    count++; return `.${prop}`;
-                });
-
-                if (count > 0) this.log(`ปรับโครงสร้าง Syntax / Method / Property ให้สะอาดขึ้น ${count} จุด`);
-                return code;
-            }
-
-            // Helper for parsing Lua Byte Arrays
-            parseLuaBytes(str) {
-                let bytes = [];
-                let i = 0;
-                while (i < str.length) {
-                    if (str[i] === '\\') {
-                        i++;
-                        if (str[i] === 'x') {
-                            bytes.push(parseInt(str.substr(i + 1, 2), 16));
-                            i += 3;
-                        } else if (/\d/.test(str[i])) {
-                            let numMatch = str.substr(i).match(/^\d{1,3}/);
-                            if (numMatch) {
-                                bytes.push(parseInt(numMatch[0], 10));
-                                i += numMatch[0].length;
-                            }
-                        } else {
-                            bytes.push(str.charCodeAt(i));
-                            i++;
-                        }
-                    } else {
-                        bytes.push(str.charCodeAt(i));
-                        i++;
-                    }
-                }
-                return bytes;
-            }
-
-            unescapeLuaString(str) {
-                return str.replace(/\\n/g, '\n')
-                          .replace(/\\r/g, '\r')
-                          .replace(/\\t/g, '\t')
-                          .replace(/\\"/g, '"')
-                          .replace(/\\\\/g, '\\');
-            }
-
-            // Code Beautifier Indentation Engine
-            beautifyLua(code) {
-                const lines = code.split('\n');
-                let indent = 0;
-                const formatted = [];
-                const inc = /^\s*(function|if|for|while|repeat|do|local\s+function)\b/;
-                const dec = /^\s*(end|until|else|elseif)\b/;
-
-                for (let line of lines) {
-                    let trimmed = line.trim();
-                    if (!trimmed) continue;
-                    if (dec.test(trimmed)) indent = Math.max(0, indent - 1);
-                    formatted.push("    ".repeat(indent) + trimmed);
-                    if (inc.test(trimmed) && !trimmed.endsWith('end')) indent++;
-                }
-                return formatted.join('\n');
+            if (
+                (trimmed.startsWith('function') || 
+                 trimmed.startsWith('if') || 
+                 trimmed.startsWith('for') || 
+                 trimmed.startsWith('while') || 
+                 trimmed.endsWith('then') || 
+                 trimmed.endsWith('do')) && 
+                !trimmed.endsWith('end')
+            ) {
+                indent++;
             }
         }
+        return formatted.join('\n');
+    }
 
-        // =========================================================================
-        // UI HANDLERS
-        // =========================================================================
-        function runDeobfuscator() {
-            const input = document.getElementById('input-code').value;
-            if (!input.trim()) {
-                showToast('กรุณากรอกหรือวางโค้ดก่อนทำการถอดรหัส', 'error');
-                return;
-            }
+    // --- Helper Functions สำหรับ UI ---
 
-            const options = {
-                recursive: document.getElementById('opt-recursive').checked,
-                tables: document.getElementById('opt-tables').checked,
-                escapes: document.getElementById('opt-escapes').checked,
-                clean: document.getElementById('opt-clean').checked
-            };
+    function clearInput() {
+        document.getElementById("inputCode").value = "";
+        document.getElementById("outputCode").value = "";
+        document.getElementById("analysisCard").style.display = "none";
+    }
 
-            try {
-                const engine = new LuaDeobfuscatorEngine(options);
-                const { code, logs } = engine.process(input);
-
-                document.getElementById('output-code').value = code;
-                renderLogs(logs);
-
-                showToast('ถอดรหัสและประมวลผลสคริปต์เรียบร้อย!', 'success');
-            } catch (err) {
-                console.error(err);
-                showToast('เกิดข้อผิดพลาดรุนแรงในการถอดรหัส', 'error');
-            }
+    function copyOutput() {
+        const output = document.getElementById("outputCode");
+        if (!output.value) {
+            alert("ไม่มีโค้ดสำหรับคัดลอก");
+            return;
         }
+        output.select();
+        document.execCommand("copy");
+        alert("คัดลอกโค้ดลง Clipboard เรียบร้อยแล้ว!");
+    }
 
-        function renderLogs(logs) {
-            const logContainer = document.getElementById('log-output');
-            const logCountSpan = document.getElementById('log-count');
-            logContainer.innerHTML = logs.map(l => {
-                let colorClass = 'text-gray-400';
-                if (l.includes('[SUCCESS]')) colorClass = 'text-green-400 font-semibold';
-                if (l.includes('[ERROR]')) colorClass = 'text-red-400 font-semibold';
-                return `<div class="${colorClass}">${escapeHtml(l)}</div>`;
-            }).join('');
-            logCountSpan.innerText = `${logs.length} รายการ`;
-            logContainer.scrollTop = logContainer.scrollHeight;
+    function downloadOutput() {
+        const code = document.getElementById("outputCode").value;
+        if (!code) {
+            alert("ไม่มีโค้ดสำหรับดาวน์โหลด");
+            return;
         }
+        const blob = new Blob([code], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "deobfuscated_script.lua";
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+</script>
 
-        function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
-
-        function clearAll() {
-            document.getElementById('input-code').value = '';
-            document.getElementById('output-code').value = '';
-            document.getElementById('input-stats').innerText = '0 ตัวอักษร';
-            document.getElementById('log-output').innerHTML = '<span class="text-gray-600">-- รอดำเนินการถอดรหัส...</span>';
-            document.getElementById('log-count').innerText = '0 รายการ';
-            showToast('ล้างข้อมูลเรียบร้อยแล้ว', 'success');
-        }
-
-        function copyOutput() {
-            const output = document.getElementById('output-code').value;
-            if (!output.trim()) return showToast('ไม่มีโค้ดให้คัดลอก', 'error');
-            navigator.clipboard.writeText(output).then(() => showToast('คัดลอกโค้ดลง Clipboard สำเร็จ', 'success'));
-        }
-
-        function downloadOutput() {
-            const output = document.getElementById('output-code').value;
-            if (!output.trim()) return showToast('ไม่มีโค้ดให้ดาวน์โหลด', 'error');
-            const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'deobfuscated_script.lua';
-            a.click();
-            showToast('เริ่มการดาวน์โหลดไฟล์ .lua', 'success');
-        }
-
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const icon = document.getElementById('toast-icon');
-            const msg = document.getElementById('toast-message');
-            msg.innerText = message;
-            icon.className = type === 'success' ? 'fa-solid fa-circle-check text-green-400' : 'fa-solid fa-circle-exclamation text-red-400';
-            toast.classList.remove('opacity-0', 'pointer-events-none');
-            toast.classList.add('opacity-100');
-            setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 2500);
-        }
-    </script>
 </body>
 </html>
