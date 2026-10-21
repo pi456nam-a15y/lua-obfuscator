@@ -18,7 +18,227 @@ def keep_alive():
     t.start()
 
 # 2. โค้ดบอท Discord
-TOKEN = 'วาง_TOKEN_ของคุณตรงนี้'
+TOKEN = 'import discord
+from discord.ext import commands
+from discord import app_commands
+from typing import Optional
+import asyncio
+import random
+
+TOKEN = 'MTUxMzkxOTU4ODA1OTA1NDMxMQ.GzGfhF.NJcP90mjIrHb2PqHnRZjXZHFfo31WEeQTF9N2Q'
+
+class MyBot(commands.Bot):
+    def __init__(self):
+        intents = discord.Intents.default()
+        intents.message_content = True
+        super().__init__(command_prefix="!", intents=intents)
+
+bot = MyBot()
+
+# --- ระบบปุ่มกดเข้าร่วมกิจกรรม ---
+class EventView(discord.ui.View):
+    def __init__(self, duration_seconds: int):
+        super().__init__(timeout=duration_seconds)
+        self.participants = set() # เก็บ ID ผู้เข้าร่วมกิจกรรม (ไม่ซ้ำ)
+
+    @discord.ui.button(label="🎉 เข้าร่วมกิจกรรม (0)", style=discord.ButtonStyle.primary, custom_id="join_event_btn")
+    async def join_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        user_id = interaction.user.id
+        
+        # ถ้านับซ้ำ = ยกเลิก / ถ้ายังไม่เคย = เข้าร่วม
+        if user_id in self.participants:
+            self.participants.remove(user_id)
+            await interaction.response.send_message("❌ คุณได้ยกเลิกการเข้าร่วมกิจกรรมแล้ว", ephemeral=True)
+        else:
+            self.participants.add(user_id)
+            await interaction.response.send_message("✅ เข้าร่วมกิจกรรมเรียบร้อยแล้ว!", ephemeral=True)
+        
+        # อัปเดตตัวเลขจำนวนคนบนปุ่มกด
+        button.label = f"🎉 เข้าร่วมกิจกรรม ({len(self.participants)})"
+        await interaction.message.edit(view=self)
+
+
+@bot.event
+async def on_ready():
+    # บังคับซิงค์คำสั่ง Slash Command ทุกคำสั่งเข้าเซิร์ฟเวอร์ทันที
+    for guild in bot.guilds:
+        bot.tree.copy_global_to(guild=guild)
+        await bot.tree.sync(guild=guild)
+    print(f'บอท {bot.user} ออนไลน์พร้อมใช้งานทุกคำสั่งแล้ว!')
+
+
+# -------------------------------------------------------------
+# 1. คำสั่ง /send (ส่งข้อความธรรมดา)
+# -------------------------------------------------------------
+@bot.tree.command(name="send", description="ส่งข้อความธรรมดาไปยังห้องที่กำหนด")
+@app_commands.checks.has_permissions(manage_messages=True)
+@app_commands.describe(
+    channel="เลือกห้องที่ต้องการส่งข้อความไป",
+    message="พิมพ์ข้อความที่ต้องการส่ง"
+)
+async def send_message(interaction: discord.Interaction, channel: discord.TextChannel, message: str):
+    await channel.send(message)
+    await interaction.response.send_message(f"ส่งข้อความไปที่ {channel.mention} เรียบร้อยแล้ว!", ephemeral=True)
+
+
+# -------------------------------------------------------------
+# 2. คำสั่ง /sendembed (ส่งข้อความกรอบ Embed)
+# -------------------------------------------------------------
+@bot.tree.command(name="sendembed", description="ส่งข้อความแบบกรอบ (Embed) ไปยังห้องที่กำหนด")
+@app_commands.checks.has_permissions(manage_messages=True)
+@app_commands.describe(
+    channel="เลือกห้องที่ต้องการส่งข้อความไป",
+    title="หัวข้อหลักของกรอบ",
+    description="เนื้อหาข้อความภายในกรอบ",
+    image_url="ลิงก์รูปภาพใหญ่ด้านล่าง (เว้นว่างได้)",
+    color_hex="รหัสสี HEX เช่น #FF0000 (แดง), #00FF00 (เขียว), #5865F2 (ฟ้าDiscord)",
+    footer="ข้อความตัวเล็กๆ ด้านล่างสุด (เว้นว่างได้)"
+)
+async def send_embed(
+    interaction: discord.Interaction, 
+    channel: discord.TextChannel, 
+    title: str, 
+    description: str,
+    image_url: Optional[str] = None,
+    color_hex: Optional[str] = "#2B2D31",
+    footer: Optional[str] = None
+):
+    try:
+        color_int = int(color_hex.replace("#", ""), 16)
+    except ValueError:
+        color_int = 0x2B2D31
+
+    embed = discord.Embed(
+        title=title,
+        description=description,
+        color=discord.Color(color_int)
+    )
+    
+    if image_url:
+        embed.set_image(url=image_url)
+    if footer:
+        embed.set_footer(text=footer)
+
+    await channel.send(embed=embed)
+    await interaction.response.send_message(f"ส่ง Embed ไปที่ {channel.mention} เรียบร้อยแล้ว!", ephemeral=True)
+
+
+# -------------------------------------------------------------
+# 3. คำสั่ง /edit (แก้ไข Embed ที่เคยส่งไปแล้ว)
+# -------------------------------------------------------------
+@bot.tree.command(name="edit", description="แก้ไขข้อความ Embed ที่บอทเคยส่งไปแล้ว")
+@app_commands.checks.has_permissions(manage_messages=True)
+@app_commands.describe(
+    channel="เลือกห้องที่ข้อความนั้นอยู่",
+    message_id="ID ของข้อความที่ต้องการแก้ไข",
+    new_title="หัวข้อใหม่",
+    new_description="เนื้อหาใหม่"
+)
+async def edit_embed(
+    interaction: discord.Interaction,
+    channel: discord.TextChannel,
+    message_id: str,
+    new_title: str,
+    new_description: str
+):
+    try:
+        msg = await channel.fetch_message(int(message_id))
+        embed = msg.embeds[0]
+        embed.title = new_title
+        embed.description = new_description
+        await msg.edit(embed=embed)
+        await interaction.response.send_message("แก้ไขข้อความเรียบร้อยแล้ว!", ephemeral=True)
+    except Exception as e:
+        await interaction.response.send_message(f"เกิดข้อผิดพลาด: ตรวจสอบ Message ID หรือสิทธิ์ของบอทอีกครั้ง", ephemeral=True)
+
+
+# -------------------------------------------------------------
+# 4. คำสั่ง /event (สร้างกิจกรรมพร้อมระบบปุ่มและสุ่มผู้โชคดี)
+# -------------------------------------------------------------
+@bot.tree.command(name="event", description="สร้างกิจกรรมแจกรางวัล พร้อมระบบนับเวลาและปุ่มกดสุ่มแจก")
+@app_commands.checks.has_permissions(manage_messages=True)
+@app_commands.describe(
+    channel="เลือกห้องที่ต้องการส่งกิจกรรมไป",
+    title="ชื่อกิจกรรม / ของรางวัล",
+    description="รายละเอียดกิจกรรม",
+    minutes="ระยะเวลากิจกรรม (หน่วยเป็นนาที)",
+    winners="จำนวนผู้โชคดีที่จะสุ่ม (เช่น 1, 2, 3)",
+    image_url="ลิงก์รูปภาพแบนเนอร์กิจกรรม (เว้นว่างได้)",
+    color_hex="รหัสสีแถบกรอบ เช่น #5865F2"
+)
+async def create_event(
+    interaction: discord.Interaction,
+    channel: discord.TextChannel,
+    title: str,
+    description: str,
+    minutes: int,
+    winners: int = 1,
+    image_url: Optional[str] = None,
+    color_hex: Optional[str] = "#5865F2"
+):
+    try:
+        color_int = int(color_hex.replace("#", ""), 16)
+    except ValueError:
+        color_int = 0x5865F2
+
+    duration_seconds = minutes * 60
+
+    embed = discord.Embed(
+        title=f"🎁 กิจกรรม: {title}",
+        description=f"{description}\n\n⏱️ **ระยะเวลา:** {minutes} นาที\n🏆 **จำนวนรางวัล:** {winners} คน",
+        color=discord.Color(color_int)
+    )
+    
+    if image_url:
+        embed.set_image(url=image_url)
+    
+    embed.set_footer(text="กดปุ่มด้านล่างเพื่อเข้าร่วมกิจกรรม!")
+
+    view = EventView(duration_seconds=duration_seconds)
+
+    event_msg = await channel.send(embed=embed, view=view)
+    await interaction.response.send_message(f"สร้างกิจกรรมในห้อง {channel.mention} เรียบร้อยแล้ว!", ephemeral=True)
+
+    # นับเวลาถอยหลังตามที่กำหนด
+    await asyncio.sleep(duration_seconds)
+
+    # --- เมื่อหมดเวลา ---
+    for item in view.children:
+        item.disabled = True
+    
+    embed.set_footer(text="🔴 กิจกรรมนี้สิ้นสุดลงแล้ว")
+    await event_msg.edit(embed=embed, view=view)
+
+    participants_list = list(view.participants)
+    
+    if not participants_list:
+        await channel.send(f"📢 กิจกรรม **{title}** สิ้นสุดลงแล้ว! แต่ไม่มีผู้เข้าร่วมกิจกรรม 😢")
+    else:
+        actual_winners_count = min(winners, len(participants_list))
+        winner_ids = random.sample(participants_list, actual_winners_count)
+        
+        winner_mentions = [f"<@{user_id}>" for user_id in winner_ids]
+        winners_text = ", ".join(winner_mentions)
+
+        win_embed = discord.Embed(
+            title="🎉 ประกาศผลผู้โชคดี!",
+            description=f"ขอแสดงความยินดีกับ {winners_text}\nคุณได้รับรางวัลจากกิจกรรม **{title}** 🥳",
+            color=discord.Color.gold()
+        )
+        await channel.send(content=f"🎉 ยินดีด้วยครับ! {winners_text}", embed=win_embed)
+
+
+# --- ระบบจัดการข้อผิดพลาดเมื่อไม่มีสิทธิ์สั่งงาน ---
+@send_message.error
+@send_embed.error
+@edit_embed.error
+@create_event.error
+async def command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
+    if isinstance(error, app_commands.MissingPermissions):
+        await interaction.response.send_message("คุณไม่มีสิทธิ์ใช้งานคำสั่งนี้ (ต้องมีสิทธิ์ Manage Messages)", ephemeral=True)
+
+bot.run(TOKEN)
+'
 
 class MyBot(commands.Bot):
     def __init__(self):
